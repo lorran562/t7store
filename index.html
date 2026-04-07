@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T7 Store — Camisas de Futebol</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #0a8c2a; --green-light: #12b83a; --green-dark: #065c1a;
+    --yellow: #f5c800; --blue: #0057b7;
+    --black: #080808; --dark2: #141414; --dark3: #1a1a1a; --white: #f5f5f5;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Barlow', sans-serif; background: var(--black); color: var(--white); overflow-x: hidden; }
+
+  /* HEADER */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(8,8,8,0.95); backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--green);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 64px;
+  }
+  .logo-wrap { display: flex; align-items: center; gap: 10px; }
+  .logo-wrap img { height: 48px; filter: drop-shadow(0 0 8px rgba(18,184,58,0.5)); }
+  .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 2px; background: linear-gradient(135deg,#fff 30%,var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  nav { display: flex; gap: 1.8rem; }
+  nav a { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; color: var(--white); text-decoration: none; transition: color .2s; }
+  nav a:hover { color: var(--yellow); }
+  .cart-btn { background: var(--green); border: none; border-radius: 6px; padding: 8px 16px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background .2s; }
+  .cart-btn:hover { background: var(--green-light); }
+  .cart-count { background: var(--yellow); color: #000; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 900; }
+
+  /* HERO */
+  .hero { min-height: 100vh; padding-top: 64px; display: flex; align-items: center; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 70% 50%, rgba(10,140,42,0.16) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 5% 80%, rgba(0,87,183,0.12) 0%, transparent 60%), linear-gradient(180deg,#080808 0%,#0d0d0d 100%); }
+  .grass-lines { position: absolute; inset: 0; opacity: 0.03; background: repeating-linear-gradient(90deg,transparent,transparent 40px,#0a8c2a 40px,#0a8c2a 80px); }
+  .hero-content { position: relative; z-index: 2; padding: 0 5vw; max-width: 680px; }
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3.5rem,8vw,6.5rem); line-height: 0.92; letter-spacing: 2px; margin-bottom: 18px; }
+  .hero-title .l1 { color: #fff; }
+  .hero-title .l2 { background: linear-gradient(90deg,var(--green-light),var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-title .l3 { color: var(--blue); }
+  .hero-sub { font-size: 1rem; color: rgba(245,245,245,0.6); margin-bottom: 30px; line-height: 1.6; max-width: 460px; }
+  .btn-primary { background: linear-gradient(135deg,var(--green),var(--green-light)); color: #fff; border: none; padding: 13px 30px; border-radius: 6px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: transform .2s, box-shadow .2s; box-shadow: 0 4px 20px rgba(10,140,42,0.4); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(10,140,42,0.6); }
+
+  /* TICKER */
+  .ticker { background: var(--green); padding: 9px 0; overflow: hidden; border-top: 2px solid var(--yellow); border-bottom: 2px solid var(--yellow); }
+  .ticker-inner { display: flex; animation: scroll 22s linear infinite; white-space: nowrap; }
+  .ticker-item { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px; color: #fff; padding: 0 36px; flex-shrink: 0; }
+  .ticker-dot { color: var(--yellow); padding: 0 16px; }
+  @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* SECTION */
+  section { padding: 72px 5vw; }
+  .section-header { text-align: center; margin-bottom: 44px; }
+  .section-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--green-light); margin-bottom: 8px; display: block; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem,4vw,3rem); letter-spacing: 2px; }
+  .section-title span { color: var(--yellow); }
+
+  /* FILTROS */
+  .filters { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 40px; }
+  .filter-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(245,245,245,0.65); padding: 7px 20px; border-radius: 50px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all .2s; }
+  .filter-btn:hover, .filter-btn.active { background: var(--green); border-color: var(--green); color: #fff; }
+
+  /* GRID */
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap: 20px; }
+  .product-card { background: var(--dark2); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform .2s, box-shadow .2s, border-color .2s; position: relative; }
+  .product-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(0,0,0,0.5); border-color: var(--green); }
+  .product-badge { position: absolute; top: 12px; left: 12px; z-index: 3; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; }
+  .badge-new { background: var(--green-light); color: #fff; }
+  .badge-sale { background: #e03c3c; color: #fff; }
+  .badge-retro { background: var(--yellow); color: #000; }
+  .product-img { width: 100%; height: 200px; background: linear-gradient(135deg,var(--dark3),#202020); display: flex; align-items: center; justify-content: center; font-size: 5.5rem; }
+  .product-info { padding: 16px; }
+  .product-club { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); margin-bottom: 3px; }
+  .product-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; color: #fff; margin-bottom: 3px; }
+  .product-meta { font-size: 0.78rem; color: rgba(245,245,245,0.38); margin-bottom: 12px; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .product-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--yellow); line-height: 1; }
+  .product-price-old { font-size: 0.75rem; color: rgba(245,245,245,0.32); text-decoration: line-through; display: block; }
+  .add-btn { background: var(--green); border: none; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; cursor: pointer; color: #fff; transition: background .2s, transform .15s; }
+  .add-btn:hover { background: var(--green-light); transform: scale(1.1); }
+
+  /* CART */
+  .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; opacity: 0; pointer-events: none; transition: opacity .3s; }
+  .cart-overlay.open { opacity: 1; pointer-events: all; }
+  .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 360px; max-width: 95vw; background: var(--dark2); border-left: 1px solid rgba(255,255,255,0.07); z-index: 201; transform: translateX(100%); transition: transform .3s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; }
+  .cart-drawer.open { transform: translateX(0); }
+  .cart-header { padding: 22px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+  .cart-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 2px; }
+  .close-cart { background: rgba(255,255,255,0.06); border: none; color: #fff; font-size: 1.2rem; cursor: pointer; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+  .close-cart:hover { background: rgba(255,255,255,0.12); }
+  .cart-items { flex: 1; overflow-y: auto; padding: 14px; }
+  .cart-empty { text-align: center; padding: 56px 20px; color: rgba(245,245,245,0.32); }
+  .cart-empty-icon { font-size: 3rem; margin-bottom: 12px; display: block; }
+  .cart-empty p { font-size: 0.88rem; }
+  .cart-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
+  .cart-item-img { width: 52px; height: 52px; background: var(--dark3); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-size: 0.82rem; font-weight: 600; color: #fff; margin-bottom: 2px; }
+  .cart-item-meta { font-size: 0.72rem; color: rgba(245,245,245,0.38); margin-bottom: 4px; }
+  .cart-item-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; color: var(--yellow); }
+  .cart-item-remove { background: none; border: none; color: rgba(245,245,245,0.28); cursor: pointer; font-size: 1rem; transition: color .2s; }
+  .cart-item-remove:hover { color: #e03c3c; }
+  .cart-footer { padding: 18px 22px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .cart-total span:first-child { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 0.85rem; color: rgba(245,245,245,0.55); }
+  .cart-total-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; color: var(--yellow); }
+  .checkout-btn { width: 100%; background: linear-gradient(135deg,var(--green),var(--green-light)); border: none; padding: 15px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; cursor: pointer; box-shadow: 0 4px 20px rgba(10,140,42,0.4); transition: opacity .2s; }
+  .checkout-btn:hover { opacity: 0.88; }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s; padding: 20px; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: var(--dark2); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; max-width: 560px; width: 100%; padding: 28px; position: relative; transform: scale(0.95); transition: transform .3s; }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .close-modal { position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.06); border: none; color: #fff; font-size: 1.2rem; cursor: pointer; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .modal-content { display: flex; gap: 24px; }
+  .modal-img { width: 160px; height: 160px; background: var(--dark3); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 4.5rem; flex-shrink: 0; }
+  .modal-info { flex: 1; }
+  .modal-club { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); margin-bottom: 3px; }
+  .modal-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.3rem; color: #fff; margin-bottom: 3px; }
+  .modal-meta { font-size: 0.82rem; color: rgba(245,245,245,0.42); margin-bottom: 14px; }
+  .modal-price { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--yellow); line-height: 1; margin-bottom: 14px; }
+  .size-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,245,245,0.45); margin-bottom: 8px; display: block; }
+  .sizes { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 18px; }
+  .size-opt { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(245,245,245,0.65); padding: 7px 13px; border-radius: 6px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all .2s; }
+  .size-opt:hover, .size-opt.selected { background: var(--green); border-color: var(--green); color: #fff; }
+  .modal-add-btn { width: 100%; background: linear-gradient(135deg,var(--green),var(--green-light)); border: none; padding: 13px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 0.95rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; cursor: pointer; transition: opacity .2s; }
+  .modal-add-btn:hover { opacity: 0.88; }
+
+  /* FOOTER */
+  footer { background: #050505; border-top: 1px solid rgba(255,255,255,0.05); padding: 36px 5vw 24px; }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 3px; background: linear-gradient(135deg,#fff 30%,var(--yellow)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom: 8px; }
+  .footer-contacts { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+  .footer-contacts a { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; color: rgba(245,245,245,0.45); text-decoration: none; transition: color .2s; }
+  .footer-contacts a:hover { color: var(--green-light); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 18px; }
+  .footer-bottom p { font-size: 0.78rem; color: rgba(245,245,245,0.28); }
+  .payment-icons { display: flex; gap: 7px; }
+  .payment-badge { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.07); border-radius: 4px; padding: 4px 9px; font-size: 0.68rem; color: rgba(245,245,245,0.45); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 1px; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(70px); background: var(--green); color: #fff; padding: 11px 26px; border-radius: 50px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.92rem; letter-spacing: 1px; z-index: 500; transition: transform .3s, opacity .3s; opacity: 0; pointer-events: none; white-space: nowrap; box-shadow: 0 6px 24px rgba(10,140,42,0.5); }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* WHATSAPP */
+  .wa-float { position: fixed; bottom: 26px; right: 26px; z-index: 150; width: 54px; height: 54px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; text-decoration: none; color: #fff; box-shadow: 0 4px 18px rgba(37,211,102,0.5); transition: transform .2s; }
+  .wa-float:hover { transform: scale(1.1); }
+
+  @media (max-width: 700px) {
+    nav { display: none; }
+    .modal-content { flex-direction: column; }
+    .modal-img { width: 100%; height: 140px; }
+    .cart-drawer { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <img src="t7estore.jpg" alt="T7 Store" onerror="this.style.display='none'">
+    <div class="logo-text">T7 STORE</div>
+  </div>
+  <nav>
+    <a href="#produtos">Produtos</a>
+    <a href="#contato">Contato</a>
+  </nav>
+  <button class="cart-btn" onclick="openCart()">
+    🛒 Carrinho <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="grass-lines"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">
+      <div class="l1">VISTA</div>
+      <div class="l2">SUA PAIXÃO</div>
+      <div class="l3">PELO FUTEBOL</div>
+    </h1>
+    <p class="hero-sub">Camisas dos maiores clubes nacionais e internacionais. Entrega rápida para todo o Brasil.</p>
+    <a href="#produtos" class="btn-primary">⚽ Ver Camisas</a>
+  </div>
+</section>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">FRETE GRÁTIS ACIMA DE R$199</span><span class="ticker-dot">★</span>
+    <span class="ticker-item">PARCELAMENTO EM ATÉ 12X SEM JUROS</span><span class="ticker-dot">★</span>
+    <span class="ticker-item">PIX COM 10% DE DESCONTO</span><span class="ticker-dot">★</span>
+    <span class="ticker-item">ENTREGA EM TODO O BRASIL</span><span class="ticker-dot">★</span>
+    <span class="ticker-item">FRETE GRÁTIS ACIMA DE R$199</span><span class="ticker-dot">★</span>
+    <span class="ticker-item">PARCELAMENTO EM ATÉ 12X SEM JUROS</span><span class="ticker-dot">★</span>
+    <span class="ticker-item">PIX COM 10% DE DESCONTO</span><span class="ticker-dot">★</span>
+    <span class="ticker-item">ENTREGA EM TODO O BRASIL</span><span class="ticker-dot">★</span>
+  </div>
+</div>
+
+<section id="produtos">
+  <div class="section-header">
+    <span class="section-tag">⚽ Coleção</span>
+    <h2 class="section-title">NOSSAS <span>CAMISAS</span></h2>
+  </div>
+  <div class="filters">
+    <button class="filter-btn active" onclick="filter('todos',this)">Todos</button>
+    <button class="filter-btn" onclick="filter('nacional',this)">Nacionais</button>
+    <button class="filter-btn" onclick="filter('internacional',this)">Internacionais</button>
+    <button class="filter-btn" onclick="filter('selecao',this)">Seleções</button>
+    <button class="filter-btn" onclick="filter('retro',this)">Retrô</button>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<footer id="contato">
+  <div class="footer-logo">T7 STORE</div>
+  <div class="footer-contacts">
+    <a href="https://wa.me/5500000000000">💬 WhatsApp</a>
+    <a href="mailto:contato@t7store.com">📧 contato@t7store.com</a>
+    <a href="#">📷 Instagram</a>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 T7 Store. Todos os direitos reservados.</p>
+    <div class="payment-icons">
+      <div class="payment-badge">PIX</div>
+      <div class="payment-badge">VISA</div>
+      <div class="payment-badge">MASTER</div>
+      <div class="payment-badge">BOLETO</div>
+    </div>
+  </div>
+</footer>
+
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>🛒 CARRINHO</h3>
+    <button class="close-cart" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty"><span class="cart-empty-icon">👕</span><p>Carrinho vazio.<br>Adicione algumas camisas!</p></div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>TOTAL</span>
+      <span class="cart-total-value" id="cartTotal">R$ 0,00</span>
+    </div>
+    <button class="checkout-btn" onclick="checkout()">FINALIZAR PELO WHATSAPP 💬</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="close-modal" onclick="closeModal(null,true)">✕</button>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<a href="https://wa.me/5500000000000" class="wa-float" title="WhatsApp">💬</a>
+
+<script>
+const products = [
+  { id:1,  emoji:'🔴', club:'Flamengo',           name:'Camisa Oficial I 24/25',   meta:'Home · Adidas',       price:189.90, oldPrice:239.90, badge:'sale',  category:'nacional'      },
+  { id:2,  emoji:'⚫', club:'Corinthians',         name:'Camisa Oficial III 24/25', meta:'Third · Nike',        price:179.90, oldPrice:null,   badge:'new',   category:'nacional'      },
+  { id:3,  emoji:'🔵', club:'Cruzeiro',            name:'Camisa Oficial I 24/25',   meta:'Home · Adidas',       price:169.90, oldPrice:null,   badge:null,    category:'nacional'      },
+  { id:4,  emoji:'🟢', club:'Palmeiras',           name:'Camisa Oficial I 24/25',   meta:'Home · Puma',         price:175.90, oldPrice:null,   badge:null,    category:'nacional'      },
+  { id:5,  emoji:'⚽', club:'São Paulo FC',        name:'Camisa Oficial I 24/25',   meta:'Home · Under Armour', price:159.90, oldPrice:null,   badge:null,    category:'nacional'      },
+  { id:6,  emoji:'🇧🇷', club:'Seleção Brasileira', name:'Camisa Oficial I 24/25',   meta:'Home · Nike',         price:329.90, oldPrice:399.90, badge:'sale',  category:'selecao'       },
+  { id:7,  emoji:'🇦🇷', club:'Argentina',          name:'Camisa Oficial I 24/25',   meta:'Home · Adidas',       price:299.90, oldPrice:null,   badge:null,    category:'selecao'       },
+  { id:8,  emoji:'🔴', club:'Real Madrid',         name:'Camisa Oficial I 24/25',   meta:'Home · Adidas',       price:299.90, oldPrice:349.90, badge:'sale',  category:'internacional' },
+  { id:9,  emoji:'🔵', club:'Barcelona',           name:'Camisa Oficial I 24/25',   meta:'Home · Nike',         price:289.90, oldPrice:null,   badge:'new',   category:'internacional' },
+  { id:10, emoji:'🔵', club:'Manchester City',     name:'Camisa Oficial I 24/25',   meta:'Home · Puma',         price:289.90, oldPrice:319.90, badge:'sale',  category:'internacional' },
+  { id:11, emoji:'⚫', club:'Juventus',            name:'Camisa Oficial I 24/25',   meta:'Home · Adidas',       price:279.90, oldPrice:null,   badge:'new',   category:'internacional' },
+  { id:12, emoji:'🟡', club:'Palmeiras',           name:'Camisa Retrô 1993',        meta:'Edição Especial',     price:149.90, oldPrice:199.90, badge:'retro', category:'retro'         },
+  { id:13, emoji:'🟢', club:'Chapecoense',         name:'Camisa Retrô 2016',        meta:'Edição Memorial',     price:139.90, oldPrice:null,   badge:'retro', category:'retro'         },
+];
+
+let cart = [], selectedSize = '';
+
+function renderProducts(cat) {
+  const list = cat === 'todos' ? products : products.filter(p => p.category === cat);
+  document.getElementById('productsGrid').innerHTML = list.map(p => `
+    <div class="product-card" onclick="openModal(${p.id})">
+      ${p.badge ? `<div class="product-badge badge-${p.badge}">${p.badge==='new'?'NOVO':p.badge==='sale'?'OFERTA':'RETRÔ'}</div>` : ''}
+      <div class="product-img">${p.emoji}</div>
+      <div class="product-info">
+        <div class="product-club">${p.club}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-meta">${p.meta}</div>
+        <div class="product-footer">
+          <div>
+            ${p.oldPrice ? `<span class="product-price-old">R$ ${fmt(p.oldPrice)}</span>` : ''}
+            <div class="product-price">R$ ${fmt(p.price)}</div>
+          </div>
+          <button class="add-btn" onclick="event.stopPropagation();quickAdd(${p.id})">+</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filter(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active'); renderProducts(cat);
+}
+
+function openModal(id) {
+  const p = products.find(x => x.id === id); selectedSize = '';
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-img">${p.emoji}</div>
+    <div class="modal-info">
+      <div class="modal-club">${p.club}</div>
+      <div class="modal-title">${p.name}</div>
+      <div class="modal-meta">${p.meta}</div>
+      <div class="modal-price">R$ ${fmt(p.price)}</div>
+      <span class="size-label">Escolha o tamanho:</span>
+      <div class="sizes">${['PP','P','M','G','GG','XGG'].map(s=>`<div class="size-opt" onclick="selectSize('${s}',this)">${s}</div>`).join('')}</div>
+      <button class="modal-add-btn" onclick="addToCart(${p.id})">🛒 ADICIONAR AO CARRINHO</button>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function selectSize(s, el) {
+  selectedSize = s;
+  document.querySelectorAll('.size-opt').forEach(x => x.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function closeModal(e, force) {
+  if (!force && e && e.target !== document.getElementById('modalOverlay')) return;
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function addToCart(id) {
+  if (!selectedSize) { showToast('⚠️ Escolha um tamanho!'); return; }
+  const p = products.find(x => x.id === id);
+  cart.push({ ...p, size: selectedSize, uid: Date.now() });
+  updateCart(); closeModal(null, true);
+  showToast(`✅ ${p.club} (${selectedSize}) adicionado!`);
+}
+
+function quickAdd(id) {
+  const p = products.find(x => x.id === id);
+  cart.push({ ...p, size: 'M', uid: Date.now() });
+  updateCart(); showToast(`✅ ${p.club} adicionado! (Tam. M)`);
+}
+
+function removeFromCart(uid) { cart = cart.filter(x => x.uid !== uid); updateCart(); }
+
+function updateCart() {
+  document.getElementById('cartCount').textContent = cart.length;
+  document.getElementById('cartTotal').textContent = `R$ ${fmt(cart.reduce((s,x)=>s+x.price,0))}`;
+  const el = document.getElementById('cartItems');
+  if (!cart.length) { el.innerHTML = `<div class="cart-empty"><span class="cart-empty-icon">👕</span><p>Carrinho vazio.<br>Adicione algumas camisas!</p></div>`; return; }
+  el.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-img">${item.emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.club} — ${item.name}</div>
+        <div class="cart-item-meta">Tamanho: ${item.size}</div>
+        <div class="cart-item-price">R$ ${fmt(item.price)}</div>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart(${item.uid})">🗑️</button>
+    </div>`).join('');
+}
+
+function openCart() {
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function checkout() {
+  if (!cart.length) { showToast('⚠️ Adicione itens ao carrinho!'); return; }
+  const total = cart.reduce((s,x)=>s+x.price,0);
+  const msg = encodeURIComponent(`Olá! Quero finalizar meu pedido T7 Store:\n\n${cart.map(i=>`• ${i.club} - ${i.name} (${i.size}) — R$ ${fmt(i.price)}`).join('\n')}\n\n*TOTAL: R$ ${fmt(total)}*`);
+  window.open(`https://wa.me/5500000000000?text=${msg}`,'_blank');
+}
+
+function fmt(n) { return n.toFixed(2).replace('.',','); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+renderProducts('todos');
+</script>
+</body>
+</html>
