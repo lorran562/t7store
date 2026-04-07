@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>T7 Store — Camisas de Futebol</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<title>T7 Store — Camisas de Futebol Oficiais | Entrega Rápida</title>
+<meta name="description" content="T7 Store: As melhores camisas de futebol dos maiores clubes do mundo. Frete grátis acima de R$199. Parcelamento em até 12x. PIX com 10% de desconto.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --green: #0a8c2a; --green-light: #12b83a; --green-dark: #065c1a;
     --yellow: #f5c800; --blue: #0057b7;
+    --red: #e03c3c; --red-dark: #c92929;
     --black: #080808; --dark2: #141414; --dark3: #1a1a1a; --white: #f5f5f5;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,9 +31,13 @@
   nav { display: flex; gap: 1.8rem; }
   nav a { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; color: var(--white); text-decoration: none; transition: color .2s; }
   nav a:hover { color: var(--yellow); }
+  .header-right { display: flex; align-items: center; gap: 12px; }
   .cart-btn { background: var(--green); border: none; border-radius: 6px; padding: 8px 16px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background .2s; }
   .cart-btn:hover { background: var(--green-light); }
   .cart-count { background: var(--yellow); color: #000; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 900; }
+  
+  /* MOBILE MENU */
+  .menu-toggle { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 8px; }
 
   /* HERO */
   .hero { min-height: 100vh; padding-top: 64px; display: flex; align-items: center; position: relative; overflow: hidden; }
@@ -42,120 +48,213 @@
   .hero-title .l1 { color: #fff; }
   .hero-title .l2 { background: linear-gradient(90deg,var(--green-light),var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .hero-title .l3 { color: var(--blue); }
-  .hero-sub { font-size: 1rem; color: rgba(245,245,245,0.6); margin-bottom: 30px; line-height: 1.6; max-width: 460px; }
-  .btn-primary { background: linear-gradient(135deg,var(--green),var(--green-light)); color: #fff; border: none; padding: 13px 30px; border-radius: 6px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: transform .2s, box-shadow .2s; box-shadow: 0 4px 20px rgba(10,140,42,0.4); }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(10,140,42,0.6); }
+  .hero-sub { font-size: 1.05rem; color: rgba(245,245,245,0.7); margin-bottom: 30px; line-height: 1.6; max-width: 460px; }
+  .hero-badges { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .hero-badge { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 8px 16px; border-radius: 50px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.82rem; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+  .hero-badge svg { width: 16px; height: 16px; }
+  .btn-primary { background: linear-gradient(135deg,var(--green),var(--green-light)); color: #fff; border: none; padding: 15px 34px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.05rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: transform .2s, box-shadow .2s; box-shadow: 0 4px 20px rgba(10,140,42,0.4); }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(10,140,42,0.6); }
+  .btn-secondary { background: transparent; border: 2px solid var(--yellow); color: var(--yellow); padding: 13px 28px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all .2s; margin-left: 12px; }
+  .btn-secondary:hover { background: var(--yellow); color: #000; }
+  .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
 
   /* TICKER */
-  .ticker { background: var(--green); padding: 9px 0; overflow: hidden; border-top: 2px solid var(--yellow); border-bottom: 2px solid var(--yellow); }
+  .ticker { background: var(--green); padding: 10px 0; overflow: hidden; border-top: 2px solid var(--yellow); border-bottom: 2px solid var(--yellow); }
   .ticker-inner { display: flex; animation: scroll 22s linear infinite; white-space: nowrap; }
-  .ticker-item { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px; color: #fff; padding: 0 36px; flex-shrink: 0; }
+  .ticker-item { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px; color: #fff; padding: 0 36px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
   .ticker-dot { color: var(--yellow); padding: 0 16px; }
   @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   /* SECTION */
-  section { padding: 72px 5vw; }
-  .section-header { text-align: center; margin-bottom: 44px; }
-  .section-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--green-light); margin-bottom: 8px; display: block; }
+  section { padding: 80px 5vw; }
+  .section-header { text-align: center; margin-bottom: 48px; }
+  .section-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--green-light); margin-bottom: 10px; display: block; }
   .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem,4vw,3rem); letter-spacing: 2px; }
   .section-title span { color: var(--yellow); }
+  .section-subtitle { font-size: 1rem; color: rgba(245,245,245,0.55); margin-top: 12px; max-width: 500px; margin-inline: auto; }
+
+  /* BENEFITS BAR */
+  .benefits-bar { background: var(--dark2); border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 28px 5vw; }
+  .benefits-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 1200px; margin: 0 auto; }
+  .benefit-item { display: flex; align-items: center; gap: 14px; justify-content: center; }
+  .benefit-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+  .benefit-text { text-align: left; }
+  .benefit-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; color: #fff; margin-bottom: 2px; }
+  .benefit-desc { font-size: 0.78rem; color: rgba(245,245,245,0.5); }
 
   /* FILTROS */
   .filters { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 40px; }
-  .filter-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(245,245,245,0.65); padding: 7px 20px; border-radius: 50px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all .2s; }
+  .filter-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(245,245,245,0.65); padding: 9px 22px; border-radius: 50px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.88rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all .2s; }
   .filter-btn:hover, .filter-btn.active { background: var(--green); border-color: var(--green); color: #fff; }
 
   /* GRID */
-  .products-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap: 20px; }
-  .product-card { background: var(--dark2); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform .2s, box-shadow .2s, border-color .2s; position: relative; }
-  .product-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(0,0,0,0.5); border-color: var(--green); }
-  .product-badge { position: absolute; top: 12px; left: 12px; z-index: 3; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(260px,1fr)); gap: 24px; }
+  .product-card { background: var(--dark2); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; overflow: hidden; cursor: pointer; transition: transform .2s, box-shadow .2s, border-color .2s; position: relative; }
+  .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-color: var(--green); }
+  .product-badge { position: absolute; top: 12px; left: 12px; z-index: 3; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; }
   .badge-new { background: var(--green-light); color: #fff; }
-  .badge-sale { background: #e03c3c; color: #fff; }
+  .badge-sale { background: var(--red); color: #fff; }
   .badge-retro { background: var(--yellow); color: #000; }
-  .product-img { width: 100%; height: 200px; background: linear-gradient(135deg,var(--dark3),#202020); display: flex; align-items: center; justify-content: center; font-size: 5.5rem; }
-  .product-info { padding: 16px; }
-  .product-club { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); margin-bottom: 3px; }
-  .product-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; color: #fff; margin-bottom: 3px; }
-  .product-meta { font-size: 0.78rem; color: rgba(245,245,245,0.38); margin-bottom: 12px; }
+  .badge-hot { background: linear-gradient(135deg, #ff6b35, #f7931e); color: #fff; }
+  .badge-last { background: #8b5cf6; color: #fff; }
+  .product-img { width: 100%; height: 220px; background: linear-gradient(135deg,var(--dark3),#202020); display: flex; align-items: center; justify-content: center; font-size: 5.5rem; position: relative; }
+  .product-stock { position: absolute; bottom: 10px; left: 10px; right: 10px; }
+  .stock-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+  .stock-fill { height: 100%; background: var(--red); border-radius: 2px; transition: width .3s; }
+  .stock-text { font-size: 0.68rem; color: var(--red); margin-top: 4px; font-weight: 600; }
+  .product-info { padding: 18px; }
+  .product-club { font-family: 'Barlow Condensed', sans-serif; font-size: 0.74rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); margin-bottom: 4px; }
+  .product-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.05rem; color: #fff; margin-bottom: 4px; }
+  .product-meta { font-size: 0.8rem; color: rgba(245,245,245,0.4); margin-bottom: 14px; }
   .product-footer { display: flex; align-items: center; justify-content: space-between; }
-  .product-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: var(--yellow); line-height: 1; }
-  .product-price-old { font-size: 0.75rem; color: rgba(245,245,245,0.32); text-decoration: line-through; display: block; }
-  .add-btn { background: var(--green); border: none; border-radius: 8px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; cursor: pointer; color: #fff; transition: background .2s, transform .15s; }
+  .product-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--yellow); line-height: 1; }
+  .product-price-old { font-size: 0.78rem; color: rgba(245,245,245,0.35); text-decoration: line-through; display: block; }
+  .add-btn { background: var(--green); border: none; border-radius: 10px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; cursor: pointer; color: #fff; transition: background .2s, transform .15s; }
   .add-btn:hover { background: var(--green-light); transform: scale(1.1); }
+
+  /* FEATURED SECTIONS */
+  .featured-section { background: linear-gradient(180deg, var(--black) 0%, var(--dark2) 50%, var(--black) 100%); }
+  .urgency-section { background: linear-gradient(180deg, var(--dark2) 0%, rgba(224,60,60,0.08) 50%, var(--dark2) 100%); }
+  
+  /* COUNTDOWN */
+  .countdown-wrap { display: flex; justify-content: center; gap: 16px; margin-bottom: 40px; }
+  .countdown-item { background: var(--dark3); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px 20px; min-width: 80px; text-align: center; }
+  .countdown-number { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--yellow); line-height: 1; }
+  .countdown-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,245,245,0.45); margin-top: 4px; }
+
+  /* TESTIMONIALS */
+  .testimonials-section { background: var(--dark2); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+  .testimonial-card { background: var(--dark3); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px; position: relative; }
+  .testimonial-quote { position: absolute; top: 16px; right: 20px; font-size: 3rem; color: var(--green); opacity: 0.2; font-family: serif; line-height: 1; }
+  .testimonial-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .testimonial-avatar { width: 52px; height: 52px; background: linear-gradient(135deg, var(--green), var(--green-light)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+  .testimonial-info h4 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1rem; color: #fff; margin-bottom: 2px; }
+  .testimonial-info span { font-size: 0.78rem; color: rgba(245,245,245,0.45); }
+  .testimonial-stars { color: var(--yellow); font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 12px; }
+  .testimonial-text { font-size: 0.92rem; color: rgba(245,245,245,0.75); line-height: 1.6; margin-bottom: 14px; }
+  .testimonial-product { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; color: var(--green-light); }
+
+  /* PROMO BANNER */
+  .promo-banner { background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 50%, var(--green-light) 100%); padding: 60px 5vw; text-align: center; position: relative; overflow: hidden; }
+  .promo-banner::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+  .promo-content { position: relative; z-index: 2; }
+  .promo-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--yellow); margin-bottom: 12px; display: block; }
+  .promo-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: 3px; color: #fff; margin-bottom: 16px; }
+  .promo-subtitle { font-size: 1.1rem; color: rgba(255,255,255,0.85); margin-bottom: 28px; max-width: 500px; margin-inline: auto; }
+  .promo-badges { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+  .promo-badge { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; }
+  .btn-promo { background: var(--yellow); color: #000; border: none; padding: 16px 40px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; transition: transform .2s, box-shadow .2s; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+  .btn-promo:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
 
   /* CART */
   .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; opacity: 0; pointer-events: none; transition: opacity .3s; }
   .cart-overlay.open { opacity: 1; pointer-events: all; }
-  .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 360px; max-width: 95vw; background: var(--dark2); border-left: 1px solid rgba(255,255,255,0.07); z-index: 201; transform: translateX(100%); transition: transform .3s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; }
+  .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; max-width: 95vw; background: var(--dark2); border-left: 1px solid rgba(255,255,255,0.07); z-index: 201; transform: translateX(100%); transition: transform .3s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; }
   .cart-drawer.open { transform: translateX(0); }
-  .cart-header { padding: 22px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
-  .cart-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 2px; }
-  .close-cart { background: rgba(255,255,255,0.06); border: none; color: #fff; font-size: 1.2rem; cursor: pointer; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+  .cart-header { padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+  .cart-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
+  .close-cart { background: rgba(255,255,255,0.06); border: none; color: #fff; font-size: 1.2rem; cursor: pointer; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: background .2s; }
   .close-cart:hover { background: rgba(255,255,255,0.12); }
-  .cart-items { flex: 1; overflow-y: auto; padding: 14px; }
-  .cart-empty { text-align: center; padding: 56px 20px; color: rgba(245,245,245,0.32); }
-  .cart-empty-icon { font-size: 3rem; margin-bottom: 12px; display: block; }
-  .cart-empty p { font-size: 0.88rem; }
-  .cart-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
-  .cart-item-img { width: 52px; height: 52px; background: var(--dark3); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; }
+  .cart-items { flex: 1; overflow-y: auto; padding: 16px; }
+  .cart-empty { text-align: center; padding: 60px 24px; color: rgba(245,245,245,0.35); }
+  .cart-empty-icon { font-size: 3.5rem; margin-bottom: 16px; display: block; }
+  .cart-empty p { font-size: 0.92rem; line-height: 1.5; }
+  .cart-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
+  .cart-item-img { width: 56px; height: 56px; background: var(--dark3); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
   .cart-item-info { flex: 1; }
-  .cart-item-name { font-size: 0.82rem; font-weight: 600; color: #fff; margin-bottom: 2px; }
-  .cart-item-meta { font-size: 0.72rem; color: rgba(245,245,245,0.38); margin-bottom: 4px; }
-  .cart-item-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; color: var(--yellow); }
-  .cart-item-remove { background: none; border: none; color: rgba(245,245,245,0.28); cursor: pointer; font-size: 1rem; transition: color .2s; }
-  .cart-item-remove:hover { color: #e03c3c; }
-  .cart-footer { padding: 18px 22px; border-top: 1px solid rgba(255,255,255,0.06); }
-  .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  .cart-total span:first-child { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 0.85rem; color: rgba(245,245,245,0.55); }
-  .cart-total-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; color: var(--yellow); }
-  .checkout-btn { width: 100%; background: linear-gradient(135deg,var(--green),var(--green-light)); border: none; padding: 15px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; cursor: pointer; box-shadow: 0 4px 20px rgba(10,140,42,0.4); transition: opacity .2s; }
-  .checkout-btn:hover { opacity: 0.88; }
+  .cart-item-name { font-size: 0.85rem; font-weight: 600; color: #fff; margin-bottom: 3px; }
+  .cart-item-meta { font-size: 0.75rem; color: rgba(245,245,245,0.4); margin-bottom: 4px; }
+  .cart-item-price { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--yellow); }
+  .cart-item-remove { background: none; border: none; color: rgba(245,245,245,0.3); cursor: pointer; font-size: 1.1rem; transition: color .2s; padding: 8px; }
+  .cart-item-remove:hover { color: var(--red); }
+  .cart-footer { padding: 20px 24px; border-top: 1px solid rgba(255,255,255,0.06); background: var(--dark3); }
+  .cart-subtotal { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; color: rgba(245,245,245,0.55); }
+  .cart-discount { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.85rem; color: var(--green-light); }
+  .cart-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .cart-total span:first-child { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 0.9rem; color: rgba(245,245,245,0.6); }
+  .cart-total-value { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--yellow); }
+  .checkout-btn { width: 100%; background: linear-gradient(135deg,var(--green),var(--green-light)); border: none; padding: 16px; border-radius: 10px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1.05rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; cursor: pointer; box-shadow: 0 4px 20px rgba(10,140,42,0.4); transition: opacity .2s, transform .2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .checkout-btn:hover { opacity: 0.92; transform: translateY(-2px); }
+  .cart-pix-note { text-align: center; margin-top: 12px; font-size: 0.78rem; color: var(--green-light); font-weight: 600; }
 
   /* MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s; padding: 20px; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 300; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .3s; padding: 20px; }
   .modal-overlay.open { opacity: 1; pointer-events: all; }
-  .modal { background: var(--dark2); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; max-width: 560px; width: 100%; padding: 28px; position: relative; transform: scale(0.95); transition: transform .3s; }
+  .modal { background: var(--dark2); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; max-width: 620px; width: 100%; padding: 32px; position: relative; transform: scale(0.95); transition: transform .3s; }
   .modal-overlay.open .modal { transform: scale(1); }
-  .close-modal { position: absolute; top: 14px; right: 14px; background: rgba(255,255,255,0.06); border: none; color: #fff; font-size: 1.2rem; cursor: pointer; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-  .modal-content { display: flex; gap: 24px; }
-  .modal-img { width: 160px; height: 160px; background: var(--dark3); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 4.5rem; flex-shrink: 0; }
+  .close-modal { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.06); border: none; color: #fff; font-size: 1.2rem; cursor: pointer; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+  .close-modal:hover { background: rgba(255,255,255,0.12); }
+  .modal-content { display: flex; gap: 28px; }
+  .modal-img { width: 180px; height: 180px; background: var(--dark3); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 5rem; flex-shrink: 0; }
   .modal-info { flex: 1; }
-  .modal-club { font-family: 'Barlow Condensed', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); margin-bottom: 3px; }
-  .modal-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.3rem; color: #fff; margin-bottom: 3px; }
-  .modal-meta { font-size: 0.82rem; color: rgba(245,245,245,0.42); margin-bottom: 14px; }
-  .modal-price { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--yellow); line-height: 1; margin-bottom: 14px; }
-  .size-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,245,245,0.45); margin-bottom: 8px; display: block; }
-  .sizes { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 18px; }
-  .size-opt { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(245,245,245,0.65); padding: 7px 13px; border-radius: 6px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all .2s; }
+  .modal-badge { display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; margin-bottom: 10px; }
+  .modal-club { font-family: 'Barlow Condensed', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); margin-bottom: 4px; }
+  .modal-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.4rem; color: #fff; margin-bottom: 4px; }
+  .modal-meta { font-size: 0.85rem; color: rgba(245,245,245,0.45); margin-bottom: 16px; }
+  .modal-price-wrap { margin-bottom: 18px; }
+  .modal-price-old { font-size: 0.9rem; color: rgba(245,245,245,0.35); text-decoration: line-through; }
+  .modal-price { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--yellow); line-height: 1; }
+  .modal-pix { font-size: 0.82rem; color: var(--green-light); margin-top: 4px; }
+  .size-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,245,245,0.5); margin-bottom: 10px; display: block; }
+  .sizes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .size-opt { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: rgba(245,245,245,0.7); padding: 10px 16px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.92rem; cursor: pointer; transition: all .2s; }
   .size-opt:hover, .size-opt.selected { background: var(--green); border-color: var(--green); color: #fff; }
-  .modal-add-btn { width: 100%; background: linear-gradient(135deg,var(--green),var(--green-light)); border: none; padding: 13px; border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 0.95rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; cursor: pointer; transition: opacity .2s; }
-  .modal-add-btn:hover { opacity: 0.88; }
+  .modal-add-btn { width: 100%; background: linear-gradient(135deg,var(--green),var(--green-light)); border: none; padding: 16px; border-radius: 10px; font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; color: #fff; cursor: pointer; transition: opacity .2s, transform .2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .modal-add-btn:hover { opacity: 0.92; transform: translateY(-2px); }
 
   /* FOOTER */
-  footer { background: #050505; border-top: 1px solid rgba(255,255,255,0.05); padding: 36px 5vw 24px; }
-  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 3px; background: linear-gradient(135deg,#fff 30%,var(--yellow)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom: 8px; }
-  .footer-contacts { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
-  .footer-contacts a { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; color: rgba(245,245,245,0.45); text-decoration: none; transition: color .2s; }
-  .footer-contacts a:hover { color: var(--green-light); }
-  .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 18px; }
-  .footer-bottom p { font-size: 0.78rem; color: rgba(245,245,245,0.28); }
-  .payment-icons { display: flex; gap: 7px; }
-  .payment-badge { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.07); border-radius: 4px; padding: 4px 9px; font-size: 0.68rem; color: rgba(245,245,245,0.45); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 1px; }
+  footer { background: #050505; border-top: 1px solid rgba(255,255,255,0.05); padding: 48px 5vw 28px; }
+  .footer-top { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 36px; }
+  .footer-brand .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px; background: linear-gradient(135deg,#fff 30%,var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px; }
+  .footer-brand p { font-size: 0.88rem; color: rgba(245,245,245,0.5); line-height: 1.6; max-width: 280px; }
+  .footer-col h4 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; color: var(--green-light); margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 0.88rem; color: rgba(245,245,245,0.55); text-decoration: none; margin-bottom: 10px; transition: color .2s; }
+  .footer-col a:hover { color: var(--yellow); }
+  .footer-social { display: flex; gap: 12px; margin-top: 16px; }
+  .footer-social a { width: 40px; height: 40px; background: rgba(255,255,255,0.06); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; text-decoration: none; transition: background .2s; }
+  .footer-social a:hover { background: var(--green); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 24px; }
+  .footer-bottom p { font-size: 0.8rem; color: rgba(245,245,245,0.3); }
+  .payment-icons { display: flex; gap: 8px; }
+  .payment-badge { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 6px 12px; font-size: 0.72rem; color: rgba(245,245,245,0.5); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: 1px; }
 
   /* TOAST */
-  .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(70px); background: var(--green); color: #fff; padding: 11px 26px; border-radius: 50px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.92rem; letter-spacing: 1px; z-index: 500; transition: transform .3s, opacity .3s; opacity: 0; pointer-events: none; white-space: nowrap; box-shadow: 0 6px 24px rgba(10,140,42,0.5); }
+  .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--green); color: #fff; padding: 14px 30px; border-radius: 12px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: 1px; z-index: 500; transition: transform .3s, opacity .3s; opacity: 0; pointer-events: none; white-space: nowrap; box-shadow: 0 8px 30px rgba(10,140,42,0.5); display: flex; align-items: center; gap: 10px; }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
   /* WHATSAPP */
-  .wa-float { position: fixed; bottom: 26px; right: 26px; z-index: 150; width: 54px; height: 54px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; text-decoration: none; color: #fff; box-shadow: 0 4px 18px rgba(37,211,102,0.5); transition: transform .2s; }
+  .wa-float { position: fixed; bottom: 28px; right: 28px; z-index: 150; width: 58px; height: 58px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; text-decoration: none; color: #fff; box-shadow: 0 4px 20px rgba(37,211,102,0.5); transition: transform .2s; }
   .wa-float:hover { transform: scale(1.1); }
 
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .benefits-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  
   @media (max-width: 700px) {
     nav { display: none; }
+    .menu-toggle { display: flex; }
+    .hero-buttons { flex-direction: column; }
+    .btn-secondary { margin-left: 0; }
     .modal-content { flex-direction: column; }
-    .modal-img { width: 100%; height: 140px; }
+    .modal-img { width: 100%; height: 160px; }
     .cart-drawer { width: 100%; }
+    .benefits-grid { grid-template-columns: 1fr; }
+    .benefit-item { justify-content: flex-start; }
+    .countdown-wrap { gap: 10px; }
+    .countdown-item { min-width: 65px; padding: 12px 14px; }
+    .countdown-number { font-size: 1.8rem; }
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .product-img { height: 160px; font-size: 4rem; }
+    .product-info { padding: 14px; }
+    .product-name { font-size: 0.92rem; }
+    .product-price { font-size: 1.4rem; }
+    .add-btn { width: 36px; height: 36px; font-size: 1.2rem; }
+    .footer-top { grid-template-columns: 1fr; text-align: center; }
+    .footer-brand p { margin-inline: auto; }
+    .footer-social { justify-content: center; }
+    .footer-bottom { justify-content: center; text-align: center; }
   }
 </style>
 </head>
@@ -167,12 +266,18 @@
     <div class="logo-text">T7 STORE</div>
   </div>
   <nav>
+    <a href="#mais-vendidos">Mais Vendidos</a>
     <a href="#produtos">Produtos</a>
+    <a href="#ofertas">Ofertas</a>
     <a href="#contato">Contato</a>
   </nav>
-  <button class="cart-btn" onclick="openCart()">
-    🛒 Carrinho <span class="cart-count" id="cartCount">0</span>
-  </button>
+  <div class="header-right">
+    <button class="menu-toggle" onclick="toggleMobileMenu()">&#9776;</button>
+    <button class="cart-btn" onclick="openCart()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Carrinho <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
 </header>
 
 <section class="hero">
@@ -181,55 +286,216 @@
   <div class="hero-content">
     <h1 class="hero-title">
       <div class="l1">VISTA</div>
-      <div class="l2">SUA PAIXÃO</div>
+      <div class="l2">SUA PAIXAO</div>
       <div class="l3">PELO FUTEBOL</div>
     </h1>
-    <p class="hero-sub">Camisas dos maiores clubes nacionais e internacionais. Entrega rápida para todo o Brasil.</p>
-    <a href="#produtos" class="btn-primary">⚽ Ver Camisas</a>
+    <p class="hero-sub">Camisas oficiais dos maiores clubes nacionais e internacionais. Qualidade premium com entrega rapida para todo o Brasil.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Frete Gratis +R$199
+      </span>
+      <span class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Ate 12x sem juros
+      </span>
+      <span class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Compra Segura
+      </span>
+    </div>
+    <div class="hero-buttons">
+      <a href="#mais-vendidos" class="btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+        Ver Camisas
+      </a>
+      <a href="#ofertas" class="btn-secondary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Ofertas
+      </a>
+    </div>
   </div>
 </section>
 
 <div class="ticker">
   <div class="ticker-inner">
-    <span class="ticker-item">FRETE GRÁTIS ACIMA DE R$199</span><span class="ticker-dot">★</span>
-    <span class="ticker-item">PARCELAMENTO EM ATÉ 12X SEM JUROS</span><span class="ticker-dot">★</span>
-    <span class="ticker-item">PIX COM 10% DE DESCONTO</span><span class="ticker-dot">★</span>
-    <span class="ticker-item">ENTREGA EM TODO O BRASIL</span><span class="ticker-dot">★</span>
-    <span class="ticker-item">FRETE GRÁTIS ACIMA DE R$199</span><span class="ticker-dot">★</span>
-    <span class="ticker-item">PARCELAMENTO EM ATÉ 12X SEM JUROS</span><span class="ticker-dot">★</span>
-    <span class="ticker-item">PIX COM 10% DE DESCONTO</span><span class="ticker-dot">★</span>
-    <span class="ticker-item">ENTREGA EM TODO O BRASIL</span><span class="ticker-dot">★</span>
+    <span class="ticker-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg> FRETE GRATIS ACIMA DE R$199</span><span class="ticker-dot">&#9733;</span>
+    <span class="ticker-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> PARCELAMENTO EM ATE 12X SEM JUROS</span><span class="ticker-dot">&#9733;</span>
+    <span class="ticker-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> PIX COM 10% DE DESCONTO</span><span class="ticker-dot">&#9733;</span>
+    <span class="ticker-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ENTREGA EM TODO O BRASIL</span><span class="ticker-dot">&#9733;</span>
+    <span class="ticker-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg> FRETE GRATIS ACIMA DE R$199</span><span class="ticker-dot">&#9733;</span>
+    <span class="ticker-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> PARCELAMENTO EM ATE 12X SEM JUROS</span><span class="ticker-dot">&#9733;</span>
+    <span class="ticker-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> PIX COM 10% DE DESCONTO</span><span class="ticker-dot">&#9733;</span>
+    <span class="ticker-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ENTREGA EM TODO O BRASIL</span><span class="ticker-dot">&#9733;</span>
   </div>
 </div>
 
+<div class="benefits-bar">
+  <div class="benefits-grid">
+    <div class="benefit-item">
+      <div class="benefit-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <div class="benefit-text">
+        <div class="benefit-title">Frete Gratis</div>
+        <div class="benefit-desc">Acima de R$199</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <div class="benefit-text">
+        <div class="benefit-title">Ate 12x sem Juros</div>
+        <div class="benefit-desc">Todos os cartoes</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="benefit-text">
+        <div class="benefit-title">Compra Segura</div>
+        <div class="benefit-desc">Site 100% protegido</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="benefit-text">
+        <div class="benefit-title">10% OFF no PIX</div>
+        <div class="benefit-desc">Desconto automatico</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="mais-vendidos" class="featured-section">
+  <div class="section-header">
+    <span class="section-tag">&#9733; Favoritos dos Clientes</span>
+    <h2 class="section-title">MAIS <span>VENDIDOS</span></h2>
+    <p class="section-subtitle">As camisas que mais saem da nossa loja. Escolha dos campeoes!</p>
+  </div>
+  <div class="products-grid" id="bestSellersGrid"></div>
+</section>
+
+<section id="ofertas" class="urgency-section">
+  <div class="section-header">
+    <span class="section-tag">&#9889; Tempo Limitado</span>
+    <h2 class="section-title">OFERTAS DA <span>SEMANA</span></h2>
+    <p class="section-subtitle">Precos especiais por tempo limitado. Nao perca!</p>
+  </div>
+  <div class="countdown-wrap">
+    <div class="countdown-item">
+      <div class="countdown-number" id="countDays">02</div>
+      <div class="countdown-label">Dias</div>
+    </div>
+    <div class="countdown-item">
+      <div class="countdown-number" id="countHours">18</div>
+      <div class="countdown-label">Horas</div>
+    </div>
+    <div class="countdown-item">
+      <div class="countdown-number" id="countMins">45</div>
+      <div class="countdown-label">Min</div>
+    </div>
+    <div class="countdown-item">
+      <div class="countdown-number" id="countSecs">30</div>
+      <div class="countdown-label">Seg</div>
+    </div>
+  </div>
+  <div class="products-grid" id="offersGrid"></div>
+</section>
+
+<section id="ultimas">
+  <div class="section-header">
+    <span class="section-tag">&#128293; Corra!</span>
+    <h2 class="section-title">ULTIMAS <span>UNIDADES</span></h2>
+    <p class="section-subtitle">Estoque limitado. Quando acabar, acabou!</p>
+  </div>
+  <div class="products-grid" id="lastUnitsGrid"></div>
+</section>
+
 <section id="produtos">
   <div class="section-header">
-    <span class="section-tag">⚽ Coleção</span>
+    <span class="section-tag">&#9917; Colecao Completa</span>
     <h2 class="section-title">NOSSAS <span>CAMISAS</span></h2>
   </div>
   <div class="filters">
     <button class="filter-btn active" onclick="filter('todos',this)">Todos</button>
     <button class="filter-btn" onclick="filter('nacional',this)">Nacionais</button>
     <button class="filter-btn" onclick="filter('internacional',this)">Internacionais</button>
-    <button class="filter-btn" onclick="filter('selecao',this)">Seleções</button>
-    <button class="filter-btn" onclick="filter('retro',this)">Retrô</button>
+    <button class="filter-btn" onclick="filter('selecao',this)">Selecoes</button>
+    <button class="filter-btn" onclick="filter('retro',this)">Retro</button>
   </div>
   <div class="products-grid" id="productsGrid"></div>
 </section>
 
+<section class="testimonials-section">
+  <div class="section-header">
+    <span class="section-tag">&#9733; Avaliacoes</span>
+    <h2 class="section-title">O QUE NOSSOS <span>CLIENTES</span> DIZEM</h2>
+  </div>
+  <div class="testimonials-grid" id="testimonialsGrid"></div>
+</section>
+
+<div class="promo-banner">
+  <div class="promo-content">
+    <span class="promo-tag">&#127881; Promocao Especial</span>
+    <h2 class="promo-title">APROVEITE AGORA!</h2>
+    <p class="promo-subtitle">Pague com PIX e ganhe 10% de desconto automatico + frete gratis em compras acima de R$199</p>
+    <div class="promo-badges">
+      <span class="promo-badge">&#9889; 10% OFF no PIX</span>
+      <span class="promo-badge">&#128666; Frete Gratis +R$199</span>
+      <span class="promo-badge">&#128179; 12x sem Juros</span>
+    </div>
+    <a href="#produtos" class="btn-promo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Comprar Agora
+    </a>
+  </div>
+</div>
+
 <footer id="contato">
-  <div class="footer-logo">T7 STORE</div>
-  <div class="footer-contacts">
-    <a href="https://wa.me/5500000000000">💬 WhatsApp</a>
-    <a href="mailto:contato@t7store.com">📧 contato@t7store.com</a>
-    <a href="#">📷 Instagram</a>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">T7 STORE</div>
+      <p>Sua loja de camisas de futebol. Qualidade premium, precos justos e entrega rapida para todo o Brasil.</p>
+      <div class="footer-social">
+        <a href="https://wa.me/5500000000000" title="WhatsApp">&#128172;</a>
+        <a href="#" title="Instagram">&#128247;</a>
+        <a href="mailto:contato@t7store.com" title="Email">&#9993;</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navegacao</h4>
+      <a href="#mais-vendidos">Mais Vendidos</a>
+      <a href="#produtos">Todos os Produtos</a>
+      <a href="#ofertas">Ofertas</a>
+      <a href="#ultimas">Ultimas Unidades</a>
+    </div>
+    <div class="footer-col">
+      <h4>Atendimento</h4>
+      <a href="https://wa.me/5500000000000">WhatsApp</a>
+      <a href="mailto:contato@t7store.com">contato@t7store.com</a>
+      <a href="#">Trocas e Devolucoes</a>
+      <a href="#">Perguntas Frequentes</a>
+    </div>
+    <div class="footer-col">
+      <h4>Pagamento</h4>
+      <a href="#">PIX (10% OFF)</a>
+      <a href="#">Cartao de Credito</a>
+      <a href="#">Boleto Bancario</a>
+      <a href="#">Parcelamento</a>
+    </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 T7 Store. Todos os direitos reservados.</p>
+    <p>&copy; 2025 T7 Store. Todos os direitos reservados.</p>
     <div class="payment-icons">
       <div class="payment-badge">PIX</div>
       <div class="payment-badge">VISA</div>
       <div class="payment-badge">MASTER</div>
+      <div class="payment-badge">ELO</div>
       <div class="payment-badge">BOLETO</div>
     </div>
   </div>
@@ -238,89 +504,218 @@
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-drawer" id="cartDrawer">
   <div class="cart-header">
-    <h3>🛒 CARRINHO</h3>
-    <button class="close-cart" onclick="closeCart()">✕</button>
+    <h3>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      CARRINHO
+    </h3>
+    <button class="close-cart" onclick="closeCart()">&times;</button>
   </div>
   <div class="cart-items" id="cartItems">
-    <div class="cart-empty"><span class="cart-empty-icon">👕</span><p>Carrinho vazio.<br>Adicione algumas camisas!</p></div>
+    <div class="cart-empty"><span class="cart-empty-icon">&#128085;</span><p>Carrinho vazio.<br>Adicione algumas camisas!</p></div>
   </div>
   <div class="cart-footer">
+    <div class="cart-subtotal">
+      <span>Subtotal</span>
+      <span id="cartSubtotal">R$ 0,00</span>
+    </div>
+    <div class="cart-discount" id="cartDiscountRow" style="display:none;">
+      <span>Desconto PIX (10%)</span>
+      <span id="cartDiscount">-R$ 0,00</span>
+    </div>
     <div class="cart-total">
-      <span>TOTAL</span>
+      <span>Total</span>
       <span class="cart-total-value" id="cartTotal">R$ 0,00</span>
     </div>
-    <button class="checkout-btn" onclick="checkout()">FINALIZAR PELO WHATSAPP 💬</button>
+    <button class="checkout-btn" onclick="checkout()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Finalizar pelo WhatsApp
+    </button>
+    <p class="cart-pix-note">&#9889; Pague com PIX e ganhe 10% OFF!</p>
   </div>
 </div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal">
-    <button class="close-modal" onclick="closeModal(null,true)">✕</button>
+    <button class="close-modal" onclick="closeModal(null,true)">&times;</button>
     <div class="modal-content" id="modalContent"></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
-<a href="https://wa.me/5500000000000" class="wa-float" title="WhatsApp">💬</a>
+<a href="https://wa.me/5500000000000" class="wa-float" title="Fale conosco no WhatsApp">&#128172;</a>
 
 <script>
+// DADOS DE PRODUTOS EXPANDIDOS
 const products = [
-  { id:1,  emoji:'🔴', club:'Flamengo',           name:'Camisa Oficial I 24/25',   meta:'Home · Adidas',       price:189.90, oldPrice:239.90, badge:'sale',  category:'nacional'      },
-  { id:2,  emoji:'⚫', club:'Corinthians',         name:'Camisa Oficial III 24/25', meta:'Third · Nike',        price:179.90, oldPrice:null,   badge:'new',   category:'nacional'      },
-  { id:3,  emoji:'🔵', club:'Cruzeiro',            name:'Camisa Oficial I 24/25',   meta:'Home · Adidas',       price:169.90, oldPrice:null,   badge:null,    category:'nacional'      },
-  { id:4,  emoji:'🟢', club:'Palmeiras',           name:'Camisa Oficial I 24/25',   meta:'Home · Puma',         price:175.90, oldPrice:null,   badge:null,    category:'nacional'      },
-  { id:5,  emoji:'⚽', club:'São Paulo FC',        name:'Camisa Oficial I 24/25',   meta:'Home · Under Armour', price:159.90, oldPrice:null,   badge:null,    category:'nacional'      },
-  { id:6,  emoji:'🇧🇷', club:'Seleção Brasileira', name:'Camisa Oficial I 24/25',   meta:'Home · Nike',         price:329.90, oldPrice:399.90, badge:'sale',  category:'selecao'       },
-  { id:7,  emoji:'🇦🇷', club:'Argentina',          name:'Camisa Oficial I 24/25',   meta:'Home · Adidas',       price:299.90, oldPrice:null,   badge:null,    category:'selecao'       },
-  { id:8,  emoji:'🔴', club:'Real Madrid',         name:'Camisa Oficial I 24/25',   meta:'Home · Adidas',       price:299.90, oldPrice:349.90, badge:'sale',  category:'internacional' },
-  { id:9,  emoji:'🔵', club:'Barcelona',           name:'Camisa Oficial I 24/25',   meta:'Home · Nike',         price:289.90, oldPrice:null,   badge:'new',   category:'internacional' },
-  { id:10, emoji:'🔵', club:'Manchester City',     name:'Camisa Oficial I 24/25',   meta:'Home · Puma',         price:289.90, oldPrice:319.90, badge:'sale',  category:'internacional' },
-  { id:11, emoji:'⚫', club:'Juventus',            name:'Camisa Oficial I 24/25',   meta:'Home · Adidas',       price:279.90, oldPrice:null,   badge:'new',   category:'internacional' },
-  { id:12, emoji:'🟡', club:'Palmeiras',           name:'Camisa Retrô 1993',        meta:'Edição Especial',     price:149.90, oldPrice:199.90, badge:'retro', category:'retro'         },
-  { id:13, emoji:'🟢', club:'Chapecoense',         name:'Camisa Retrô 2016',        meta:'Edição Memorial',     price:139.90, oldPrice:null,   badge:'retro', category:'retro'         },
+  // NACIONAIS
+  { id:1,  emoji:'&#128308;', club:'Flamengo',           name:'Camisa Oficial I 24/25',   meta:'Home - Adidas',       price:189.90, oldPrice:239.90, badge:'sale',  category:'nacional', stock:45, sold:312, description:'A camisa mais vendida do Brasil. Tecnologia Aeroready para maximo conforto.' },
+  { id:2,  emoji:'&#9899;', club:'Corinthians',         name:'Camisa Oficial III 24/25', meta:'Third - Nike',        price:179.90, oldPrice:null,   badge:'new',   category:'nacional', stock:38, sold:287, description:'Edicao especial com design moderno. Tecido Dri-FIT de alta performance.' },
+  { id:3,  emoji:'&#128309;', club:'Cruzeiro',            name:'Camisa Oficial I 24/25',   meta:'Home - Adidas',       price:169.90, oldPrice:null,   badge:null,    category:'nacional', stock:52, sold:198, description:'A raposa volta com forca total. Camisa com tecnologia de ponta.' },
+  { id:4,  emoji:'&#128994;', club:'Palmeiras',           name:'Camisa Oficial I 24/25',   meta:'Home - Puma',         price:175.90, oldPrice:null,   badge:'hot',   category:'nacional', stock:8,  sold:456, description:'O manto do maior campeao nacional. Qualidade Puma incomparavel.' },
+  { id:5,  emoji:'&#9917;', club:'Sao Paulo FC',        name:'Camisa Oficial I 24/25',   meta:'Home - Under Armour', price:159.90, oldPrice:null,   badge:null,    category:'nacional', stock:41, sold:203, description:'Tricolor paulista em design classico e elegante.' },
+  { id:6,  emoji:'&#9899;', club:'Vasco',               name:'Camisa Oficial I 24/25',   meta:'Home - Kappa',        price:149.90, oldPrice:189.90, badge:'sale',  category:'nacional', stock:5,  sold:178, description:'O gigante da colina em versao premium.' },
+  { id:7,  emoji:'&#128308;', club:'Internacional',       name:'Camisa Oficial I 24/25',   meta:'Home - Adidas',       price:169.90, oldPrice:null,   badge:null,    category:'nacional', stock:33, sold:165, description:'Colorado de alma e coracao. Qualidade internacional.' },
+  { id:8,  emoji:'&#128309;', club:'Gremio',              name:'Camisa Oficial I 24/25',   meta:'Home - Umbro',        price:159.90, oldPrice:null,   badge:'new',   category:'nacional', stock:29, sold:189, description:'Imortal tricolor com tecnologia de alta performance.' },
+  
+  // INTERNACIONAIS
+  { id:9,  emoji:'&#9898;', club:'Real Madrid',         name:'Camisa Oficial I 24/25',   meta:'Home - Adidas',       price:299.90, oldPrice:349.90, badge:'sale',  category:'internacional', stock:22, sold:234, description:'O clube mais vitorioso do mundo. 15x campeao da Champions.' },
+  { id:10, emoji:'&#128309;', club:'Barcelona',           name:'Camisa Oficial I 24/25',   meta:'Home - Nike',         price:289.90, oldPrice:null,   badge:'hot',   category:'internacional', stock:7,  sold:298, description:'Mes que un club. Blaugrana de tradicao e gloria.' },
+  { id:11, emoji:'&#128308;', club:'Manchester United',   name:'Camisa Oficial I 24/25',   meta:'Home - Adidas',       price:279.90, oldPrice:null,   badge:'new',   category:'internacional', stock:31, sold:187, description:'Red Devils com nova era. Tradicao inglesa.' },
+  { id:12, emoji:'&#128309;', club:'Manchester City',     name:'Camisa Oficial I 24/25',   meta:'Home - Puma',         price:289.90, oldPrice:319.90, badge:'sale',  category:'internacional', stock:26, sold:212, description:'Os Citizens dominam a Premier League. Tecnologia Puma.' },
+  { id:13, emoji:'&#9899;', club:'Juventus',            name:'Camisa Oficial I 24/25',   meta:'Home - Adidas',       price:269.90, oldPrice:null,   badge:null,    category:'internacional', stock:35, sold:156, description:'A Vecchia Signora em preto e branco classico.' },
+  { id:14, emoji:'&#128308;', club:'Liverpool',           name:'Camisa Oficial I 24/25',   meta:'Home - Nike',         price:279.90, oldPrice:null,   badge:'hot',   category:'internacional', stock:4,  sold:267, description:'You will Never Walk Alone. Anfield orgulha-se.' },
+  { id:15, emoji:'&#128308;', club:'PSG',                 name:'Camisa Oficial I 24/25',   meta:'Home - Nike',         price:299.90, oldPrice:null,   badge:'new',   category:'internacional', stock:19, sold:198, description:'Paris Saint-Germain com estilo e glamour.' },
+  { id:16, emoji:'&#128308;', club:'Bayern Munich',       name:'Camisa Oficial I 24/25',   meta:'Home - Adidas',       price:289.90, oldPrice:329.90, badge:'sale',  category:'internacional', stock:24, sold:176, description:'O gigante da Baviera. Tradicao alema.' },
+  
+  // SELECOES
+  { id:17, emoji:'&#127463;&#127479;', club:'Selecao Brasileira', name:'Camisa Oficial I 24/25',   meta:'Home - Nike',         price:329.90, oldPrice:399.90, badge:'sale',  category:'selecao', stock:15, sold:523, description:'Pentacampeoes mundiais. Amarelinha eterna.' },
+  { id:18, emoji:'&#127462;&#127479;', club:'Argentina',          name:'Camisa Oficial I 24/25',   meta:'Home - Adidas',       price:299.90, oldPrice:null,   badge:'hot',   category:'selecao', stock:6,  sold:412, description:'Tricampeoes mundiais. A camisa de Messi.' },
+  { id:19, emoji:'&#127467;&#127479;', club:'Franca',             name:'Camisa Oficial I 24/25',   meta:'Home - Nike',         price:289.90, oldPrice:null,   badge:'new',   category:'selecao', stock:28, sold:189, description:'Les Bleus bicampeoes. Elegancia francesa.' },
+  { id:20, emoji:'&#127465;&#127466;', club:'Alemanha',           name:'Camisa Oficial I 24/25',   meta:'Home - Adidas',       price:279.90, oldPrice:null,   badge:null,    category:'selecao', stock:32, sold:145, description:'Tetracampeoes com tradicao e eficiencia.' },
+  { id:21, emoji:'&#127466;&#127480;', club:'Espanha',            name:'Camisa Oficial I 24/25',   meta:'Home - Adidas',       price:269.90, oldPrice:null,   badge:null,    category:'selecao', stock:37, sold:132, description:'La Roja campe do mundo e da Euro.' },
+  { id:22, emoji:'&#127477;&#127481;', club:'Portugal',           name:'Camisa Oficial I 24/25',   meta:'Home - Nike',         price:279.90, oldPrice:319.90, badge:'sale',  category:'selecao', stock:21, sold:198, description:'Selecao das Quinas. Terra de CR7.' },
+  
+  // RETRO
+  { id:23, emoji:'&#128312;', club:'Brasil',             name:'Camisa Retro 1970',        meta:'Edicao Especial',     price:199.90, oldPrice:249.90, badge:'retro', category:'retro', stock:12, sold:89, description:'A camisa do tricampeonato mundial. Pele eterno.' },
+  { id:24, emoji:'&#128312;', club:'Palmeiras',           name:'Camisa Retro 1993',        meta:'Edicao Especial',     price:149.90, oldPrice:199.90, badge:'retro', category:'retro', stock:9,  sold:76, description:'O manto do campeonato brasileiro historico.' },
+  { id:25, emoji:'&#128994;', club:'Chapecoense',         name:'Camisa Retro 2016',        meta:'Edicao Memorial',     price:139.90, oldPrice:null,   badge:'retro', category:'retro', stock:18, sold:234, description:'Em homenagem aos eternos campeoes. Forca Chape.' },
+  { id:26, emoji:'&#128308;', club:'Flamengo',            name:'Camisa Retro 1981',        meta:'Edicao Especial',     price:179.90, oldPrice:null,   badge:'retro', category:'retro', stock:11, sold:156, description:'A camisa do primeiro mundial rubro-negro.' },
+  { id:27, emoji:'&#9899;', club:'Santos',              name:'Camisa Retro 1962',        meta:'Edicao Pele',         price:189.90, oldPrice:229.90, badge:'retro', category:'retro', stock:7,  sold:98, description:'A camisa do Rei. Bicampeonato mundial.' },
 ];
 
-let cart = [], selectedSize = '';
+// DEPOIMENTOS
+const testimonials = [
+  { name: 'Lucas Oliveira', city: 'Sao Paulo, SP', avatar: '&#128104;', text: 'Qualidade impressionante! A camisa do Corinthians chegou em 3 dias e o acabamento e perfeito. Ja e minha terceira compra.', product: 'Corinthians III 24/25', stars: 5 },
+  { name: 'Amanda Costa', city: 'Rio de Janeiro, RJ', avatar: '&#128105;', text: 'Comprei a do Flamengo pro meu marido. Ele amou! Material premium e entrega super rapida. Recomendo demais!', product: 'Flamengo I 24/25', stars: 5 },
+  { name: 'Rafael Santos', city: 'Belo Horizonte, MG', avatar: '&#128104;', text: 'Melhor loja de camisas que ja comprei. PIX com desconto e frete gratis. A do Cruzeiro ficou linda!', product: 'Cruzeiro I 24/25', stars: 5 },
+  { name: 'Juliana Ferreira', city: 'Porto Alegre, RS', avatar: '&#128105;', text: 'Presente perfeito! Comprei a do Gremio pro meu pai e ele chorou de emocao. Atendimento excelente pelo WhatsApp.', product: 'Gremio I 24/25', stars: 5 },
+  { name: 'Marcos Almeida', city: 'Salvador, BA', avatar: '&#128104;', text: 'Ja comprei 5 camisas aqui. Todas de otima qualidade. A do Barcelona e identica a original. Muito satisfeito!', product: 'Barcelona I 24/25', stars: 5 },
+  { name: 'Carla Mendes', city: 'Curitiba, PR', avatar: '&#128105;', text: 'Adorei a camisa da Selecao! Chegou antes do prazo e veio muito bem embalada. Certeza que voltarei a comprar.', product: 'Brasil I 24/25', stars: 5 },
+];
 
+let cart = JSON.parse(localStorage.getItem('t7cart') || '[]');
+let selectedSize = '';
+
+// INICIALIZACAO
+function init() {
+  renderBestSellers();
+  renderOffers();
+  renderLastUnits();
+  renderProducts('todos');
+  renderTestimonials();
+  updateCart();
+  startCountdown();
+}
+
+// RENDERIZAR MAIS VENDIDOS
+function renderBestSellers() {
+  const bestSellers = [...products].sort((a,b) => b.sold - a.sold).slice(0, 4);
+  document.getElementById('bestSellersGrid').innerHTML = bestSellers.map(p => renderProductCard(p, true)).join('');
+}
+
+// RENDERIZAR OFERTAS
+function renderOffers() {
+  const offers = products.filter(p => p.badge === 'sale').slice(0, 4);
+  document.getElementById('offersGrid').innerHTML = offers.map(p => renderProductCard(p)).join('');
+}
+
+// RENDERIZAR ULTIMAS UNIDADES
+function renderLastUnits() {
+  const lastUnits = products.filter(p => p.stock <= 10).slice(0, 4);
+  document.getElementById('lastUnitsGrid').innerHTML = lastUnits.map(p => renderProductCard(p, false, true)).join('');
+}
+
+// RENDERIZAR PRODUTOS
 function renderProducts(cat) {
   const list = cat === 'todos' ? products : products.filter(p => p.category === cat);
-  document.getElementById('productsGrid').innerHTML = list.map(p => `
-    <div class="product-card" onclick="openModal(${p.id})">
-      ${p.badge ? `<div class="product-badge badge-${p.badge}">${p.badge==='new'?'NOVO':p.badge==='sale'?'OFERTA':'RETRÔ'}</div>` : ''}
-      <div class="product-img">${p.emoji}</div>
-      <div class="product-info">
-        <div class="product-club">${p.club}</div>
-        <div class="product-name">${p.name}</div>
-        <div class="product-meta">${p.meta}</div>
-        <div class="product-footer">
-          <div>
-            ${p.oldPrice ? `<span class="product-price-old">R$ ${fmt(p.oldPrice)}</span>` : ''}
-            <div class="product-price">R$ ${fmt(p.price)}</div>
-          </div>
-          <button class="add-btn" onclick="event.stopPropagation();quickAdd(${p.id})">+</button>
-        </div>
-      </div>
-    </div>`).join('');
+  document.getElementById('productsGrid').innerHTML = list.map(p => renderProductCard(p)).join('');
 }
 
+// CARD DE PRODUTO
+function renderProductCard(p, showHot = false, showStock = false) {
+  const badgeClass = p.badge === 'new' ? 'badge-new' : p.badge === 'sale' ? 'badge-sale' : p.badge === 'retro' ? 'badge-retro' : p.badge === 'hot' ? 'badge-hot' : '';
+  const badgeText = p.badge === 'new' ? 'NOVO' : p.badge === 'sale' ? 'OFERTA' : p.badge === 'retro' ? 'RETRO' : p.badge === 'hot' ? 'MAIS VENDIDO' : '';
+  
+  let stockHtml = '';
+  if (showStock && p.stock <= 10) {
+    const stockPercent = (p.stock / 50) * 100;
+    stockHtml = '<div class="product-stock"><div class="stock-bar"><div class="stock-fill" style="width:' + stockPercent + '%"></div></div><div class="stock-text">Apenas ' + p.stock + ' restantes!</div></div>';
+  }
+  
+  return '<div class="product-card" onclick="openModal(' + p.id + ')">' +
+    (badgeText ? '<div class="product-badge ' + badgeClass + '">' + badgeText + '</div>' : '') +
+    '<div class="product-img">' + p.emoji + stockHtml + '</div>' +
+    '<div class="product-info">' +
+      '<div class="product-club">' + p.club + '</div>' +
+      '<div class="product-name">' + p.name + '</div>' +
+      '<div class="product-meta">' + p.meta + '</div>' +
+      '<div class="product-footer">' +
+        '<div>' +
+          (p.oldPrice ? '<span class="product-price-old">R$ ' + fmt(p.oldPrice) + '</span>' : '') +
+          '<div class="product-price">R$ ' + fmt(p.price) + '</div>' +
+        '</div>' +
+        '<button class="add-btn" onclick="event.stopPropagation();quickAdd(' + p.id + ')">+</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+// RENDERIZAR DEPOIMENTOS
+function renderTestimonials() {
+  document.getElementById('testimonialsGrid').innerHTML = testimonials.map(t => 
+    '<div class="testimonial-card">' +
+      '<div class="testimonial-quote">"</div>' +
+      '<div class="testimonial-header">' +
+        '<div class="testimonial-avatar">' + t.avatar + '</div>' +
+        '<div class="testimonial-info">' +
+          '<h4>' + t.name + '</h4>' +
+          '<span>' + t.city + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="testimonial-stars">' + '&#9733;'.repeat(t.stars) + '</div>' +
+      '<p class="testimonial-text">"' + t.text + '"</p>' +
+      '<span class="testimonial-product">&#128085; Comprou: ' + t.product + '</span>' +
+    '</div>'
+  ).join('');
+}
+
+// FILTRO
 function filter(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active'); renderProducts(cat);
+  btn.classList.add('active');
+  renderProducts(cat);
 }
 
+// MODAL
 function openModal(id) {
-  const p = products.find(x => x.id === id); selectedSize = '';
-  document.getElementById('modalContent').innerHTML = `
-    <div class="modal-img">${p.emoji}</div>
-    <div class="modal-info">
-      <div class="modal-club">${p.club}</div>
-      <div class="modal-title">${p.name}</div>
-      <div class="modal-meta">${p.meta}</div>
-      <div class="modal-price">R$ ${fmt(p.price)}</div>
-      <span class="size-label">Escolha o tamanho:</span>
-      <div class="sizes">${['PP','P','M','G','GG','XGG'].map(s=>`<div class="size-opt" onclick="selectSize('${s}',this)">${s}</div>`).join('')}</div>
-      <button class="modal-add-btn" onclick="addToCart(${p.id})">🛒 ADICIONAR AO CARRINHO</button>
-    </div>`;
+  const p = products.find(x => x.id === id);
+  selectedSize = '';
+  
+  const badgeClass = p.badge === 'new' ? 'badge-new' : p.badge === 'sale' ? 'badge-sale' : p.badge === 'retro' ? 'badge-retro' : p.badge === 'hot' ? 'badge-hot' : '';
+  const badgeText = p.badge === 'new' ? 'NOVO' : p.badge === 'sale' ? 'OFERTA' : p.badge === 'retro' ? 'RETRO' : p.badge === 'hot' ? 'MAIS VENDIDO' : '';
+  const pixPrice = (p.price * 0.9).toFixed(2);
+  
+  document.getElementById('modalContent').innerHTML = 
+    '<div class="modal-img">' + p.emoji + '</div>' +
+    '<div class="modal-info">' +
+      (badgeText ? '<span class="modal-badge ' + badgeClass + '">' + badgeText + '</span>' : '') +
+      '<div class="modal-club">' + p.club + '</div>' +
+      '<div class="modal-title">' + p.name + '</div>' +
+      '<div class="modal-meta">' + p.meta + ' | ' + p.sold + ' vendidos</div>' +
+      '<div class="modal-price-wrap">' +
+        (p.oldPrice ? '<div class="modal-price-old">R$ ' + fmt(p.oldPrice) + '</div>' : '') +
+        '<div class="modal-price">R$ ' + fmt(p.price) + '</div>' +
+        '<div class="modal-pix">&#9889; R$ ' + fmt(parseFloat(pixPrice)) + ' no PIX (10% OFF)</div>' +
+      '</div>' +
+      '<p style="font-size:0.88rem;color:rgba(245,245,245,0.6);margin-bottom:16px;line-height:1.5;">' + p.description + '</p>' +
+      '<span class="size-label">Escolha o tamanho:</span>' +
+      '<div class="sizes">' + ['PP','P','M','G','GG','XGG'].map(s => '<div class="size-opt" onclick="selectSize(\'' + s + '\',this)">' + s + '</div>').join('') + '</div>' +
+      '<button class="modal-add-btn" onclick="addToCart(' + p.id + ')">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>' +
+        'ADICIONAR AO CARRINHO' +
+      '</button>' +
+    '</div>';
+  
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -337,37 +732,66 @@ function closeModal(e, force) {
   document.body.style.overflow = '';
 }
 
+// CARRINHO
 function addToCart(id) {
-  if (!selectedSize) { showToast('⚠️ Escolha um tamanho!'); return; }
+  if (!selectedSize) { showToast('&#9888; Escolha um tamanho!'); return; }
   const p = products.find(x => x.id === id);
   cart.push({ ...p, size: selectedSize, uid: Date.now() });
-  updateCart(); closeModal(null, true);
-  showToast(`✅ ${p.club} (${selectedSize}) adicionado!`);
+  saveCart();
+  updateCart();
+  closeModal(null, true);
+  showToast('&#9989; ' + p.club + ' (' + selectedSize + ') adicionado!');
 }
 
 function quickAdd(id) {
   const p = products.find(x => x.id === id);
   cart.push({ ...p, size: 'M', uid: Date.now() });
-  updateCart(); showToast(`✅ ${p.club} adicionado! (Tam. M)`);
+  saveCart();
+  updateCart();
+  showToast('&#9989; ' + p.club + ' adicionado! (Tam. M)');
 }
 
-function removeFromCart(uid) { cart = cart.filter(x => x.uid !== uid); updateCart(); }
+function removeFromCart(uid) {
+  cart = cart.filter(x => x.uid !== uid);
+  saveCart();
+  updateCart();
+}
+
+function saveCart() {
+  localStorage.setItem('t7cart', JSON.stringify(cart));
+}
 
 function updateCart() {
   document.getElementById('cartCount').textContent = cart.length;
-  document.getElementById('cartTotal').textContent = `R$ ${fmt(cart.reduce((s,x)=>s+x.price,0))}`;
+  
+  const subtotal = cart.reduce((s,x) => s + x.price, 0);
+  const discount = subtotal * 0.1;
+  const total = subtotal - discount;
+  
+  document.getElementById('cartSubtotal').textContent = 'R$ ' + fmt(subtotal);
+  document.getElementById('cartDiscount').textContent = '-R$ ' + fmt(discount);
+  document.getElementById('cartTotal').textContent = 'R$ ' + fmt(total);
+  
+  const discountRow = document.getElementById('cartDiscountRow');
+  discountRow.style.display = cart.length > 0 ? 'flex' : 'none';
+  
   const el = document.getElementById('cartItems');
-  if (!cart.length) { el.innerHTML = `<div class="cart-empty"><span class="cart-empty-icon">👕</span><p>Carrinho vazio.<br>Adicione algumas camisas!</p></div>`; return; }
-  el.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <div class="cart-item-img">${item.emoji}</div>
-      <div class="cart-item-info">
-        <div class="cart-item-name">${item.club} — ${item.name}</div>
-        <div class="cart-item-meta">Tamanho: ${item.size}</div>
-        <div class="cart-item-price">R$ ${fmt(item.price)}</div>
-      </div>
-      <button class="cart-item-remove" onclick="removeFromCart(${item.uid})">🗑️</button>
-    </div>`).join('');
+  if (!cart.length) {
+    el.innerHTML = '<div class="cart-empty"><span class="cart-empty-icon">&#128085;</span><p>Carrinho vazio.<br>Adicione algumas camisas!</p></div>';
+    return;
+  }
+  
+  el.innerHTML = cart.map(item => 
+    '<div class="cart-item">' +
+      '<div class="cart-item-img">' + item.emoji + '</div>' +
+      '<div class="cart-item-info">' +
+        '<div class="cart-item-name">' + item.club + ' - ' + item.name + '</div>' +
+        '<div class="cart-item-meta">Tamanho: ' + item.size + '</div>' +
+        '<div class="cart-item-price">R$ ' + fmt(item.price) + '</div>' +
+      '</div>' +
+      '<button class="cart-item-remove" onclick="removeFromCart(' + item.uid + ')">&#128465;</button>' +
+    '</div>'
+  ).join('');
 }
 
 function openCart() {
@@ -383,21 +807,70 @@ function closeCart() {
 }
 
 function checkout() {
-  if (!cart.length) { showToast('⚠️ Adicione itens ao carrinho!'); return; }
-  const total = cart.reduce((s,x)=>s+x.price,0);
-  const msg = encodeURIComponent(`Olá! Quero finalizar meu pedido T7 Store:\n\n${cart.map(i=>`• ${i.club} - ${i.name} (${i.size}) — R$ ${fmt(i.price)}`).join('\n')}\n\n*TOTAL: R$ ${fmt(total)}*`);
-  window.open(`https://wa.me/5500000000000?text=${msg}`,'_blank');
+  if (!cart.length) { showToast('&#9888; Adicione itens ao carrinho!'); return; }
+  
+  const subtotal = cart.reduce((s,x) => s + x.price, 0);
+  const discount = subtotal * 0.1;
+  const total = subtotal - discount;
+  
+  const msg = encodeURIComponent(
+    'Ola! Quero finalizar meu pedido T7 Store:\n\n' +
+    cart.map(i => '- ' + i.club + ' - ' + i.name + ' (' + i.size + ') - R$ ' + fmt(i.price)).join('\n') +
+    '\n\n' +
+    'Subtotal: R$ ' + fmt(subtotal) + '\n' +
+    'Desconto PIX (10%): -R$ ' + fmt(discount) + '\n' +
+    '*TOTAL COM PIX: R$ ' + fmt(total) + '*'
+  );
+  
+  window.open('https://wa.me/5500000000000?text=' + msg, '_blank');
 }
 
-function fmt(n) { return n.toFixed(2).replace('.',','); }
+// COUNTDOWN
+function startCountdown() {
+  const endDate = new Date();
+  endDate.setDate(endDate.getDate() + 2);
+  endDate.setHours(23, 59, 59);
+  
+  function update() {
+    const now = new Date();
+    const diff = endDate - now;
+    
+    if (diff <= 0) {
+      endDate.setDate(endDate.getDate() + 3);
+    }
+    
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    document.getElementById('countDays').textContent = String(days).padStart(2, '0');
+    document.getElementById('countHours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('countMins').textContent = String(mins).padStart(2, '0');
+    document.getElementById('countSecs').textContent = String(secs).padStart(2, '0');
+  }
+  
+  update();
+  setInterval(update, 1000);
+}
+
+// UTILITARIOS
+function fmt(n) { return n.toFixed(2).replace('.', ','); }
 
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2800);
+  t.innerHTML = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-renderProducts('todos');
+function toggleMobileMenu() {
+  // Poderia implementar menu mobile aqui
+  showToast('&#9776; Menu em desenvolvimento');
+}
+
+// INICIAR
+init();
 </script>
 </body>
 </html>
