@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { fmt } from "@/lib/data";
 
@@ -90,18 +91,34 @@ export default function CartDrawer() {
               {cartTotal}
             </span>
           </div>
-          <button
-            onClick={checkout}
+          <Link
+            href="/checkout"
+            onClick={closeCart}
             style={{
               width: "100%", background: "linear-gradient(135deg,#0a8c2a,#12b83a)",
               border: "none", padding: "15px", borderRadius: "8px",
               fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900,
               fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase",
               color: "#fff", cursor: "pointer", boxShadow: "0 4px 20px rgba(10,140,42,0.4)",
+              display: "block", textAlign: "center", textDecoration: "none",
             }}
             className="hover:opacity-90 transition-opacity"
           >
-            FINALIZAR PELO WHATSAPP 💬
+            FINALIZAR COMPRA
+          </Link>
+          <button
+            onClick={checkout}
+            style={{
+              width: "100%", background: "transparent",
+              border: "2px solid rgba(255,255,255,0.15)", padding: "13px", borderRadius: "8px",
+              fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700,
+              fontSize: "0.88rem", letterSpacing: "1px", textTransform: "uppercase",
+              color: "#fff", cursor: "pointer", marginTop: "10px",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+            }}
+            className="hover:border-green-500 transition-colors"
+          >
+            OU FINALIZE PELO WHATSAPP
           </button>
         </div>
       </div>
