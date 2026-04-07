@@ -3,14 +3,14 @@
 import { products, Product, fmt } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
-import { useState } from "react";
+import { useState, ReactNode } from "react";
 import ProductModal from "./ProductModal";
 
 const featured = products.filter((p) => p.badge === "sale").slice(0, 4);
 const bestSellers = products.slice(0, 4);
 
 interface ProductGridProps {
-  title: string;
+  title: ReactNode;
   subtitle: string;
   items: Product[];
   badge?: { text: string; color: string; bg: string };
@@ -257,7 +257,7 @@ function ProductGrid({ title, subtitle, items, badge }: ProductGridProps) {
 export function OfferOfTheWeek() {
   return (
     <ProductGrid
-      title="OFERTAS DA <span style='color: var(--yellow)'>SEMANA</span>"
+      title={<>OFERTAS DA <span style={{ color: "var(--yellow)" }}>SEMANA</span></>}
       subtitle="Aproveite os descontos"
       items={featured}
       badge={{ text: "ATÉ 20% OFF", bg: "#e03c3c", color: "#fff" }}
@@ -268,7 +268,7 @@ export function OfferOfTheWeek() {
 export function BestSellers() {
   return (
     <ProductGrid
-      title="MAIS <span style='color: var(--yellow)'>VENDIDOS</span>"
+      title={<>MAIS <span style={{ color: "var(--yellow)" }}>VENDIDOS</span></>}
       subtitle="Os favoritos dos clientes"
       items={bestSellers}
       badge={{ text: "TOP VENDAS", bg: "var(--green)", color: "#fff" }}
