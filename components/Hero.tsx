@@ -45,6 +45,7 @@ export default function Hero() {
           }}
           priority
           quality={90}
+          unoptimized
         />
         {/* Dark overlay for readability */}
         <div
@@ -299,6 +300,7 @@ export default function Hero() {
               }}
               priority
               quality={95}
+              unoptimized
             />
           </div>
 
