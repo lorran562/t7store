@@ -16,8 +16,8 @@ export default function AdminSidebar() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    document.cookie = "sb-access-token=; path=/; max-age=0";
+    
+    document.cookie = "admin-auth=; path=/; max-age=0";
     router.push("/admin/login");
   };
 
