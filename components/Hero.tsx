@@ -20,7 +20,7 @@ export default function Hero() {
     <section
       style={{
         minHeight: "100vh",
-        paddingTop: "108px",
+        paddingTop: "64px",
         display: "flex",
         alignItems: "center",
         position: "relative",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,807 +8,168 @@ import { products, SIZES, fmt, Product } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
 
-const relatedProducts = (currentId: number) =>
-  products.filter((p) => p.id !== currentId).slice(0, 4);
-
 export default function ProductPage() {
   const params = useParams();
-  const router = useRouter();
   const { addToCart, openCart } = useCart();
   const { showToast } = useToast();
   const [selectedSize, setSelectedSize] = useState("");
-  const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const product = products.find((p) => p.id === Number(params.id));
 
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
+  useEffect(() => { setIsLoaded(true); }, []);
 
-  if (!product) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "column",
-          gap: "24px",
-          background: "var(--black)",
-        }}
-      >
-        <h1
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: "2rem",
-            color: "#fff",
-          }}
-        >
-          Produto não encontrado
-        </h1>
-        <Link
-          href="/"
-          style={{
-            background: "var(--green)",
-            color: "#fff",
-            padding: "12px 24px",
-            borderRadius: "8px",
-            textDecoration: "none",
-            fontFamily: "'Barlow Condensed', sans-serif",
-            fontWeight: 700,
-          }}
-        >
-          Voltar para a loja
-        </Link>
-      </div>
-    );
-  }
+  if (!product) return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "24px", background: "var(--black)" }}>
+      <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", color: "#fff" }}>Produto não encontrado</h1>
+      <Link href="/" style={{ background: "var(--green)", color: "#fff", padding: "12px 24px", borderRadius: "8px", textDecoration: "none", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 }}>
+        Voltar para a loja
+      </Link>
+    </div>
+  );
 
-  // Mock gallery images (using emoji as placeholder)
-  const galleryImages = [product.emoji, product.emoji, product.emoji, product.emoji];
+  const discount = product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0;
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
-      showToast("Selecione um tamanho!");
-      return;
-    }
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product, selectedSize);
-    }
+    if (!selectedSize) { showToast("Selecione um tamanho!"); return; }
+    for (let i = 0; i < quantity; i++) addToCart(product, selectedSize);
     showToast(`${quantity}x ${product.club} (${selectedSize}) adicionado!`);
   };
 
   const handleBuyNow = () => {
-    if (!selectedSize) {
-      showToast("Selecione um tamanho!");
-      return;
-    }
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product, selectedSize);
-    }
+    if (!selectedSize) { showToast("Selecione um tamanho!"); return; }
+    for (let i = 0; i < quantity; i++) addToCart(product, selectedSize);
     openCart();
   };
 
-  const discount = product.oldPrice
-    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
-    : 0;
-
-  const pixPrice = product.price * 0.95;
+  const related = products.filter(p => p.id !== product.id).slice(0, 4);
 
   return (
     <div style={{ background: "var(--black)", minHeight: "100vh" }}>
       {/* Header */}
-      <header
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          background: "rgba(8,8,8,0.95)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "2px solid var(--green)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 5vw",
-          height: "64px",
-        }}
-      >
+      <header style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: "rgba(8,8,8,0.95)", backdropFilter: "blur(12px)", borderBottom: "2px solid var(--green)", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 5vw", height: "64px" }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-          <Image
-            src="/t7estore.jpg"
-            alt="T7 Store"
-            width={48}
-            height={48}
-            style={{ filter: "drop-shadow(0 0 8px rgba(18,184,58,0.5))", objectFit: "contain" }}
-          />
-          <span
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "1.7rem",
-              letterSpacing: "2px",
-              background: "linear-gradient(135deg,#fff 30%,#f5c800)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            T7 STORE
-          </span>
+          <Image src="/t7estore.jpg" alt="T7 Store" width={48} height={48} style={{ filter: "drop-shadow(0 0 8px rgba(18,184,58,0.5))", objectFit: "contain" }} />
+          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.7rem", letterSpacing: "2px", background: "linear-gradient(135deg,#fff 30%,#f5c800)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>T7 STORE</span>
         </Link>
-        <Link
-          href="/#produtos"
-          style={{
-            fontFamily: "'Barlow Condensed', sans-serif",
-            fontWeight: 700,
-            fontSize: "0.9rem",
-            letterSpacing: "1px",
-            color: "#fff",
-            textDecoration: "none",
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-          }}
-        >
-          ← Voltar para loja
+        <Link href="/#produtos" style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.9rem", color: "#fff", textDecoration: "none" }}>
+          ← Voltar
         </Link>
       </header>
 
-      {/* Main Content */}
-      <main
-        style={{
-          paddingTop: "96px",
-          padding: "96px 5vw 48px",
-          maxWidth: "1400px",
-          margin: "0 auto",
-          opacity: isLoaded ? 1 : 0,
-          transform: isLoaded ? "translateY(0)" : "translateY(20px)",
-          transition: "all 0.5s ease",
-        }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "48px",
-          }}
-          className="lg:grid-cols-2"
-        >
-          {/* Gallery */}
+      <main style={{ paddingTop: "96px", padding: "96px 5vw 48px", maxWidth: "1400px", margin: "0 auto", opacity: isLoaded ? 1 : 0, transform: isLoaded ? "translateY(0)" : "translateY(20px)", transition: "all 0.5s ease" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "48px" }} className="lg:grid-cols-2">
+
+          {/* Imagem */}
           <div>
-            {/* Main Image */}
-            <div
-              style={{
-                background: "linear-gradient(135deg, var(--dark2), var(--dark3))",
-                borderRadius: "20px",
-                aspectRatio: "1",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "12rem",
-                marginBottom: "16px",
-                position: "relative",
-                overflow: "hidden",
-                border: "1px solid rgba(255,255,255,0.06)",
-              }}
-            >
-              {/* Badges */}
+            <div style={{ background: "linear-gradient(135deg, var(--dark2), var(--dark3))", borderRadius: "20px", aspectRatio: "1", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12rem", position: "relative", overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)", marginBottom: "16px" }}>
               {product.badge === "sale" && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "20px",
-                    left: "20px",
-                    background: "#e03c3c",
-                    color: "#fff",
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontWeight: 900,
-                    fontSize: "0.85rem",
-                    letterSpacing: "1px",
-                    padding: "6px 14px",
-                    borderRadius: "6px",
-                    zIndex: 2,
-                  }}
-                >
+                <div style={{ position: "absolute", top: "20px", left: "20px", background: "#e03c3c", color: "#fff", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "0.85rem", padding: "6px 14px", borderRadius: "6px", zIndex: 2 }}>
                   {discount}% OFF
                 </div>
               )}
               {product.badge === "new" && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "20px",
-                    left: "20px",
-                    background: "var(--green)",
-                    color: "#fff",
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontWeight: 900,
-                    fontSize: "0.85rem",
-                    letterSpacing: "1px",
-                    padding: "6px 14px",
-                    borderRadius: "6px",
-                    zIndex: 2,
-                  }}
-                >
+                <div style={{ position: "absolute", top: "20px", left: "20px", background: "var(--green)", color: "#fff", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "0.85rem", padding: "6px 14px", borderRadius: "6px", zIndex: 2 }}>
                   NOVO
                 </div>
               )}
-              <span style={{ transform: "scale(1.2)" }}>{galleryImages[selectedImage]}</span>
-            </div>
-
-            {/* Thumbnails */}
-            <div style={{ display: "flex", gap: "12px" }}>
-              {galleryImages.map((img, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  style={{
-                    width: "80px",
-                    height: "80px",
-                    background: "var(--dark2)",
-                    border: selectedImage === index
-                      ? "2px solid var(--green)"
-                      : "1px solid rgba(255,255,255,0.1)",
-                    borderRadius: "12px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "2.5rem",
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                    opacity: selectedImage === index ? 1 : 0.6,
-                  }}
-                >
-                  {img}
-                </button>
-              ))}
+              <span>{product.emoji}</span>
             </div>
           </div>
 
-          {/* Product Info */}
+          {/* Info */}
           <div>
-            {/* Breadcrumb */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                marginBottom: "16px",
-                fontSize: "0.82rem",
-                color: "rgba(245,245,245,0.45)",
-              }}
-            >
-              <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>
-                Home
-              </Link>
-              <span>/</span>
-              <Link href="/#produtos" style={{ color: "inherit", textDecoration: "none" }}>
-                Camisas
-              </Link>
-              <span>/</span>
-              <span style={{ color: "var(--green-light)" }}>{product.club}</span>
-            </div>
-
-            {/* Club & Name */}
-            <div
-              style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: "0.85rem",
-                fontWeight: 700,
-                letterSpacing: "3px",
-                textTransform: "uppercase",
-                color: "var(--green-light)",
-                marginBottom: "8px",
-              }}
-            >
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.85rem", fontWeight: 700, letterSpacing: "3px", textTransform: "uppercase", color: "var(--green-light)", marginBottom: "8px" }}>
               {product.club}
             </div>
-
-            <h1
-              style={{
-                fontFamily: "'Bebas Neue', sans-serif",
-                fontSize: "clamp(2rem, 4vw, 3rem)",
-                letterSpacing: "2px",
-                color: "#fff",
-                marginBottom: "8px",
-                lineHeight: 1.1,
-              }}
-            >
+            <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(2rem, 4vw, 3rem)", letterSpacing: "2px", color: "#fff", marginBottom: "8px", lineHeight: 1.1 }}>
               {product.name}
-              <span style={{ color: "var(--yellow)", display: "block", fontSize: "0.7em" }}>
-                VERSÃO JOGADOR
-              </span>
             </h1>
-
-            <div
-              style={{
-                fontSize: "0.92rem",
-                color: "rgba(245,245,245,0.55)",
-                marginBottom: "24px",
-              }}
-            >
+            <div style={{ fontSize: "0.92rem", color: "rgba(245,245,245,0.55)", marginBottom: "24px" }}>
               {product.meta}
             </div>
 
-            {/* Rating */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                marginBottom: "24px",
-              }}
-            >
-              <div style={{ display: "flex", gap: "2px" }}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span key={star} style={{ color: "var(--yellow)", fontSize: "1rem" }}>
-                    ★
-                  </span>
-                ))}
-              </div>
-              <span style={{ fontSize: "0.88rem", color: "rgba(245,245,245,0.55)" }}>
-                4.9 (128 avaliações)
-              </span>
-            </div>
-
-            {/* Price */}
-            <div
-              style={{
-                background: "var(--dark2)",
-                borderRadius: "16px",
-                padding: "24px",
-                marginBottom: "24px",
-                border: "1px solid rgba(255,255,255,0.06)",
-              }}
-            >
+            {/* Preço */}
+            <div style={{ background: "var(--dark2)", borderRadius: "16px", padding: "24px", marginBottom: "24px", border: "1px solid rgba(255,255,255,0.06)" }}>
               {product.oldPrice && (
-                <div
-                  style={{
-                    fontSize: "1rem",
-                    color: "rgba(245,245,245,0.4)",
-                    textDecoration: "line-through",
-                    marginBottom: "4px",
-                  }}
-                >
+                <div style={{ fontSize: "1rem", color: "rgba(245,245,245,0.4)", textDecoration: "line-through", marginBottom: "4px" }}>
                   De R$ {fmt(product.oldPrice)}
                 </div>
               )}
               <div style={{ display: "flex", alignItems: "baseline", gap: "12px" }}>
-                <div
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: "3rem",
-                    color: "var(--yellow)",
-                    lineHeight: 1,
-                  }}
-                >
+                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "3rem", color: "var(--yellow)", lineHeight: 1 }}>
                   R$ {fmt(product.price)}
                 </div>
                 {product.oldPrice && (
-                  <div
-                    style={{
-                      background: "#e03c3c",
-                      color: "#fff",
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      fontWeight: 900,
-                      fontSize: "0.78rem",
-                      padding: "4px 10px",
-                      borderRadius: "4px",
-                    }}
-                  >
+                  <div style={{ background: "#e03c3c", color: "#fff", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "0.78rem", padding: "4px 10px", borderRadius: "4px" }}>
                     ECONOMIZE R$ {fmt(product.oldPrice - product.price)}
                   </div>
                 )}
               </div>
-              <div
-                style={{
-                  marginTop: "12px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "6px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    fontSize: "0.92rem",
-                    color: "var(--green-light)",
-                    fontWeight: 600,
-                  }}
-                >
-                  <span style={{ fontSize: "1.1rem" }}>💚</span>
-                  <span>R$ {fmt(pixPrice)} no PIX (5% off)</span>
-                </div>
-                <div
-                  style={{
-                    fontSize: "0.88rem",
-                    color: "rgba(245,245,245,0.55)",
-                  }}
-                >
-                  ou 3x de R$ {fmt(product.price / 3)} sem juros
-                </div>
-              </div>
             </div>
 
-            {/* Size Selection */}
+            {/* Tamanhos */}
             <div style={{ marginBottom: "24px" }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  marginBottom: "12px",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontWeight: 700,
-                    fontSize: "0.88rem",
-                    letterSpacing: "1px",
-                    textTransform: "uppercase",
-                    color: "#fff",
-                  }}
-                >
-                  Tamanho:
-                  {selectedSize && (
-                    <span style={{ color: "var(--green-light)", marginLeft: "8px" }}>
-                      {selectedSize}
-                    </span>
-                  )}
-                </span>
-                <button
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "var(--green-light)",
-                    fontSize: "0.82rem",
-                    textDecoration: "underline",
-                    cursor: "pointer",
-                  }}
-                >
-                  Guia de tamanhos
-                </button>
-              </div>
+              <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.88rem", letterSpacing: "1px", textTransform: "uppercase", color: "#fff", display: "block", marginBottom: "12px" }}>
+                Tamanho: {selectedSize && <span style={{ color: "var(--green-light)", marginLeft: "8px" }}>{selectedSize}</span>}
+              </span>
               <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                {SIZES.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    style={{
-                      background:
-                        selectedSize === size ? "var(--green)" : "rgba(255,255,255,0.05)",
-                      border: `2px solid ${
-                        selectedSize === size ? "var(--green)" : "rgba(255,255,255,0.1)"
-                      }`,
-                      color: selectedSize === size ? "#fff" : "rgba(245,245,245,0.65)",
-                      padding: "12px 20px",
-                      borderRadius: "8px",
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                      cursor: "pointer",
-                      transition: "all 0.2s",
-                      minWidth: "60px",
-                    }}
-                    className="hover:border-green-500"
-                  >
+                {SIZES.map(size => (
+                  <button key={size} onClick={() => setSelectedSize(size)}
+                    style={{ background: selectedSize === size ? "var(--green)" : "rgba(255,255,255,0.05)", border: `2px solid ${selectedSize === size ? "var(--green)" : "rgba(255,255,255,0.1)"}`, color: selectedSize === size ? "#fff" : "rgba(245,245,245,0.65)", padding: "12px 20px", borderRadius: "8px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "1rem", cursor: "pointer", minWidth: "60px" }}>
                     {size}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Quantity */}
+            {/* Quantidade */}
             <div style={{ marginBottom: "24px" }}>
-              <span
-                style={{
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontWeight: 700,
-                  fontSize: "0.88rem",
-                  letterSpacing: "1px",
-                  textTransform: "uppercase",
-                  color: "#fff",
-                  display: "block",
-                  marginBottom: "12px",
-                }}
-              >
-                Quantidade:
-              </span>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  background: "var(--dark2)",
-                  borderRadius: "8px",
-                  padding: "4px",
-                  width: "fit-content",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                }}
-              >
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    background: "rgba(255,255,255,0.05)",
-                    border: "none",
-                    borderRadius: "6px",
-                    color: "#fff",
-                    fontSize: "1.2rem",
-                    cursor: "pointer",
-                  }}
-                >
-                  -
-                </button>
-                <span
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: "1.3rem",
-                    color: "#fff",
-                    minWidth: "40px",
-                    textAlign: "center",
-                  }}
-                >
-                  {quantity}
-                </span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    background: "rgba(255,255,255,0.05)",
-                    border: "none",
-                    borderRadius: "6px",
-                    color: "#fff",
-                    fontSize: "1.2rem",
-                    cursor: "pointer",
-                  }}
-                >
-                  +
-                </button>
+              <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.88rem", letterSpacing: "1px", textTransform: "uppercase", color: "#fff", display: "block", marginBottom: "12px" }}>Quantidade:</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", background: "var(--dark2)", borderRadius: "8px", padding: "4px", width: "fit-content", border: "1px solid rgba(255,255,255,0.1)" }}>
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ width: "40px", height: "40px", background: "rgba(255,255,255,0.05)", border: "none", borderRadius: "6px", color: "#fff", fontSize: "1.2rem", cursor: "pointer" }}>-</button>
+                <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.3rem", color: "#fff", minWidth: "40px", textAlign: "center" }}>{quantity}</span>
+                <button onClick={() => setQuantity(quantity + 1)} style={{ width: "40px", height: "40px", background: "rgba(255,255,255,0.05)", border: "none", borderRadius: "6px", color: "#fff", fontSize: "1.2rem", cursor: "pointer" }}>+</button>
               </div>
             </div>
 
-            {/* CTA Buttons */}
+            {/* Botões */}
             <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "32px" }}>
-              <button
-                onClick={handleBuyNow}
-                style={{
-                  width: "100%",
-                  background: "linear-gradient(135deg, #0a8c2a, #12b83a)",
-                  border: "none",
-                  padding: "18px 32px",
-                  borderRadius: "10px",
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontWeight: 900,
-                  fontSize: "1.1rem",
-                  letterSpacing: "2px",
-                  textTransform: "uppercase",
-                  color: "#fff",
-                  cursor: "pointer",
-                  boxShadow: "0 4px 24px rgba(10,140,42,0.5)",
-                  transition: "all 0.3s",
-                }}
-                className="hover:scale-[1.02] hover:shadow-[0_6px_32px_rgba(10,140,42,0.6)]"
-              >
+              <button onClick={handleBuyNow} style={{ width: "100%", background: "linear-gradient(135deg, #0a8c2a, #12b83a)", border: "none", padding: "18px 32px", borderRadius: "10px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1.1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: "pointer", boxShadow: "0 4px 24px rgba(10,140,42,0.5)" }}>
                 COMPRAR AGORA
               </button>
-              <button
-                onClick={handleAddToCart}
-                style={{
-                  width: "100%",
-                  background: "transparent",
-                  border: "2px solid rgba(255,255,255,0.2)",
-                  padding: "16px 32px",
-                  borderRadius: "10px",
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontWeight: 700,
-                  fontSize: "1rem",
-                  letterSpacing: "1px",
-                  textTransform: "uppercase",
-                  color: "#fff",
-                  cursor: "pointer",
-                  transition: "all 0.3s",
-                }}
-                className="hover:border-green-500 hover:text-green-400"
-              >
+              <button onClick={handleAddToCart} style={{ width: "100%", background: "transparent", border: "2px solid rgba(255,255,255,0.2)", padding: "16px 32px", borderRadius: "10px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "1rem", letterSpacing: "1px", textTransform: "uppercase", color: "#fff", cursor: "pointer" }}>
                 ADICIONAR AO CARRINHO
               </button>
             </div>
 
             {/* Trust badges */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: "12px",
-              }}
-            >
-              {[
-                { icon: "🚚", text: "Frete Grátis acima de R$ 299" },
-                { icon: "🔒", text: "Pagamento 100% Seguro" },
-                { icon: "⚡", text: "Entrega em até 7 dias" },
-                { icon: "💬", text: "Suporte via WhatsApp" },
-              ].map((item) => (
-                <div
-                  key={item.text}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    padding: "12px",
-                    background: "rgba(255,255,255,0.02)",
-                    borderRadius: "8px",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                  }}
-                >
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px" }}>
+              {[{ icon: "🚚", text: "Frete Grátis acima de R$ 299" }, { icon: "🔒", text: "Pagamento 100% Seguro" }, { icon: "⚡", text: "Entrega em até 7 dias" }, { icon: "💬", text: "Suporte via WhatsApp" }].map(item => (
+                <div key={item.text} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px", background: "rgba(255,255,255,0.02)", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.05)" }}>
                   <span style={{ fontSize: "1.3rem" }}>{item.icon}</span>
-                  <span style={{ fontSize: "0.78rem", color: "rgba(245,245,245,0.65)" }}>
-                    {item.text}
-                  </span>
+                  <span style={{ fontSize: "0.78rem", color: "rgba(245,245,245,0.65)" }}>{item.text}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Product Description */}
+        {/* Produtos relacionados */}
         <section style={{ marginTop: "64px" }}>
-          <h2
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "1.8rem",
-              letterSpacing: "2px",
-              color: "#fff",
-              marginBottom: "24px",
-            }}
-          >
-            SOBRE A <span style={{ color: "var(--yellow)" }}>CAMISA</span>
-          </h2>
-          <div
-            style={{
-              background: "var(--dark2)",
-              borderRadius: "16px",
-              padding: "28px",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "1rem",
-                color: "rgba(245,245,245,0.75)",
-                lineHeight: 1.8,
-                marginBottom: "20px",
-              }}
-            >
-              A camisa oficial do {product.club} temporada 24/25 é a escolha perfeita para os
-              verdadeiros torcedores. Com tecido de alta qualidade AAA+, esta réplica oferece
-              conforto e durabilidade excepcionais, sendo praticamente idêntica à versão usada
-              pelos jogadores em campo.
-            </p>
-            <div style={{ display: "grid", gap: "16px" }}>
-              <div style={{ display: "flex", alignItems: "start", gap: "12px" }}>
-                <span style={{ color: "var(--green-light)", fontSize: "1.1rem" }}>✓</span>
-                <div>
-                  <strong style={{ color: "#fff" }}>Tecido Dri-Fit Premium:</strong>
-                  <span style={{ color: "rgba(245,245,245,0.65)" }}>
-                    {" "}
-                    Tecnologia que mantém você seco e confortável durante o jogo ou no dia a dia.
-                  </span>
-                </div>
-              </div>
-              <div style={{ display: "flex", alignItems: "start", gap: "12px" }}>
-                <span style={{ color: "var(--green-light)", fontSize: "1.1rem" }}>✓</span>
-                <div>
-                  <strong style={{ color: "#fff" }}>Bordados de Alta Definição:</strong>
-                  <span style={{ color: "rgba(245,245,245,0.65)" }}>
-                    {" "}
-                    Escudo e logos bordados com precisão para maior durabilidade.
-                  </span>
-                </div>
-              </div>
-              <div style={{ display: "flex", alignItems: "start", gap: "12px" }}>
-                <span style={{ color: "var(--green-light)", fontSize: "1.1rem" }}>✓</span>
-                <div>
-                  <strong style={{ color: "#fff" }}>Modelagem Versão Jogador:</strong>
-                  <span style={{ color: "rgba(245,245,245,0.65)" }}>
-                    {" "}
-                    Corte ajustado ao corpo, igual ao usado pelos atletas profissionais.
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Related Products */}
-        <section style={{ marginTop: "64px" }}>
-          <h2
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "1.8rem",
-              letterSpacing: "2px",
-              color: "#fff",
-              marginBottom: "24px",
-            }}
-          >
+          <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.8rem", letterSpacing: "2px", color: "#fff", marginBottom: "24px" }}>
             VOCÊ TAMBÉM VAI <span style={{ color: "var(--yellow)" }}>GOSTAR</span>
           </h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-              gap: "20px",
-            }}
-          >
-            {relatedProducts(product.id).map((related) => (
-              <Link
-                key={related.id}
-                href={`/produto/${related.id}`}
-                style={{ textDecoration: "none" }}
-              >
-                <div
-                  style={{
-                    background: "var(--dark2)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    borderRadius: "12px",
-                    overflow: "hidden",
-                    transition: "all 0.3s",
-                  }}
-                  className="hover:-translate-y-1 hover:border-green-500"
-                >
-                  <div
-                    style={{
-                      height: "160px",
-                      background: "var(--dark3)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "4rem",
-                    }}
-                  >
-                    {related.emoji}
-                  </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "20px" }}>
+            {related.map(r => (
+              <Link key={r.id} href={`/produto/${r.id}`} style={{ textDecoration: "none" }}>
+                <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", overflow: "hidden", transition: "all 0.3s" }} className="hover:-translate-y-1 hover:border-green-500">
+                  <div style={{ height: "160px", background: "var(--dark3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "4rem" }}>{r.emoji}</div>
                   <div style={{ padding: "14px" }}>
-                    <div
-                      style={{
-                        fontFamily: "'Barlow Condensed', sans-serif",
-                        fontSize: "0.72rem",
-                        fontWeight: 700,
-                        letterSpacing: "1px",
-                        color: "var(--green-light)",
-                        marginBottom: "4px",
-                      }}
-                    >
-                      {related.club}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "'Barlow Condensed', sans-serif",
-                        fontWeight: 700,
-                        fontSize: "0.92rem",
-                        color: "#fff",
-                        marginBottom: "8px",
-                      }}
-                    >
-                      {related.name}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: "1.3rem",
-                        color: "var(--yellow)",
-                      }}
-                    >
-                      R$ {fmt(related.price)}
-                    </div>
+                    <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.72rem", fontWeight: 700, color: "var(--green-light)", marginBottom: "4px" }}>{r.club}</div>
+                    <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.92rem", color: "#fff", marginBottom: "8px" }}>{r.name}</div>
+                    <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.3rem", color: "var(--yellow)" }}>R$ {fmt(r.price)}</div>
                   </div>
                 </div>
               </Link>

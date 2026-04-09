@@ -13,12 +13,8 @@ const badgeStyles: Record<string, { background: string; color: string; label: st
   retro: { background: "#f5c800", color: "#000", label: "RETRO" },
 };
 
-// Generate pseudo-random stock based on product id
-const getStock = (id: number) => ((id * 7) % 12) + 3;
-
 export default function ProductCard({ product, onClick, onQuickAdd }: Props) {
   const badge = product.badge ? badgeStyles[product.badge] : null;
-  const stock = getStock(product.id);
   const discount = product.oldPrice
     ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
     : 0;
@@ -56,31 +52,6 @@ export default function ProductCard({ product, onClick, onQuickAdd }: Props) {
           }}
         >
           {discount > 0 ? `${discount}% OFF` : badge.label}
-        </div>
-      )}
-
-      {/* Stock indicator */}
-      {stock <= 5 && (
-        <div
-          style={{
-            position: "absolute",
-            top: "12px",
-            right: "12px",
-            zIndex: 3,
-            fontFamily: "'Barlow Condensed', sans-serif",
-            fontWeight: 700,
-            fontSize: "0.68rem",
-            letterSpacing: "0.5px",
-            padding: "4px 8px",
-            borderRadius: "4px",
-            background: "rgba(224, 60, 60, 0.9)",
-            color: "#fff",
-            display: "flex",
-            alignItems: "center",
-            gap: "4px",
-          }}
-        >
-          Restam {stock}
         </div>
       )}
 
