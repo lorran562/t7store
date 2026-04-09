@@ -1,7 +1,6 @@
 "use client";
-
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
-import { CartItem, Product, fmt } from "@/lib/data";
+import { CartItem, Product, fmt } from "@/lib/supabase";
 
 interface CartContextType {
   cart: CartItem[];
@@ -22,11 +21,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const addToCart = useCallback((product: Product, size: string) => {
-    setCart((prev) => [...prev, { ...product, size, uid: Date.now() }]);
+    setCart(prev => [...prev, { ...product, size, uid: Date.now() + Math.random() }]);
   }, []);
 
   const removeFromCart = useCallback((uid: number) => {
-    setCart((prev) => prev.filter((x) => x.uid !== uid));
+    setCart(prev => prev.filter(x => x.uid !== uid));
   }, []);
 
   const openCart = useCallback(() => {
@@ -44,17 +43,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const total = cart.reduce((s, x) => s + x.price, 0);
     const msg = encodeURIComponent(
       `Olá! Quero finalizar meu pedido T7 Store:\n\n${cart
-        .map((i) => `• ${i.club} - ${i.name} (${i.size}) — R$ ${fmt(i.price)}`)
+        .map(i => `• ${i.club} - ${i.name} (${i.size}) — R$ ${fmt(i.price)}`)
         .join("\n")}\n\n*TOTAL: R$ ${fmt(total)}*`
     );
     window.open(`https://wa.me/5500000000000?text=${msg}`, "_blank");
   }, [cart]);
 
-  const cartCount = cart.length;
-  const cartTotal = `R$ ${fmt(cart.reduce((s, x) => s + x.price, 0))}`;
-
   return (
-    <CartContext.Provider value={{ cart, cartCount, cartTotal, isCartOpen, addToCart, removeFromCart, openCart, closeCart, checkout }}>
+    <CartContext.Provider value={{
+      cart,
+      cartCount: cart.length,
+      cartTotal: `R$ ${fmt(cart.reduce((s, x) => s + x.price, 0))}`,
+      isCartOpen,
+      addToCart, removeFromCart, openCart, closeCart, checkout,
+    }}>
       {children}
     </CartContext.Provider>
   );

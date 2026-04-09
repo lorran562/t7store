@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { supabase, DbProduct } from "@/lib/supabase";
+import { supabase, Product } from "@/lib/supabase";
 import Link from "next/link";
 
 type FormData = {
@@ -17,7 +17,7 @@ const empty: FormData = {
   badge: "", category: "nacional", emoji: "⚽", active: true, stock: "10",
 };
 
-export default function ProductForm({ product, isEdit }: { product?: DbProduct; isEdit?: boolean }) {
+export default function ProductForm({ product, isEdit }: { product?: Product; isEdit?: boolean }) {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<FormData>(product ? {

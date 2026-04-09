@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { fmt } from "@/lib/data";
+import { fmt } from "@/lib/supabase";
 
 export default function CartDrawer() {
   const { cart, cartTotal, isCartOpen, closeCart, removeFromCart, checkout } = useCart();

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import { fmt } from "@/lib/data";
+import { fmt } from "@/lib/supabase";
 
 type PaymentMethod = "pix" | "card" | "boleto";
 

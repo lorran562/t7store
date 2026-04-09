@@ -1,15 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://placeholder.supabase.co";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "placeholder";
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pfmtwfkfdtytlwvqggce.supabase.co";
+const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmbXR3ZmtmZHR5dGx3dnFnZ2NlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MDIxMTYsImV4cCI6MjA4OTk3ODExNn0.tsEkJRa2KAW-pUCg_cZ4zJApKIiS0siK2xOvpo5-br0";
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(url, key);
 
-export type DbProduct = {
+// Tipo unificado que corresponde exatamente à tabela do Supabase
+export type Product = {
   id: number;
   club: string;
   name: string;
   meta: string;
+  description: string;
   price: number;
   old_price: number | null;
   badge: "sale" | "new" | "retro" | null;
@@ -18,11 +20,12 @@ export type DbProduct = {
   emoji: string;
   active: boolean;
   stock: number;
+  sizes: string[];
   created_at: string;
   updated_at: string;
 };
 
-export type DbOrder = {
+export type Order = {
   id: number;
   items: Array<{ club: string; name: string; size: string; price: number; emoji: string }>;
   total: number;
@@ -32,3 +35,33 @@ export type DbOrder = {
   notes: string | null;
   created_at: string;
 };
+
+// CartItem para uso no frontend
+export type CartItem = Product & { size: string; uid: number };
+
+// Helpers
+export function fmt(n: number): string {
+  return n.toFixed(2).replace(".", ",");
+}
+
+export type Category = "todos" | "nacional" | "internacional" | "selecao" | "retro" | "tenis";
+
+export const CATEGORIES: { label: string; value: Category }[] = [
+  { label: "Todos",          value: "todos"         },
+  { label: "Nacionais",      value: "nacional"      },
+  { label: "Internacionais", value: "internacional" },
+  { label: "Seleções",       value: "selecao"       },
+  { label: "Retrô",          value: "retro"         },
+  { label: "👟 Tênis",       value: "tenis"         },
+];
+
+export const SHIRT_SIZES = ["PP", "P", "M", "G", "GG", "XGG"];
+export const SHOE_SIZES  = ["36", "37", "38", "39", "40", "41", "42", "43", "44"];
+
+export function getSizes(category: string): string[] {
+  return category === "tenis" ? SHOE_SIZES : SHIRT_SIZES;
+}
+
+export function isTenis(category: string): boolean {
+  return category === "tenis";
+}

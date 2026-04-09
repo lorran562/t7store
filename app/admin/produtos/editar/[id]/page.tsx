@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { DbProduct } from "@/lib/supabase";
+import { Product } from "@/lib/supabase";
 import ProductForm from "@/components/admin/ProductForm";
 
 export default function EditarProdutoPage() {
   const { id } = useParams();
-  const [product, setProduct] = useState<DbProduct | null>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

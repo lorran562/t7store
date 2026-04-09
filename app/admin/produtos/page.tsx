@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { DbProduct } from "@/lib/supabase";
+import { Product } from "@/lib/supabase";
 
 export default function AdminProdutos() {
-  const [products, setProducts] = useState<DbProduct[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
