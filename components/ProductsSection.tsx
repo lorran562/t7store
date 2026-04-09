@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { supabase, Product, CATEGORIES, Category, fmt, isTenis } from "@/lib/supabase";
 import { useCart } from "@/context/CartContext";
@@ -7,62 +6,69 @@ import { useToast } from "@/context/ToastContext";
 import ProductCard from "./ProductCard";
 import ProductModal from "./ProductModal";
 
+function SkeletonCard() {
+  return (
+    <div style={{ background: "var(--dark2)", borderRadius: "12px", overflow: "hidden" }}>
+      <div className="skeleton" style={{ width: "100%", paddingBottom: "100%" }} />
+      <div style={{ padding: "10px 12px 12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+        <div className="skeleton" style={{ height: "10px", width: "50%", borderRadius: "4px" }} />
+        <div className="skeleton" style={{ height: "14px", width: "85%", borderRadius: "4px" }} />
+        <div className="skeleton" style={{ height: "14px", width: "65%", borderRadius: "4px" }} />
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div className="skeleton" style={{ height: "24px", width: "40%", borderRadius: "4px" }} />
+          <div className="skeleton" style={{ width: "44px", height: "44px", borderRadius: "9px" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ProductsSection() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<Category>("todos");
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selected, setSelected] = useState<Product | null>(null);
   const { addToCart } = useCart();
   const { showToast } = useToast();
 
   useEffect(() => {
-    supabase
-      .from("products")
-      .select("*")
-      .eq("active", true)
-      .order("category")
-      .order("id")
-      .then(({ data }) => {
-        setProducts(data || []);
-        setLoading(false);
-      });
+    supabase.from("products").select("*").eq("active", true).order("category").order("id")
+      .then(({ data }) => { setProducts(data || []); setLoading(false); });
   }, []);
 
-  const filtered = activeCategory === "todos"
-    ? products
-    : products.filter(p => p.category === activeCategory);
+  const filtered = activeCategory === "todos" ? products : products.filter(p => p.category === activeCategory);
 
-  const handleQuickAdd = (product: Product) => {
-    const size = isTenis(product.category) ? "42" : "M";
-    addToCart(product, size);
-    showToast(`✅ ${product.club} adicionado!`);
+  const handleQuickAdd = (p: Product) => {
+    addToCart(p, isTenis(p.category) ? "42" : "M");
+    showToast(`✅ ${p.club} adicionado!`);
   };
 
-  const handleModalAdd = (product: Product, size: string) => {
-    addToCart(product, size);
-    setSelectedProduct(null);
-    showToast(`✅ ${product.club} (${size}) adicionado!`);
+  const handleModalAdd = (p: Product, size: string) => {
+    addToCart(p, size);
+    setSelected(null);
+    showToast(`✅ ${p.club} (${size}) adicionado!`);
   };
 
   return (
-    <section id="produtos" style={{ padding: "72px 5vw" }}>
-      <div style={{ textAlign: "center", marginBottom: "44px" }}>
-        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.78rem", fontWeight: 700, letterSpacing: "4px", textTransform: "uppercase", color: "var(--green-light)", marginBottom: "8px", display: "block" }}>
+    <section id="produtos" style={{ padding: "48px 16px 60px" }}>
+      {/* Header */}
+      <div style={{ textAlign: "center", marginBottom: "28px" }}>
+        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "4px", textTransform: "uppercase", color: "var(--green-light)", display: "block", marginBottom: "8px" }}>
           Coleção
         </span>
-        <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(2rem,4vw,3rem)", letterSpacing: "2px" }}>
-          NOSSAS <span style={{ color: "var(--yellow)" }}>CAMISAS & TÊNIS</span>
+        <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(1.8rem,5vw,2.8rem)", letterSpacing: "2px" }}>
+          CAMISAS & <span style={{ color: "var(--yellow)" }}>TÊNIS</span>
         </h2>
       </div>
 
-      {/* Filtros */}
-      <div style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap", marginBottom: "40px" }}>
+      {/* Filtros — scroll horizontal no mobile */}
+      <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "4px", marginBottom: "24px", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }} className="no-scrollbar">
         {CATEGORIES.map(({ label, value }) => {
           const isTenisBtn = value === "tenis";
           const isActive = activeCategory === value;
           return (
             <button key={value} onClick={() => setActiveCategory(value)}
-              style={{ background: isActive ? (isTenisBtn ? "rgba(0,87,183,0.85)" : "var(--green)") : "rgba(255,255,255,0.05)", border: `1px solid ${isActive ? (isTenisBtn ? "#0057b7" : "var(--green)") : "rgba(255,255,255,0.1)"}`, color: isActive ? "#fff" : "rgba(245,245,245,0.65)", padding: "7px 20px", borderRadius: "50px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "1px", textTransform: "uppercase", cursor: "pointer", transition: "all .2s" }}>
+              style={{ background: isActive ? (isTenisBtn ? "rgba(0,87,183,0.9)" : "var(--green)") : "rgba(255,255,255,0.06)", border: `1px solid ${isActive ? (isTenisBtn ? "#0057b7" : "var(--green)") : "rgba(255,255,255,0.1)"}`, color: isActive ? "#fff" : "rgba(245,245,245,0.65)", padding: "8px 16px", borderRadius: "50px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.82rem", letterSpacing: "0.5px", textTransform: "uppercase", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, scrollSnapAlign: "start", minHeight: "38px", transition: "all .2s" }}>
               {label}
             </button>
           );
@@ -71,51 +77,34 @@ export default function ProductsSection() {
 
       {/* Banner tênis */}
       {activeCategory === "tenis" && (
-        <div style={{ background: "linear-gradient(135deg, rgba(0,57,127,0.3), rgba(0,87,183,0.15))", border: "1px solid rgba(0,87,183,0.3)", borderRadius: "14px", padding: "20px 28px", marginBottom: "32px", display: "flex", alignItems: "center", gap: "16px" }}>
-          <span style={{ fontSize: "2.5rem" }}>👟</span>
+        <div style={{ background: "linear-gradient(135deg,rgba(0,57,127,0.3),rgba(0,87,183,0.15))", border: "1px solid rgba(0,87,183,0.3)", borderRadius: "12px", padding: "14px 18px", marginBottom: "20px", display: "flex", alignItems: "center", gap: "12px" }}>
+          <span style={{ fontSize: "1.8rem" }}>👟</span>
           <div>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.3rem", letterSpacing: "2px", color: "#fff" }}>
-              TÊNIS <span style={{ color: "#6baed6" }}>ESPORTIVOS</span>
-            </div>
-            <div style={{ fontSize: "0.85rem", color: "rgba(245,245,245,0.6)" }}>
-              Nike, Adidas, Puma e New Balance — Numeração 36 ao 44
-            </div>
+            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff" }}>TÊNIS <span style={{ color: "#6baed6" }}>ESPORTIVOS</span></div>
+            <div style={{ fontSize: "0.78rem", color: "rgba(245,245,245,0.55)" }}>Nike, Adidas, Puma, New Balance · Num. 36-44</div>
           </div>
         </div>
       )}
 
-      {loading ? (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: "20px" }}>
-          {[...Array(8)].map((_, i) => (
-            <div key={i} style={{ background: "var(--dark2)", borderRadius: "12px", height: "320px", animation: "pulse 1.5s ease-in-out infinite" }} />
-          ))}
-        </div>
-      ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: "20px" }}>
-          {filtered.map(product => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onClick={setSelectedProduct}
-              onQuickAdd={handleQuickAdd}
-            />
-          ))}
+      {/* Grid */}
+      <div className="products-grid">
+        {loading
+          ? [...Array(8)].map((_, i) => <SkeletonCard key={i} />)
+          : filtered.map(p => (
+              <ProductCard key={p.id} product={p} onClick={setSelected} onQuickAdd={handleQuickAdd} />
+            ))
+        }
+      </div>
+
+      {!loading && filtered.length === 0 && (
+        <div style={{ textAlign: "center", padding: "60px 20px", color: "rgba(245,245,245,0.4)" }}>
+          <div style={{ fontSize: "2.5rem", marginBottom: "12px" }}>🔍</div>
+          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.3rem" }}>Nenhum produto aqui</div>
         </div>
       )}
 
-      {filtered.length === 0 && !loading && (
-        <div style={{ textAlign: "center", padding: "60px", color: "rgba(245,245,245,0.4)" }}>
-          <div style={{ fontSize: "3rem", marginBottom: "16px" }}>🔍</div>
-          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.5rem" }}>Nenhum produto nessa categoria</div>
-        </div>
-      )}
-
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          onAdd={handleModalAdd}
-        />
+      {selected && (
+        <ProductModal product={selected} onClose={() => setSelected(null)} onAdd={handleModalAdd} />
       )}
     </section>
   );
