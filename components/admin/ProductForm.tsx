@@ -70,18 +70,22 @@ export default function ProductForm({ product, isEdit }: { product?: DbProduct; 
       image_url,
     };
 
-    const { error: dbErr } = isEdit && product
-      ? await supabase.from("products").update(payload).eq("id", product.id)
-      : await supabase.from("products").insert([payload]);
-
-    if (dbErr) {
-      setError(`Erro: ${dbErr.message}`);
+    try {
+      const url = isEdit && product ? `/api/produtos/${product.id}` : "/api/produtos";
+      const method = isEdit ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (!res.ok) { setError(`Erro: ${json.error}`); setSaving(false); return; }
+      router.push("/admin/produtos");
+      router.refresh();
+    } catch (err: any) {
+      setError(`Erro de conexão: ${err.message}`);
       setSaving(false);
-      return;
     }
-
-    router.push("/admin/produtos");
-    router.refresh();
   };
 
   const inp = {
@@ -109,10 +113,7 @@ export default function ProductForm({ product, isEdit }: { product?: DbProduct; 
       <form onSubmit={handleSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "24px", alignItems: "start" }}>
 
-          {/* Esquerda */}
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-
-            {/* Informações */}
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "24px" }}>
               <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "20px" }}>INFORMAÇÕES</h3>
               <div style={{ display: "grid", gap: "16px" }}>
@@ -125,7 +126,6 @@ export default function ProductForm({ product, isEdit }: { product?: DbProduct; 
               </div>
             </div>
 
-            {/* Preço */}
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "24px" }}>
               <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "20px" }}>PREÇO E ESTOQUE</h3>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "16px" }}>
@@ -135,7 +135,6 @@ export default function ProductForm({ product, isEdit }: { product?: DbProduct; 
               </div>
             </div>
 
-            {/* Categoria */}
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "24px" }}>
               <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "20px" }}>CATEGORIA E BADGE</h3>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
@@ -161,10 +160,7 @@ export default function ProductForm({ product, isEdit }: { product?: DbProduct; 
             </div>
           </div>
 
-          {/* Direita */}
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-
-            {/* Foto */}
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "24px" }}>
               <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>FOTO</h3>
               <div onClick={() => fileRef.current?.click()}
@@ -187,7 +183,6 @@ export default function ProductForm({ product, isEdit }: { product?: DbProduct; 
               </button>
             </div>
 
-            {/* Status */}
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "24px" }}>
               <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>STATUS</h3>
               <div style={{ display: "flex", alignItems: "center", gap: "14px", cursor: "pointer" }} onClick={() => set("active", !form.active)}>
@@ -204,7 +199,6 @@ export default function ProductForm({ product, isEdit }: { product?: DbProduct; 
               </div>
             </div>
 
-            {/* Erro */}
             {error && (
               <div style={{ background: "rgba(224,60,60,0.15)", border: "1px solid rgba(224,60,60,0.4)",
                 borderRadius: "10px", padding: "12px 16px", fontSize: "0.85rem", color: "#ff6b6b" }}>
@@ -212,7 +206,6 @@ export default function ProductForm({ product, isEdit }: { product?: DbProduct; 
               </div>
             )}
 
-            {/* Salvar */}
             <button type="submit" disabled={saving}
               style={{ background: saving ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#0a8c2a,#12b83a)",
                 border: "none", borderRadius: "12px", padding: "16px",
