@@ -5,7 +5,7 @@ import Link from "next/link";
 import { products as initialProducts, fmt } from "@/lib/data";
 
 type Badge = "sale" | "new" | "retro" | null;
-type Category = "nacional" | "internacional" | "selecao" | "retro";
+type Category = "nacional" | "internacional" | "selecao" | "retro" | "tenis";
 
 type Product = {
   id: number;
@@ -277,6 +277,7 @@ export const CATEGORIES: { label: string; value: Category }[] = [
                     <option value="internacional">Internacionais</option>
                     <option value="selecao">Seleções</option>
                     <option value="retro">Retrô</option>
+                    <option value="tenis">Tênis</option>
                   </select>
                 </div>
                 <div>
@@ -286,6 +287,7 @@ export const CATEGORIES: { label: string; value: Category }[] = [
                     <option value="new">Novo</option>
                     <option value="sale">Oferta</option>
                     <option value="retro">Retrô</option>
+                    <option value="tenis">Tênis</option>
                   </select>
                 </div>
               </div>

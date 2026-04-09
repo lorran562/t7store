@@ -13,7 +13,7 @@ export type DbProduct = {
   price: number;
   old_price: number | null;
   badge: "sale" | "new" | "retro" | null;
-  category: "nacional" | "internacional" | "selecao" | "retro";
+  category: "nacional" | "internacional" | "selecao" | "retro" | "tenis";
   image_url: string | null;
   emoji: string;
   active: boolean;

@@ -7,15 +7,17 @@ import { useState } from "react";
 import ProductModal from "./ProductModal";
 
 const featured = products.filter(p => p.badge === "sale").slice(0, 4);
-const bestSellers = products.slice(0, 4);
+const bestSellers = products.filter(p => p.category !== "tenis").slice(0, 4);
+const featuredTenis = products.filter(p => p.category === "tenis").slice(0, 4);
 
-function ProductGrid({ title, subtitle, items, badgeBg, badgeText, bg }: {
+function ProductGrid({ title, subtitle, items, badgeBg, badgeText, bg, accentColor }: {
   title: string; subtitle: string; items: Product[];
-  badgeBg: string; badgeText: string; bg: string;
+  badgeBg: string; badgeText: string; bg: string; accentColor?: string;
 }) {
   const { addToCart } = useCart();
   const { showToast } = useToast();
   const [selected, setSelected] = useState<Product | null>(null);
+  const accent = accentColor || "var(--green)";
 
   return (
     <section style={{ padding: "64px 5vw", background: bg }}>
@@ -35,7 +37,7 @@ function ProductGrid({ title, subtitle, items, badgeBg, badgeText, bg }: {
               {p.emoji}
             </div>
             <div style={{ padding: "16px" }}>
-              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: "var(--green-light)", marginBottom: "4px" }}>{p.club}</div>
+              <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: p.category === "tenis" ? "#6baed6" : "var(--green-light)", marginBottom: "4px" }}>{p.club}</div>
               <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "1rem", color: "#fff", marginBottom: "4px" }}>{p.name}</div>
               <div style={{ fontSize: "0.78rem", color: "rgba(245,245,245,0.38)", marginBottom: "12px" }}>{p.meta}</div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -43,9 +45,8 @@ function ProductGrid({ title, subtitle, items, badgeBg, badgeText, bg }: {
                   {p.oldPrice && <span style={{ fontSize: "0.75rem", color: "rgba(245,245,245,0.32)", textDecoration: "line-through", display: "block" }}>R$ {fmt(p.oldPrice)}</span>}
                   <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.5rem", color: "var(--yellow)", lineHeight: 1 }}>R$ {fmt(p.price)}</div>
                 </div>
-                <button onClick={e => { e.stopPropagation(); addToCart(p, "M"); showToast(`${p.club} adicionado!`); }}
-                  style={{ background: "var(--green)", border: "none", borderRadius: "8px", width: "42px", height: "42px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem", cursor: "pointer", color: "#fff" }}
-                  className="hover:brightness-110 hover:scale-110">+</button>
+                <button onClick={e => { e.stopPropagation(); const sz = p.category === "tenis" ? "42" : "M"; addToCart(p, sz); showToast(`${p.club} adicionado!`); }}
+                  style={{ background: accent, border: "none", borderRadius: "8px", width: "42px", height: "42px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem", cursor: "pointer", color: "#fff" }}>+</button>
               </div>
             </div>
           </div>
@@ -61,6 +62,7 @@ export default function FeaturedProducts() {
     <>
       <ProductGrid title={`OFERTAS DA <span style="color:var(--yellow)">SEMANA</span>`} subtitle="Aproveite os descontos" items={featured} badgeBg="#e03c3c" badgeText="ATÉ 20% OFF" bg="var(--dark2)" />
       <ProductGrid title={`MAIS <span style="color:var(--yellow)">VENDIDOS</span>`} subtitle="Os favoritos dos clientes" items={bestSellers} badgeBg="var(--green)" badgeText="TOP VENDAS" bg="var(--black)" />
+      <ProductGrid title={`TÊNIS <span style="color:var(--yellow)">EM DESTAQUE</span>`} subtitle="👟 Coleção de Tênis" items={featuredTenis} badgeBg="rgba(0,87,183,0.85)" badgeText="TÊNIS" bg="var(--dark2)" accentColor="rgba(0,87,183,0.85)" />
     </>
   );
 }
