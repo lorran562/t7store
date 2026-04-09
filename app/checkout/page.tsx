@@ -1,1050 +1,394 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { fmt } from "@/lib/supabase";
 
-type PaymentMethod = "pix" | "card" | "boleto";
+type PayMethod = "pix" | "credito" | "debito" | "dinheiro";
 
-interface FormData {
-  name: string;
-  email: string;
-  phone: string;
-  cpf: string;
+const PAY_OPTIONS: { id: PayMethod; label: string; icon: string; desc: string }[] = [
+  { id: "pix",      label: "PIX",                icon: "💚", desc: "5% de desconto" },
+  { id: "credito",  label: "Cartão de Crédito",  icon: "💳", desc: "Até 3x sem juros" },
+  { id: "debito",   label: "Cartão de Débito",   icon: "🏦", desc: "Pagamento na entrega" },
+  { id: "dinheiro", label: "Dinheiro",            icon: "💵", desc: "Na entrega" },
+];
+
+const ESTADOS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
+
+const WHATSAPP_NUMBER = "556993209150";
+
+type Form = {
+  nome: string;
+  telefone: string;
   cep: string;
-  address: string;
-  number: string;
-  complement: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-  cardNumber: string;
-  cardName: string;
-  cardExpiry: string;
-  cardCvv: string;
-  installments: string;
-}
+  endereco: string;
+  numero: string;
+  complemento: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+};
 
-export default function CheckoutPage() {
-  const { cart, cartTotal, removeFromCart } = useCart();
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("pix");
-  const [step, setStep] = useState(1);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [orderComplete, setOrderComplete] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    phone: "",
-    cpf: "",
-    cep: "",
-    address: "",
-    number: "",
-    complement: "",
-    neighborhood: "",
-    city: "",
-    state: "",
-    cardNumber: "",
-    cardName: "",
-    cardExpiry: "",
-    cardCvv: "",
-    installments: "1",
-  });
+const EMPTY: Form = { nome: "", telefone: "", cep: "", endereco: "", numero: "", complemento: "", bairro: "", cidade: "", estado: "" };
 
-  const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
-  const shipping = subtotal >= 299 ? 0 : 29.90;
-  const pixDiscount = paymentMethod === "pix" ? subtotal * 0.05 : 0;
-  const total = subtotal + shipping - pixDiscount;
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = async () => {
-    setIsProcessing(true);
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    setOrderComplete(true);
-  };
-
-  if (cart.length === 0 && !orderComplete) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "var(--black)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "24px",
-          padding: "20px",
-        }}
-      >
-        <div style={{ fontSize: "5rem" }}>🛒</div>
-        <h1
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: "2rem",
-            color: "#fff",
-            textAlign: "center",
-          }}
-        >
-          Seu carrinho está vazio
-        </h1>
-        <Link
-          href="/"
-          style={{
-            background: "var(--green)",
-            color: "#fff",
-            padding: "14px 32px",
-            borderRadius: "8px",
-            textDecoration: "none",
-            fontFamily: "'Barlow Condensed', sans-serif",
-            fontWeight: 700,
-            letterSpacing: "1px",
-          }}
-        >
-          Voltar para a loja
-        </Link>
-      </div>
-    );
-  }
-
-  if (orderComplete) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "var(--black)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "24px",
-          padding: "20px",
-          textAlign: "center",
-        }}
-      >
-        <div
-          style={{
-            width: "100px",
-            height: "100px",
-            background: "linear-gradient(135deg, var(--green), var(--green-light))",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "3rem",
-            marginBottom: "16px",
-          }}
-        >
-          ✓
-        </div>
-        <h1
-          style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: "clamp(2rem, 5vw, 3rem)",
-            color: "#fff",
-          }}
-        >
-          PEDIDO <span style={{ color: "var(--yellow)" }}>CONFIRMADO!</span>
-        </h1>
-        <p
-          style={{
-            color: "rgba(245,245,245,0.7)",
-            maxWidth: "400px",
-            lineHeight: 1.6,
-          }}
-        >
-          Obrigado pela sua compra! Você receberá um e-mail com os detalhes do pedido e
-          informações de rastreamento.
-        </p>
-        <div
-          style={{
-            background: "var(--dark2)",
-            borderRadius: "12px",
-            padding: "20px 32px",
-            border: "1px solid rgba(255,255,255,0.1)",
-          }}
-        >
-          <div style={{ fontSize: "0.82rem", color: "rgba(245,245,245,0.5)", marginBottom: "8px" }}>
-            Número do pedido
-          </div>
-          <div
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "1.5rem",
-              color: "var(--green-light)",
-              letterSpacing: "2px",
-            }}
-          >
-            #T7{Date.now().toString().slice(-8)}
-          </div>
-        </div>
-        {paymentMethod === "pix" && (
-          <div
-            style={{
-              background: "var(--dark2)",
-              borderRadius: "16px",
-              padding: "24px",
-              border: "1px solid rgba(255,255,255,0.1)",
-              maxWidth: "320px",
-              width: "100%",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontWeight: 700,
-                fontSize: "1rem",
-                color: "#fff",
-                marginBottom: "16px",
-                textAlign: "center",
-              }}
-            >
-              Pague via PIX
-            </div>
-            <div
-              style={{
-                background: "#fff",
-                borderRadius: "12px",
-                padding: "20px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginBottom: "16px",
-              }}
-            >
-              <div
-                style={{
-                  width: "200px",
-                  height: "200px",
-                  background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23000' x='10' y='10' width='10' height='10'/%3E%3Crect fill='%23000' x='20' y='10' width='10' height='10'/%3E%3Crect fill='%23000' x='30' y='10' width='10' height='10'/%3E%3Crect fill='%23000' x='40' y='10' width='10' height='10'/%3E%3Crect fill='%23000' x='50' y='10' width='10' height='10'/%3E%3Crect fill='%23000' x='60' y='10' width='10' height='10'/%3E%3Crect fill='%23000' x='70' y='10' width='10' height='10'/%3E%3Crect fill='%23000' x='10' y='20' width='10' height='10'/%3E%3Crect fill='%23000' x='70' y='20' width='10' height='10'/%3E%3Crect fill='%23000' x='10' y='30' width='10' height='10'/%3E%3Crect fill='%23000' x='30' y='30' width='10' height='10'/%3E%3Crect fill='%23000' x='50' y='30' width='10' height='10'/%3E%3Crect fill='%23000' x='70' y='30' width='10' height='10'/%3E%3Crect fill='%23000' x='10' y='40' width='10' height='10'/%3E%3Crect fill='%23000' x='30' y='40' width='10' height='10'/%3E%3Crect fill='%23000' x='50' y='40' width='10' height='10'/%3E%3Crect fill='%23000' x='70' y='40' width='10' height='10'/%3E%3Crect fill='%23000' x='10' y='50' width='10' height='10'/%3E%3Crect fill='%23000' x='30' y='50' width='10' height='10'/%3E%3Crect fill='%23000' x='50' y='50' width='10' height='10'/%3E%3Crect fill='%23000' x='70' y='50' width='10' height='10'/%3E%3Crect fill='%23000' x='10' y='60' width='10' height='10'/%3E%3Crect fill='%23000' x='70' y='60' width='10' height='10'/%3E%3Crect fill='%23000' x='10' y='70' width='10' height='10'/%3E%3Crect fill='%23000' x='20' y='70' width='10' height='10'/%3E%3Crect fill='%23000' x='30' y='70' width='10' height='10'/%3E%3Crect fill='%23000' x='40' y='70' width='10' height='10'/%3E%3Crect fill='%23000' x='50' y='70' width='10' height='10'/%3E%3Crect fill='%23000' x='60' y='70' width='10' height='10'/%3E%3Crect fill='%23000' x='70' y='70' width='10' height='10'/%3E%3C/svg%3E")`,
-                  backgroundSize: "contain",
-                }}
-              />
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: "0.82rem", color: "rgba(245,245,245,0.5)", marginBottom: "8px" }}>
-                Valor a pagar
-              </div>
-              <div
-                style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: "1.8rem",
-                  color: "var(--yellow)",
-                }}
-              >
-                R$ {fmt(total)}
-              </div>
-            </div>
-          </div>
-        )}
-        <Link
-          href="/"
-          style={{
-            background: "var(--green)",
-            color: "#fff",
-            padding: "14px 32px",
-            borderRadius: "8px",
-            textDecoration: "none",
-            fontFamily: "'Barlow Condensed', sans-serif",
-            fontWeight: 700,
-            letterSpacing: "1px",
-            marginTop: "16px",
-          }}
-        >
-          Continuar comprando
-        </Link>
-      </div>
-    );
-  }
-
+function Field({ label, required, error, children }: { label: string; required?: boolean; error?: string; children: React.ReactNode }) {
   return (
-    <div style={{ background: "var(--black)", minHeight: "100vh" }}>
-      {/* Header */}
-      <header
-        style={{
-          background: "rgba(8,8,8,0.95)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "2px solid var(--green)",
-          padding: "0 5vw",
-          height: "64px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-        }}
-      >
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-          <Image
-            src="/t7estore.jpg"
-            alt="T7 Store"
-            width={40}
-            height={40}
-            style={{ objectFit: "contain" }}
-          />
-          <span
-            style={{
-              fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "1.5rem",
-              letterSpacing: "2px",
-              background: "linear-gradient(135deg,#fff 30%,#f5c800)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            T7 STORE
-          </span>
-        </Link>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            color: "var(--green-light)",
-            fontSize: "0.88rem",
-          }}
-        >
-          <span style={{ fontSize: "1.1rem" }}>🔒</span>
-          <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 600 }}>
-            Checkout Seguro
-          </span>
-        </div>
-      </header>
-
-      {/* Progress Steps */}
-      <div
-        style={{
-          background: "var(--dark2)",
-          padding: "20px 5vw",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "40px",
-            maxWidth: "600px",
-            margin: "0 auto",
-          }}
-        >
-          {[
-            { num: 1, label: "Dados" },
-            { num: 2, label: "Pagamento" },
-            { num: 3, label: "Confirmação" },
-          ].map((s, index) => (
-            <div
-              key={s.num}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                opacity: step >= s.num ? 1 : 0.4,
-              }}
-            >
-              <div
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "50%",
-                  background: step >= s.num ? "var(--green)" : "rgba(255,255,255,0.1)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: "1rem",
-                  color: "#fff",
-                }}
-              >
-                {step > s.num ? "✓" : s.num}
-              </div>
-              <span
-                style={{
-                  fontFamily: "'Barlow Condensed', sans-serif",
-                  fontWeight: 700,
-                  fontSize: "0.88rem",
-                  letterSpacing: "1px",
-                  color: step >= s.num ? "#fff" : "rgba(255,255,255,0.5)",
-                }}
-                className="hidden sm:inline"
-              >
-                {s.label}
-              </span>
-              {index < 2 && (
-                <div
-                  style={{
-                    width: "40px",
-                    height: "2px",
-                    background: step > s.num ? "var(--green)" : "rgba(255,255,255,0.1)",
-                  }}
-                  className="hidden sm:block"
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <main
-        style={{
-          padding: "40px 5vw",
-          maxWidth: "1200px",
-          margin: "0 auto",
-        }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "32px",
-          }}
-          className="lg:grid-cols-[1fr_400px]"
-        >
-          {/* Left Column - Forms */}
-          <div>
-            {step === 1 && (
-              <div>
-                <h2
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: "1.8rem",
-                    letterSpacing: "2px",
-                    color: "#fff",
-                    marginBottom: "24px",
-                  }}
-                >
-                  DADOS <span style={{ color: "var(--yellow)" }}>PESSOAIS</span>
-                </h2>
-
-                <div style={{ display: "grid", gap: "16px" }}>
-                  <InputField
-                    label="Nome completo"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="Seu nome completo"
-                  />
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                    <InputField
-                      label="E-mail"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="seu@email.com"
-                    />
-                    <InputField
-                      label="Telefone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      placeholder="(00) 00000-0000"
-                    />
-                  </div>
-                  <InputField
-                    label="CPF"
-                    name="cpf"
-                    value={formData.cpf}
-                    onChange={handleInputChange}
-                    placeholder="000.000.000-00"
-                  />
-                </div>
-
-                <h3
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: "1.5rem",
-                    letterSpacing: "2px",
-                    color: "#fff",
-                    marginTop: "40px",
-                    marginBottom: "24px",
-                  }}
-                >
-                  ENDEREÇO DE <span style={{ color: "var(--yellow)" }}>ENTREGA</span>
-                </h3>
-
-                <div style={{ display: "grid", gap: "16px" }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "150px 1fr", gap: "16px" }}>
-                    <InputField
-                      label="CEP"
-                      name="cep"
-                      value={formData.cep}
-                      onChange={handleInputChange}
-                      placeholder="00000-000"
-                    />
-                    <InputField
-                      label="Endereço"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      placeholder="Rua, Avenida..."
-                    />
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "100px 1fr 1fr", gap: "16px" }}>
-                    <InputField
-                      label="Número"
-                      name="number"
-                      value={formData.number}
-                      onChange={handleInputChange}
-                      placeholder="123"
-                    />
-                    <InputField
-                      label="Complemento"
-                      name="complement"
-                      value={formData.complement}
-                      onChange={handleInputChange}
-                      placeholder="Apto, Bloco..."
-                    />
-                    <InputField
-                      label="Bairro"
-                      name="neighborhood"
-                      value={formData.neighborhood}
-                      onChange={handleInputChange}
-                      placeholder="Seu bairro"
-                    />
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 100px", gap: "16px" }}>
-                    <InputField
-                      label="Cidade"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      placeholder="Sua cidade"
-                    />
-                    <InputField
-                      label="Estado"
-                      name="state"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      placeholder="UF"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setStep(2)}
-                  style={{
-                    width: "100%",
-                    background: "linear-gradient(135deg, var(--green), var(--green-light))",
-                    border: "none",
-                    padding: "16px",
-                    borderRadius: "10px",
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontWeight: 900,
-                    fontSize: "1rem",
-                    letterSpacing: "2px",
-                    color: "#fff",
-                    cursor: "pointer",
-                    marginTop: "32px",
-                    boxShadow: "0 4px 20px rgba(10,140,42,0.4)",
-                  }}
-                >
-                  CONTINUAR PARA PAGAMENTO
-                </button>
-              </div>
-            )}
-
-            {step === 2 && (
-              <div>
-                <button
-                  onClick={() => setStep(1)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "var(--green-light)",
-                    fontSize: "0.88rem",
-                    cursor: "pointer",
-                    marginBottom: "16px",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                  }}
-                >
-                  ← Voltar para dados
-                </button>
-
-                <h2
-                  style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: "1.8rem",
-                    letterSpacing: "2px",
-                    color: "#fff",
-                    marginBottom: "24px",
-                  }}
-                >
-                  FORMA DE <span style={{ color: "var(--yellow)" }}>PAGAMENTO</span>
-                </h2>
-
-                {/* Payment Methods */}
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "32px" }}>
-                  {[
-                    { id: "pix" as const, label: "PIX", icon: "💚", discount: "5% de desconto" },
-                    { id: "card" as const, label: "Cartão de Crédito", icon: "💳", discount: "até 3x sem juros" },
-                    { id: "boleto" as const, label: "Boleto Bancário", icon: "📄", discount: "vence em 3 dias" },
-                  ].map((method) => (
-                    <button
-                      key={method.id}
-                      onClick={() => setPaymentMethod(method.id)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "16px",
-                        padding: "20px",
-                        background: paymentMethod === method.id ? "rgba(18,184,58,0.1)" : "var(--dark2)",
-                        border: `2px solid ${
-                          paymentMethod === method.id ? "var(--green)" : "rgba(255,255,255,0.1)"
-                        }`,
-                        borderRadius: "12px",
-                        cursor: "pointer",
-                        transition: "all 0.2s",
-                        width: "100%",
-                        textAlign: "left",
-                      }}
-                    >
-                      <span style={{ fontSize: "1.5rem" }}>{method.icon}</span>
-                      <div style={{ flex: 1 }}>
-                        <div
-                          style={{
-                            fontFamily: "'Barlow Condensed', sans-serif",
-                            fontWeight: 700,
-                            fontSize: "1rem",
-                            color: "#fff",
-                          }}
-                        >
-                          {method.label}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "0.82rem",
-                            color: method.id === "pix" ? "var(--green-light)" : "rgba(245,245,245,0.5)",
-                          }}
-                        >
-                          {method.discount}
-                        </div>
-                      </div>
-                      <div
-                        style={{
-                          width: "24px",
-                          height: "24px",
-                          borderRadius: "50%",
-                          border: `2px solid ${
-                            paymentMethod === method.id ? "var(--green)" : "rgba(255,255,255,0.2)"
-                          }`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {paymentMethod === method.id && (
-                          <div
-                            style={{
-                              width: "12px",
-                              height: "12px",
-                              borderRadius: "50%",
-                              background: "var(--green)",
-                            }}
-                          />
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Card Form */}
-                {paymentMethod === "card" && (
-                  <div
-                    style={{
-                      background: "var(--dark2)",
-                      borderRadius: "16px",
-                      padding: "24px",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      marginBottom: "24px",
-                    }}
-                  >
-                    <div style={{ display: "grid", gap: "16px" }}>
-                      <InputField
-                        label="Número do cartão"
-                        name="cardNumber"
-                        value={formData.cardNumber}
-                        onChange={handleInputChange}
-                        placeholder="0000 0000 0000 0000"
-                      />
-                      <InputField
-                        label="Nome no cartão"
-                        name="cardName"
-                        value={formData.cardName}
-                        onChange={handleInputChange}
-                        placeholder="Como está no cartão"
-                      />
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "16px" }}>
-                        <InputField
-                          label="Validade"
-                          name="cardExpiry"
-                          value={formData.cardExpiry}
-                          onChange={handleInputChange}
-                          placeholder="MM/AA"
-                        />
-                        <InputField
-                          label="CVV"
-                          name="cardCvv"
-                          value={formData.cardCvv}
-                          onChange={handleInputChange}
-                          placeholder="123"
-                        />
-                        <div>
-                          <label
-                            style={{
-                              display: "block",
-                              fontFamily: "'Barlow Condensed', sans-serif",
-                              fontWeight: 700,
-                              fontSize: "0.82rem",
-                              letterSpacing: "1px",
-                              color: "rgba(245,245,245,0.65)",
-                              marginBottom: "8px",
-                            }}
-                          >
-                            Parcelas
-                          </label>
-                          <select
-                            name="installments"
-                            value={formData.installments}
-                            onChange={handleInputChange}
-                            style={{
-                              width: "100%",
-                              background: "rgba(255,255,255,0.05)",
-                              border: "1px solid rgba(255,255,255,0.15)",
-                              borderRadius: "8px",
-                              padding: "14px 16px",
-                              color: "#fff",
-                              fontSize: "0.95rem",
-                            }}
-                          >
-                            <option value="1">1x R$ {fmt(total)}</option>
-                            <option value="2">2x R$ {fmt(total / 2)}</option>
-                            <option value="3">3x R$ {fmt(total / 3)}</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {paymentMethod === "pix" && (
-                  <div
-                    style={{
-                      background: "rgba(18,184,58,0.1)",
-                      border: "1px solid rgba(18,184,58,0.3)",
-                      borderRadius: "12px",
-                      padding: "20px",
-                      marginBottom: "24px",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "16px",
-                    }}
-                  >
-                    <span style={{ fontSize: "2rem" }}>💚</span>
-                    <div>
-                      <div style={{ fontWeight: 600, color: "#fff", marginBottom: "4px" }}>
-                        5% de desconto no PIX!
-                      </div>
-                      <div style={{ fontSize: "0.88rem", color: "rgba(245,245,245,0.7)" }}>
-                        Economize R$ {fmt(pixDiscount)} pagando via PIX
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <button
-                  onClick={handleSubmit}
-                  disabled={isProcessing}
-                  style={{
-                    width: "100%",
-                    background: isProcessing
-                      ? "rgba(255,255,255,0.1)"
-                      : "linear-gradient(135deg, var(--green), var(--green-light))",
-                    border: "none",
-                    padding: "18px",
-                    borderRadius: "10px",
-                    fontFamily: "'Barlow Condensed', sans-serif",
-                    fontWeight: 900,
-                    fontSize: "1.1rem",
-                    letterSpacing: "2px",
-                    color: "#fff",
-                    cursor: isProcessing ? "wait" : "pointer",
-                    boxShadow: isProcessing ? "none" : "0 4px 20px rgba(10,140,42,0.4)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "12px",
-                  }}
-                >
-                  {isProcessing ? (
-                    <>
-                      <div
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                          border: "2px solid rgba(255,255,255,0.3)",
-                          borderTopColor: "#fff",
-                          borderRadius: "50%",
-                          animation: "spin 1s linear infinite",
-                        }}
-                      />
-                      PROCESSANDO...
-                    </>
-                  ) : (
-                    `FINALIZAR PEDIDO - R$ ${fmt(total)}`
-                  )}
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Right Column - Order Summary */}
-          <div>
-            <div
-              style={{
-                background: "var(--dark2)",
-                borderRadius: "16px",
-                padding: "24px",
-                border: "1px solid rgba(255,255,255,0.1)",
-                position: "sticky",
-                top: "100px",
-              }}
-            >
-              <h3
-                style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: "1.3rem",
-                  letterSpacing: "2px",
-                  color: "#fff",
-                  marginBottom: "20px",
-                }}
-              >
-                RESUMO DO PEDIDO
-              </h3>
-
-              {/* Items */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "20px" }}>
-                {cart.map((item) => (
-                  <div
-                    key={item.uid}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      padding: "12px",
-                      background: "rgba(255,255,255,0.02)",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        background: "var(--dark3)",
-                        borderRadius: "8px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "1.5rem",
-                      }}
-                    >
-                      {"📦"}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#fff" }}>
-                        {item.club}
-                      </div>
-                      <div style={{ fontSize: "0.78rem", color: "rgba(245,245,245,0.5)" }}>
-                        Tam: {item.size}
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "'Bebas Neue', sans-serif",
-                        fontSize: "1.1rem",
-                        color: "var(--yellow)",
-                      }}
-                    >
-                      R$ {fmt(item.price)}
-                    </div>
-                    <button
-                      onClick={() => removeFromCart(item.uid)}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "rgba(245,245,245,0.3)",
-                        cursor: "pointer",
-                        fontSize: "1rem",
-                        padding: "4px",
-                      }}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              {/* Totals */}
-              <div
-                style={{
-                  borderTop: "1px solid rgba(255,255,255,0.1)",
-                  paddingTop: "16px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ color: "rgba(245,245,245,0.6)" }}>Subtotal</span>
-                  <span style={{ color: "#fff" }}>R$ {fmt(subtotal)}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ color: "rgba(245,245,245,0.6)" }}>Frete</span>
-                  <span style={{ color: shipping === 0 ? "var(--green-light)" : "#fff" }}>
-                    {shipping === 0 ? "Grátis" : `R$ ${fmt(shipping)}`}
-                  </span>
-                </div>
-                {paymentMethod === "pix" && pixDiscount > 0 && (
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: "var(--green-light)" }}>Desconto PIX (5%)</span>
-                    <span style={{ color: "var(--green-light)" }}>-R$ {fmt(pixDiscount)}</span>
-                  </div>
-                )}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    paddingTop: "12px",
-                    borderTop: "1px solid rgba(255,255,255,0.1)",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      fontWeight: 700,
-                      fontSize: "1rem",
-                      color: "#fff",
-                    }}
-                  >
-                    TOTAL
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                      fontSize: "1.8rem",
-                      color: "var(--yellow)",
-                    }}
-                  >
-                    R$ {fmt(total)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Trust badges */}
-              <div
-                style={{
-                  marginTop: "20px",
-                  paddingTop: "20px",
-                  borderTop: "1px solid rgba(255,255,255,0.1)",
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "16px",
-                  flexWrap: "wrap",
-                }}
-              >
-                {["SSL", "PCI DSS", "LGPD"].map((badge) => (
-                  <div
-                    key={badge}
-                    style={{
-                      background: "rgba(255,255,255,0.05)",
-                      padding: "6px 12px",
-                      borderRadius: "4px",
-                      fontSize: "0.72rem",
-                      color: "rgba(245,245,245,0.5)",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {badge}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      <style jsx>{`
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
+    <div>
+      <label style={{ display: "block", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1px", textTransform: "uppercase", color: error ? "#ff6b6b" : "rgba(245,245,245,0.5)", marginBottom: "6px" }}>
+        {label}{required && <span style={{ color: "#ff6b6b", marginLeft: "3px" }}>*</span>}
+      </label>
+      {children}
+      {error && <p style={{ fontSize: "0.72rem", color: "#ff6b6b", marginTop: "4px" }}>{error}</p>}
     </div>
   );
 }
 
-function InputField({
-  label,
-  name,
-  value,
-  onChange,
-  placeholder,
-  type = "text",
-}: {
-  label: string;
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder: string;
-  type?: string;
-}) {
+const inp: React.CSSProperties = { width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "10px", padding: "12px 14px", color: "#fff", fontSize: "16px", outline: "none", fontFamily: "inherit", transition: "border-color .2s" };
+const inpErr: React.CSSProperties = { ...inp, borderColor: "rgba(224,60,60,0.6)" };
+
+export default function CheckoutPage() {
+  const { cart, cartSubtotal, clearCart } = useCart();
+  const [form, setForm] = useState<Form>(EMPTY);
+  const [payment, setPayment] = useState<PayMethod>("pix");
+  const [errors, setErrors] = useState<Partial<Form>>({});
+  const [sent, setSent] = useState(false);
+
+  const shipping = cartSubtotal >= 299 ? 0 : 29.90;
+  const pixDiscount = payment === "pix" ? cartSubtotal * 0.05 : 0;
+  const total = cartSubtotal + shipping - pixDiscount;
+
+  // Máscara de telefone
+  const maskPhone = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 11);
+    if (d.length <= 2) return `(${d}`;
+    if (d.length <= 7) return `(${d.slice(0,2)}) ${d.slice(2)}`;
+    return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+  };
+
+  // Máscara de CEP
+  const maskCep = (v: string) => {
+    const d = v.replace(/\D/g, "").slice(0, 8);
+    if (d.length <= 5) return d;
+    return `${d.slice(0,5)}-${d.slice(5)}`;
+  };
+
+  // Buscar endereço pelo CEP
+  const fetchCep = async (cep: string) => {
+    const raw = cep.replace(/\D/g, "");
+    if (raw.length !== 8) return;
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${raw}/json/`);
+      const data = await res.json();
+      if (!data.erro) {
+        setForm(f => ({ ...f, endereco: data.logradouro || f.endereco, bairro: data.bairro || f.bairro, cidade: data.localidade || f.cidade, estado: data.uf || f.estado }));
+      }
+    } catch {}
+  };
+
+  const set = (k: keyof Form, v: string) => {
+    setForm(f => ({ ...f, [k]: v }));
+    if (errors[k]) setErrors(e => ({ ...e, [k]: undefined }));
+  };
+
+  const validate = (): boolean => {
+    const e: Partial<Form> = {};
+    if (!form.nome.trim())     e.nome     = "Nome obrigatório";
+    if (!form.telefone.trim() || form.telefone.replace(/\D/g,"").length < 10) e.telefone = "Telefone inválido";
+    if (!form.cep.trim() || form.cep.replace(/\D/g,"").length < 8) e.cep = "CEP inválido";
+    if (!form.endereco.trim()) e.endereco = "Endereço obrigatório";
+    if (!form.numero.trim())   e.numero   = "Número obrigatório";
+    if (!form.bairro.trim())   e.bairro   = "Bairro obrigatório";
+    if (!form.cidade.trim())   e.cidade   = "Cidade obrigatória";
+    if (!form.estado)          e.estado   = "Estado obrigatório";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const buildMessage = (): string => {
+    const payLabel = PAY_OPTIONS.find(p => p.id === payment)?.label || payment;
+    const enderecoFull = `${form.endereco}, ${form.numero}${form.complemento ? ` - ${form.complemento}` : ""}, ${form.bairro}, ${form.cidade}/${form.estado}, CEP ${form.cep}`;
+
+    // Agrupar itens iguais
+    const grouped: Record<string, { name: string; qty: number; price: number }> = {};
+    cart.forEach(item => {
+      const key = `${item.club} - ${item.name} (${item.size})`;
+      if (grouped[key]) { grouped[key].qty++; }
+      else grouped[key] = { name: key, qty: 1, price: item.price };
+    });
+
+    const items = Object.values(grouped)
+      .map(i => `• ${i.name}${i.qty > 1 ? ` x${i.qty}` : ""} - R$ ${fmt(i.price * i.qty)}`)
+      .join("\n");
+
+    const lines = [
+      `🛒 *NOVO PEDIDO - T7 STORE*`,
+      ``,
+      `👤 *Cliente:* ${form.nome}`,
+      `📱 *Telefone:* ${form.telefone}`,
+      ``,
+      `📍 *Endereço de entrega:*`,
+      enderecoFull,
+      ``,
+      `🛍️ *Produtos:*`,
+      items,
+      ``,
+      `━━━━━━━━━━━━━━━━`,
+      `Subtotal: R$ ${fmt(cartSubtotal)}`,
+      shipping === 0 ? `Frete: Grátis 🎉` : `Frete: R$ ${fmt(shipping)}`,
+      payment === "pix" ? `Desconto PIX (5%): -R$ ${fmt(pixDiscount)}` : null,
+      `*TOTAL: R$ ${fmt(total)}*`,
+      ``,
+      `💳 *Pagamento:* ${payLabel}`,
+    ].filter(Boolean).join("\n");
+
+    return lines;
+  };
+
+  const handleSubmit = () => {
+    if (cart.length === 0) return;
+    if (!validate()) {
+      // Scroll para o primeiro erro
+      document.querySelector("[data-error]")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    const msg = encodeURIComponent(buildMessage());
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
+    setSent(true);
+    clearCart();
+  };
+
+  // Carrinho vazio sem ter enviado
+  if (cart.length === 0 && !sent) {
+    return (
+      <div style={{ minHeight: "100svh", background: "var(--black)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "20px", padding: "24px" }}>
+        <div style={{ fontSize: "4rem" }}>🛒</div>
+        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", color: "#fff", textAlign: "center" }}>Carrinho vazio</h1>
+        <p style={{ color: "rgba(245,245,245,0.5)", textAlign: "center", fontSize: "0.9rem" }}>Adicione produtos antes de finalizar.</p>
+        <Link href="/" style={{ background: "var(--green)", color: "#fff", padding: "14px 32px", borderRadius: "10px", textDecoration: "none", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, letterSpacing: "1px", minHeight: "52px", display: "flex", alignItems: "center" }}>
+          ← VOLTAR À LOJA
+        </Link>
+      </div>
+    );
+  }
+
+  // Sucesso após enviar
+  if (sent) {
+    return (
+      <div style={{ minHeight: "100svh", background: "var(--black)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "20px", padding: "24px", textAlign: "center" }}>
+        <div style={{ width: "80px", height: "80px", background: "linear-gradient(135deg,#0a8c2a,#12b83a)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2.2rem", boxShadow: "0 8px 32px rgba(10,140,42,0.5)" }}>✓</div>
+        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(1.8rem,5vw,2.8rem)", color: "#fff" }}>
+          PEDIDO <span style={{ color: "var(--yellow)" }}>ENVIADO!</span>
+        </h1>
+        <p style={{ color: "rgba(245,245,245,0.65)", maxWidth: "360px", lineHeight: 1.65, fontSize: "0.92rem" }}>
+          Seu pedido foi enviado para nosso WhatsApp. Em breve nossa equipe entrará em contato para confirmar.
+        </p>
+        <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "14px", padding: "16px 24px", display: "flex", alignItems: "center", gap: "12px" }}>
+          <span style={{ fontSize: "1.5rem" }}>💬</span>
+          <div style={{ textAlign: "left" }}>
+            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.78rem", letterSpacing: "1px", color: "var(--green-light)" }}>WHATSAPP</div>
+            <div style={{ color: "#fff", fontSize: "0.92rem" }}>(69) 9320-9150</div>
+          </div>
+        </div>
+        <Link href="/" style={{ background: "var(--green)", color: "#fff", padding: "14px 32px", borderRadius: "10px", textDecoration: "none", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, letterSpacing: "1px", minHeight: "52px", display: "inline-flex", alignItems: "center" }}>
+          CONTINUAR COMPRANDO
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <label
-        style={{
-          display: "block",
-          fontFamily: "'Barlow Condensed', sans-serif",
-          fontWeight: 700,
-          fontSize: "0.82rem",
-          letterSpacing: "1px",
-          color: "rgba(245,245,245,0.65)",
-          marginBottom: "8px",
-        }}
-      >
-        {label}
-      </label>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        style={{
-          width: "100%",
-          background: "rgba(255,255,255,0.05)",
-          border: "1px solid rgba(255,255,255,0.15)",
-          borderRadius: "8px",
-          padding: "14px 16px",
-          color: "#fff",
-          fontSize: "0.95rem",
-          outline: "none",
-          transition: "border-color 0.2s",
-        }}
-      />
+    <div style={{ background: "var(--black)", minHeight: "100svh" }}>
+      {/* Header */}
+      <header style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(8,8,8,0.97)", backdropFilter: "blur(14px)", borderBottom: "2px solid var(--green)", height: "var(--header-h)", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px" }}>
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
+          <Image src="/t7estore.jpg" alt="T7" width={34} height={34} style={{ objectFit: "contain" }} />
+          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.3rem", letterSpacing: "2px", background: "linear-gradient(135deg,#fff 30%,#f5c800)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>T7 STORE</span>
+        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--green-light)", fontSize: "0.82rem" }}>
+          <span>🔒</span>
+          <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 600 }}>Checkout Seguro</span>
+        </div>
+      </header>
+
+      <main style={{ maxWidth: "900px", margin: "0 auto", padding: "24px 16px 80px" }}>
+        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(1.8rem,5vw,2.4rem)", letterSpacing: "2px", color: "#fff", marginBottom: "4px" }}>
+          FINALIZAR <span style={{ color: "var(--yellow)" }}>PEDIDO</span>
+        </h1>
+        <p style={{ color: "rgba(245,245,245,0.4)", fontSize: "0.85rem", marginBottom: "28px" }}>Preencha seus dados e confirme pelo WhatsApp</p>
+
+        <div style={{ display: "grid", gap: "20px" }} className="checkout-grid">
+          {/* ── COLUNA ESQUERDA: Formulário ── */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+
+            {/* Dados pessoais */}
+            <section style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "20px" }}>
+              <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ background: "var(--green)", borderRadius: "50%", width: "24px", height: "24px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", fontFamily: "sans-serif", fontWeight: 900 }}>1</span>
+                SEUS DADOS
+              </h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <Field label="Nome completo" required error={errors.nome}>
+                  <input style={errors.nome ? inpErr : inp} value={form.nome} onChange={e => set("nome", e.target.value)} placeholder="Seu nome completo" data-error={errors.nome ? "" : undefined} />
+                </Field>
+                <Field label="Telefone / WhatsApp" required error={errors.telefone}>
+                  <input style={errors.telefone ? inpErr : inp} value={form.telefone} onChange={e => set("telefone", maskPhone(e.target.value))} placeholder="(00) 00000-0000" inputMode="tel" />
+                </Field>
+              </div>
+            </section>
+
+            {/* Endereço */}
+            <section style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "20px" }}>
+              <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ background: "var(--green)", borderRadius: "50%", width: "24px", height: "24px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", fontFamily: "sans-serif", fontWeight: 900 }}>2</span>
+                ENDEREÇO DE ENTREGA
+              </h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {/* CEP — busca automática */}
+                <Field label="CEP" required error={errors.cep}>
+                  <input style={errors.cep ? inpErr : inp} value={form.cep} onChange={e => { const v = maskCep(e.target.value); set("cep", v); if (v.replace(/\D/g,"").length === 8) fetchCep(v); }} placeholder="00000-000" inputMode="numeric" maxLength={9} />
+                </Field>
+
+                <Field label="Endereço" required error={errors.endereco}>
+                  <input style={errors.endereco ? inpErr : inp} value={form.endereco} onChange={e => set("endereco", e.target.value)} placeholder="Rua, Avenida..." />
+                </Field>
+
+                <div style={{ display: "grid", gridTemplateColumns: "100px 1fr", gap: "10px" }}>
+                  <Field label="Número" required error={errors.numero}>
+                    <input style={errors.numero ? inpErr : inp} value={form.numero} onChange={e => set("numero", e.target.value)} placeholder="123" inputMode="numeric" />
+                  </Field>
+                  <Field label="Complemento">
+                    <input style={inp} value={form.complemento} onChange={e => set("complemento", e.target.value)} placeholder="Apto, Bloco..." />
+                  </Field>
+                </div>
+
+                <Field label="Bairro" required error={errors.bairro}>
+                  <input style={errors.bairro ? inpErr : inp} value={form.bairro} onChange={e => set("bairro", e.target.value)} placeholder="Seu bairro" />
+                </Field>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 90px", gap: "10px" }}>
+                  <Field label="Cidade" required error={errors.cidade}>
+                    <input style={errors.cidade ? inpErr : inp} value={form.cidade} onChange={e => set("cidade", e.target.value)} placeholder="Sua cidade" />
+                  </Field>
+                  <Field label="Estado" required error={errors.estado}>
+                    <select style={errors.estado ? { ...inpErr, cursor: "pointer" } : { ...inp, cursor: "pointer" }} value={form.estado} onChange={e => set("estado", e.target.value)}>
+                      <option value="">UF</option>
+                      {ESTADOS.map(uf => <option key={uf} value={uf}>{uf}</option>)}
+                    </select>
+                  </Field>
+                </div>
+              </div>
+            </section>
+
+            {/* Pagamento */}
+            <section style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "20px" }}>
+              <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ background: "var(--green)", borderRadius: "50%", width: "24px", height: "24px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", fontFamily: "sans-serif", fontWeight: 900 }}>3</span>
+                FORMA DE PAGAMENTO
+              </h2>
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                {PAY_OPTIONS.map(opt => (
+                  <button key={opt.id} type="button" onClick={() => setPayment(opt.id)}
+                    style={{ display: "flex", alignItems: "center", gap: "14px", padding: "14px 16px", background: payment === opt.id ? "rgba(10,140,42,0.12)" : "rgba(255,255,255,0.03)", border: `1.5px solid ${payment === opt.id ? "var(--green)" : "rgba(255,255,255,0.1)"}`, borderRadius: "12px", cursor: "pointer", textAlign: "left", width: "100%", transition: "all .15s", minHeight: "58px" }}>
+                    <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>{opt.icon}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "#fff" }}>{opt.label}</div>
+                      <div style={{ fontSize: "0.75rem", color: opt.id === "pix" ? "var(--green-light)" : "rgba(245,245,245,0.45)" }}>{opt.desc}</div>
+                    </div>
+                    {/* Radio visual */}
+                    <div style={{ width: "20px", height: "20px", borderRadius: "50%", border: `2px solid ${payment === opt.id ? "var(--green)" : "rgba(255,255,255,0.2)"}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                      {payment === opt.id && <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "var(--green)" }} />}
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {payment === "pix" && (
+                <div style={{ marginTop: "12px", background: "rgba(10,140,42,0.1)", border: "1px solid rgba(10,140,42,0.3)", borderRadius: "10px", padding: "12px 14px", display: "flex", alignItems: "center", gap: "10px" }}>
+                  <span>💚</span>
+                  <div style={{ fontSize: "0.82rem" }}>
+                    <strong style={{ color: "#fff" }}>5% de desconto no PIX!</strong>
+                    <span style={{ color: "rgba(245,245,245,0.6)" }}> Economize R$ {fmt(pixDiscount)}</span>
+                  </div>
+                </div>
+              )}
+            </section>
+          </div>
+
+          {/* ── COLUNA DIREITA: Resumo ── */}
+          <div>
+            <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "20px", position: "sticky", top: "calc(var(--header-h) + 16px)" }}>
+              <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>
+                RESUMO DO PEDIDO
+              </h2>
+
+              {/* Itens */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "16px", maxHeight: "280px", overflowY: "auto" }}>
+                {cart.map(item => (
+                  <div key={item.uid} style={{ display: "flex", gap: "10px", alignItems: "center", padding: "10px", background: "rgba(255,255,255,0.03)", borderRadius: "10px" }}>
+                    <div style={{ width: "48px", height: "48px", borderRadius: "8px", background: "var(--dark3)", overflow: "hidden", flexShrink: 0 }}>
+                      {item.image_url ? <img src={item.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", opacity: 0.4 }}>{item.category === "tenis" ? "👟" : "⚽"}</div>}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: "0.8rem", color: "#fff", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.club}</div>
+                      <div style={{ fontSize: "0.72rem", color: "rgba(245,245,245,0.4)" }}>{item.name} · {item.category === "tenis" ? "Nº" : "Tam."} {item.size}</div>
+                    </div>
+                    <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", color: "var(--yellow)", flexShrink: 0 }}>R$ {fmt(item.price)}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Totais */}
+              <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "14px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.83rem", color: "rgba(245,245,245,0.55)" }}>
+                  <span>Subtotal ({cart.length} {cart.length === 1 ? "item" : "itens"})</span>
+                  <span>R$ {fmt(cartSubtotal)}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.83rem" }}>
+                  <span style={{ color: shipping === 0 ? "var(--green-light)" : "rgba(245,245,245,0.55)" }}>Frete</span>
+                  <span style={{ color: shipping === 0 ? "var(--green-light)" : "rgba(245,245,245,0.55)" }}>{shipping === 0 ? "Grátis 🎉" : `R$ ${fmt(shipping)}`}</span>
+                </div>
+                {payment === "pix" && (
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.83rem", color: "var(--green-light)" }}>
+                    <span>Desconto PIX (5%)</span>
+                    <span>-R$ {fmt(pixDiscount)}</span>
+                  </div>
+                )}
+                <div style={{ display: "flex", justifyContent: "space-between", paddingTop: "10px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                  <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.92rem", color: "#fff" }}>TOTAL</span>
+                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.7rem", color: "var(--yellow)" }}>R$ {fmt(total)}</span>
+                </div>
+              </div>
+
+              {/* Botão principal */}
+              <button onClick={handleSubmit}
+                style={{ width: "100%", marginTop: "16px", background: "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", padding: "17px 20px", borderRadius: "12px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: "pointer", boxShadow: "0 6px 24px rgba(10,140,42,0.45)", minHeight: "56px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
+                <span style={{ fontSize: "1.2rem" }}>💬</span>
+                CONFIRMAR PELO WHATSAPP
+              </button>
+
+              {/* Trust badges */}
+              <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginTop: "14px", flexWrap: "wrap" }}>
+                {["🔒 Seguro", "⚡ Rápido", "✅ Confiável"].map(b => (
+                  <span key={b} style={{ fontSize: "0.72rem", color: "rgba(245,245,245,0.35)", fontFamily: "'Barlow Condensed', sans-serif" }}>{b}</span>
+                ))}
+              </div>
+
+              <p style={{ textAlign: "center", fontSize: "0.72rem", color: "rgba(245,245,245,0.25)", marginTop: "10px", lineHeight: 1.5 }}>
+                Ao confirmar, você será redirecionado ao WhatsApp com seu pedido completo.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Botão flutuante mobile — aparece só em mobile */}
+        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "var(--dark2)", borderTop: "1px solid rgba(255,255,255,0.08)", padding: "12px 16px", zIndex: 40 }} className="md:hidden safe-bottom">
+          <button onClick={handleSubmit}
+            style={{ width: "100%", background: "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", padding: "16px", borderRadius: "12px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: "pointer", boxShadow: "0 4px 20px rgba(10,140,42,0.45)", minHeight: "52px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+            💬 CONFIRMAR PELO WHATSAPP · R$ {fmt(total)}
+          </button>
+        </div>
+      </main>
     </div>
   );
 }
