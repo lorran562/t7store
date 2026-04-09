@@ -1,17 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
-import { supabase, Product, fmt, CATEGORIES, getSizes } from "@/lib/supabase";
+import { useState, useEffect, useRef } from "react";
+import { supabase, Product, fmt, getSizes, uploadProductImage } from "@/lib/supabase";
 
 type FormState = {
   club: string; name: string; meta: string; description: string;
   price: string; old_price: string; badge: string;
-  category: string; emoji: string; active: boolean; stock: string;
-  sizes: string[];
+  category: string; active: boolean; stock: string;
+  sizes: string[]; image_url: string;
 };
 
 const EMPTY: FormState = {
   club: "", name: "", meta: "", description: "", price: "", old_price: "",
-  badge: "", category: "nacional", emoji: "⚽", active: true, stock: "10", sizes: [],
+  badge: "", category: "nacional", active: true, stock: "10", sizes: [], image_url: "",
 };
 
 const badgeColor: Record<string, string> = { sale: "#e03c3c", new: "#12b83a", retro: "#f5c800" };
@@ -24,14 +24,19 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const load = () => {
-    supabase.from("products").select("*").order("category").order("id").then(({ data }) => setProducts(data || []));
+    supabase.from("products").select("*").order("category").order("id")
+      .then(({ data }) => setProducts(data || []));
   };
   useEffect(load, []);
 
   const startNew = () => {
     setEditing({ ...EMPTY });
+    setImagePreview("");
     setIsNew(true);
     setTab("edit");
     setError("");
@@ -42,13 +47,38 @@ export default function AdminPage() {
       id: p.id, club: p.club, name: p.name, meta: p.meta,
       description: p.description || "", price: String(p.price),
       old_price: p.old_price ? String(p.old_price) : "",
-      badge: p.badge || "", category: p.category, emoji: p.emoji,
-      active: p.active, stock: String(p.stock),
-      sizes: p.sizes || getSizes(p.category),
+      badge: p.badge || "", category: p.category, active: p.active,
+      stock: String(p.stock), sizes: p.sizes || getSizes(p.category),
+      image_url: p.image_url || "",
     });
+    setImagePreview(p.image_url || "");
     setIsNew(false);
     setTab("edit");
     setError("");
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    // Preview local imediato
+    const localUrl = URL.createObjectURL(file);
+    setImagePreview(localUrl);
+    // Upload para Supabase storage
+    const publicUrl = await uploadProductImage(file);
+    if (publicUrl) {
+      setEditing(p => ({ ...p, image_url: publicUrl }));
+      setImagePreview(publicUrl);
+    } else {
+      setError("Erro ao fazer upload da imagem. Tente usar uma URL direta.");
+      setImagePreview("");
+    }
+    setUploading(false);
+  };
+
+  const handleUrlChange = (url: string) => {
+    setEditing(p => ({ ...p, image_url: url }));
+    setImagePreview(url);
   };
 
   const saveEdit = async () => {
@@ -56,26 +86,19 @@ export default function AdminPage() {
     setSaving(true); setError("");
     const payload = {
       club: editing.club.trim(), name: editing.name.trim(), meta: editing.meta.trim(),
-      description: editing.description.trim(),
-      price: parseFloat(editing.price),
+      description: editing.description.trim(), price: parseFloat(editing.price),
       old_price: editing.old_price ? parseFloat(editing.old_price) : null,
-      badge: editing.badge || null, category: editing.category,
-      emoji: editing.emoji || "⚽", active: editing.active,
+      badge: editing.badge || null, category: editing.category, active: editing.active,
       stock: parseInt(editing.stock) || 0,
       sizes: editing.sizes.length ? editing.sizes : getSizes(editing.category),
+      image_url: editing.image_url.trim(),
     };
-    try {
-      if (isNew) {
-        await supabase.from("products").insert([payload]);
-      } else {
-        await supabase.from("products").update(payload).eq("id", editing.id!);
-      }
-      load();
-      setTab("list");
-    } catch (e: any) {
-      setError(e.message);
+    if (isNew) {
+      await supabase.from("products").insert([payload]);
+    } else {
+      await supabase.from("products").update(payload).eq("id", editing.id!);
     }
-    setSaving(false);
+    load(); setTab("list"); setSaving(false);
   };
 
   const deleteProduct = async (id: number) => {
@@ -89,6 +112,13 @@ export default function AdminPage() {
     setProducts(prev => prev.map(p => p.id === id ? { ...p, active: !active } : p));
   };
 
+  const toggleSize = (size: string) => {
+    setEditing(prev => ({
+      ...prev,
+      sizes: prev.sizes.includes(size) ? prev.sizes.filter(s => s !== size) : [...prev.sizes, size]
+    }));
+  };
+
   const filtered = products.filter(p =>
     p.club.toLowerCase().includes(search.toLowerCase()) ||
     p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -98,14 +128,6 @@ export default function AdminPage() {
   const inp: React.CSSProperties = { width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "10px", padding: "10px 14px", color: "#fff", fontSize: "0.88rem", outline: "none" };
   const lbl: React.CSSProperties = { display: "block", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1px", textTransform: "uppercase", color: "rgba(245,245,245,0.45)", marginBottom: "6px" };
 
-  // Toggle size
-  const toggleSize = (size: string) => {
-    setEditing(prev => ({
-      ...prev,
-      sizes: prev.sizes.includes(size) ? prev.sizes.filter(s => s !== size) : [...prev.sizes, size]
-    }));
-  };
-
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "28px", flexWrap: "wrap", gap: "12px" }}>
@@ -114,7 +136,7 @@ export default function AdminPage() {
             {tab === "list" ? "PRODUTOS" : isNew ? "NOVO PRODUTO" : "EDITAR PRODUTO"}
           </h1>
           <p style={{ color: "rgba(245,245,245,0.4)", fontSize: "0.85rem" }}>
-            {tab === "list" ? `${products.length} produtos · ${products.filter(p => p.active).length} ativos` : "Preencha e salve"}
+            {tab === "list" ? `${products.length} produtos · ${products.filter(p => p.active).length} ativos` : "Edite e salve"}
           </p>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
@@ -135,23 +157,30 @@ export default function AdminPage() {
         </div>
       </div>
 
+      {/* LISTA */}
       {tab === "list" && (
         <>
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Buscar por clube, nome ou categoria..."
             style={{ ...inp, maxWidth: "400px", marginBottom: "20px" }} />
-
           <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", overflow: "hidden" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "48px 1fr 110px 110px 80px 80px 90px", padding: "10px 18px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.02)" }}>
-              {["", "Produto", "Categoria", "Preço", "Badge", "Status", "Ações"].map(h => (
+            <div style={{ display: "grid", gridTemplateColumns: "60px 1fr 110px 110px 80px 80px 90px", padding: "10px 18px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.02)" }}>
+              {["Foto", "Produto", "Categoria", "Preço", "Badge", "Status", "Ações"].map(h => (
                 <div key={h} style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.7rem", letterSpacing: "1.5px", textTransform: "uppercase", color: "rgba(245,245,245,0.35)" }}>{h}</div>
               ))}
             </div>
-            {filtered.length === 0 && (
-              <div style={{ padding: "48px", textAlign: "center", color: "rgba(245,245,245,0.3)" }}>Nenhum produto encontrado</div>
-            )}
+            {filtered.length === 0 && <div style={{ padding: "48px", textAlign: "center", color: "rgba(245,245,245,0.3)" }}>Nenhum produto encontrado</div>}
             {filtered.map((p, i) => (
-              <div key={p.id} style={{ display: "grid", gridTemplateColumns: "48px 1fr 110px 110px 80px 80px 90px", padding: "12px 18px", alignItems: "center", borderBottom: i < filtered.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none", opacity: p.active ? 1 : 0.4 }}>
-                <div style={{ fontSize: "1.6rem" }}>{p.emoji}</div>
+              <div key={p.id} style={{ display: "grid", gridTemplateColumns: "60px 1fr 110px 110px 80px 80px 90px", padding: "12px 18px", alignItems: "center", borderBottom: i < filtered.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none", opacity: p.active ? 1 : 0.4 }}>
+                {/* Miniatura */}
+                <div style={{ width: "44px", height: "44px", background: "var(--dark3)", borderRadius: "8px", overflow: "hidden", flexShrink: 0 }}>
+                  {p.image_url ? (
+                    <img src={p.image_url} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  ) : (
+                    <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.3rem", opacity: 0.4 }}>
+                      {p.category === "tenis" ? "👟" : "⚽"}
+                    </div>
+                  )}
+                </div>
                 <div>
                   <div style={{ fontWeight: 600, color: "#fff", fontSize: "0.88rem" }}>{p.club}</div>
                   <div style={{ fontSize: "0.73rem", color: "rgba(245,245,245,0.38)" }}>{p.name}</div>
@@ -182,22 +211,23 @@ export default function AdminPage() {
         </>
       )}
 
+      {/* FORMULÁRIO */}
       {tab === "edit" && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "20px", alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "24px", alignItems: "start" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+
+            {/* Informações */}
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "22px" }}>
               <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "18px" }}>INFORMAÇÕES</div>
               <div style={{ display: "grid", gap: "14px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 72px", gap: "12px" }}>
-                  <div><label style={lbl}>Clube / Marca *</label><input style={inp} value={editing.club} onChange={e => setEditing(p => ({ ...p, club: e.target.value }))} placeholder="Ex: Flamengo, Nike" /></div>
-                  <div><label style={lbl}>Emoji</label><input style={inp} value={editing.emoji} onChange={e => setEditing(p => ({ ...p, emoji: e.target.value }))} /></div>
-                </div>
+                <div><label style={lbl}>Clube / Marca *</label><input style={inp} value={editing.club} onChange={e => setEditing(p => ({ ...p, club: e.target.value }))} placeholder="Ex: Flamengo, Nike" /></div>
                 <div><label style={lbl}>Nome *</label><input style={inp} value={editing.name} onChange={e => setEditing(p => ({ ...p, name: e.target.value }))} placeholder="Ex: Camisa Oficial I 24/25" /></div>
                 <div><label style={lbl}>Meta (subtítulo)</label><input style={inp} value={editing.meta} onChange={e => setEditing(p => ({ ...p, meta: e.target.value }))} placeholder="Ex: Home · Adidas · 2024/25" /></div>
                 <div><label style={lbl}>Descrição</label><textarea style={{ ...inp, minHeight: "80px", resize: "vertical" } as React.CSSProperties} value={editing.description} onChange={e => setEditing(p => ({ ...p, description: e.target.value }))} placeholder="Descreva o produto..." /></div>
               </div>
             </div>
 
+            {/* Preço */}
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "22px" }}>
               <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "18px" }}>PREÇO E ESTOQUE</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "14px" }}>
@@ -207,16 +237,14 @@ export default function AdminPage() {
               </div>
             </div>
 
+            {/* Categoria e tamanhos */}
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "22px" }}>
               <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "18px" }}>CATEGORIA, BADGE E TAMANHOS</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px", marginBottom: "16px" }}>
                 <div>
                   <label style={lbl}>Categoria *</label>
                   <select style={{ ...inp, cursor: "pointer" }} value={editing.category}
-                    onChange={e => {
-                      const cat = e.target.value;
-                      setEditing(p => ({ ...p, category: cat, sizes: getSizes(cat), emoji: cat === "tenis" ? "👟" : "⚽" }));
-                    }}>
+                    onChange={e => { const cat = e.target.value; setEditing(p => ({ ...p, category: cat, sizes: getSizes(cat) })); }}>
                     <option value="nacional">Nacionais</option>
                     <option value="internacional">Internacionais</option>
                     <option value="selecao">Seleções</option>
@@ -248,7 +276,59 @@ export default function AdminPage() {
             </div>
           </div>
 
+          {/* Coluna direita — Imagem e status */}
           <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+
+            {/* Upload de Imagem */}
+            <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "22px" }}>
+              <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>📸 IMAGEM DO PRODUTO</div>
+
+              {/* Preview */}
+              <div
+                onClick={() => !uploading && fileRef.current?.click()}
+                style={{ width: "100%", aspectRatio: "1", background: "var(--dark3)", borderRadius: "12px", overflow: "hidden", marginBottom: "12px", cursor: uploading ? "wait" : "pointer", border: "2px dashed rgba(255,255,255,0.12)", position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}
+              >
+                {uploading && (
+                  <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}>
+                    <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.85rem", color: "#fff", letterSpacing: "2px" }}>ENVIANDO...</div>
+                  </div>
+                )}
+                {imagePreview ? (
+                  <img src={imagePreview} alt="preview" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={() => setImagePreview("")} />
+                ) : (
+                  <div style={{ textAlign: "center", color: "rgba(245,245,245,0.3)", padding: "20px" }}>
+                    <div style={{ fontSize: "2.5rem", marginBottom: "10px" }}>📷</div>
+                    <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.78rem", letterSpacing: "1px" }}>Clique para fazer upload</div>
+                  </div>
+                )}
+              </div>
+
+              <input ref={fileRef} type="file" accept="image/*" onChange={handleFileUpload} style={{ display: "none" }} />
+
+              <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
+                style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", padding: "10px", color: "rgba(245,245,245,0.7)", cursor: "pointer", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.85rem", marginBottom: "12px" }}>
+                {uploading ? "ENVIANDO..." : imagePreview ? "📷 TROCAR IMAGEM" : "📷 FAZER UPLOAD"}
+              </button>
+
+              {/* Ou URL direta */}
+              <div>
+                <label style={{ ...lbl, marginBottom: "6px" }}>Ou cole uma URL de imagem:</label>
+                <input
+                  style={inp}
+                  value={editing.image_url}
+                  onChange={e => handleUrlChange(e.target.value)}
+                  placeholder="https://exemplo.com/imagem.jpg"
+                />
+              </div>
+
+              {editing.image_url && (
+                <div style={{ marginTop: "8px", fontSize: "0.72rem", color: "rgba(245,245,245,0.35)", wordBreak: "break-all" }}>
+                  ✓ {editing.image_url.substring(0, 50)}...
+                </div>
+              )}
+            </div>
+
+            {/* Status */}
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "22px" }}>
               <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>STATUS</div>
               <div style={{ display: "flex", alignItems: "center", gap: "14px", cursor: "pointer" }} onClick={() => setEditing(p => ({ ...p, active: !p.active }))}>
@@ -268,13 +348,9 @@ export default function AdminPage() {
             )}
 
             <button onClick={saveEdit} disabled={saving || !editing.club || !editing.name || !editing.price}
-              style={{ background: (!editing.club || !editing.name || !editing.price) ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", borderRadius: "12px", padding: "16px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: "pointer" }}>
+              style={{ background: (!editing.club || !editing.name || !editing.price) ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", borderRadius: "12px", padding: "16px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: "pointer", boxShadow: "0 4px 20px rgba(10,140,42,0.3)" }}>
               {saving ? "SALVANDO..." : "💾 SALVAR PRODUTO"}
             </button>
-
-            <div style={{ background: "rgba(245,200,0,0.08)", border: "1px solid rgba(245,200,0,0.2)", borderRadius: "10px", padding: "12px 14px", fontSize: "0.78rem", color: "rgba(245,200,0,0.8)" }}>
-              💡 Produto salvo automaticamente no Supabase — aparece no site em segundos.
-            </div>
           </div>
         </div>
       )}

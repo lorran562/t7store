@@ -861,7 +861,7 @@ export default function CheckoutPage() {
                         fontSize: "1.5rem",
                       }}
                     >
-                      {item.emoji}
+                      {"📦"}
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: "0.88rem", fontWeight: 600, color: "#fff" }}>

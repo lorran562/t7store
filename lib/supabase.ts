@@ -5,7 +5,6 @@ const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsIn
 
 export const supabase = createClient(url, key);
 
-// Tipo unificado que corresponde exatamente à tabela do Supabase
 export type Product = {
   id: number;
   club: string;
@@ -16,8 +15,7 @@ export type Product = {
   old_price: number | null;
   badge: "sale" | "new" | "retro" | null;
   category: "nacional" | "internacional" | "selecao" | "retro" | "tenis";
-  image_url: string | null;
-  emoji: string;
+  image_url: string;
   active: boolean;
   stock: number;
   sizes: string[];
@@ -27,7 +25,7 @@ export type Product = {
 
 export type Order = {
   id: number;
-  items: Array<{ club: string; name: string; size: string; price: number; emoji: string }>;
+  items: Array<{ club: string; name: string; size: string; price: number; image_url?: string }>;
   total: number;
   customer_name: string | null;
   customer_phone: string | null;
@@ -36,10 +34,8 @@ export type Order = {
   created_at: string;
 };
 
-// CartItem para uso no frontend
 export type CartItem = Product & { size: string; uid: number };
 
-// Helpers
 export function fmt(n: number): string {
   return n.toFixed(2).replace(".", ",");
 }
@@ -64,4 +60,16 @@ export function getSizes(category: string): string[] {
 
 export function isTenis(category: string): boolean {
   return category === "tenis";
+}
+
+// Upload de imagem para o storage do Supabase
+export async function uploadProductImage(file: File): Promise<string | null> {
+  const ext = file.name.split(".").pop() || "jpg";
+  const path = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await supabase.storage
+    .from("product-images")
+    .upload(path, file, { upsert: true, contentType: file.type });
+  if (error) return null;
+  const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+  return data.publicUrl;
 }

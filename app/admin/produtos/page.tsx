@@ -78,7 +78,7 @@ export default function AdminProdutos() {
           : filtered.map((p, i) => (
             <div key={p.id} style={{ display: "grid", gridTemplateColumns: "56px 1fr 110px 100px 90px 80px 100px", padding: "14px 20px", alignItems: "center", borderBottom: i < filtered.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none", opacity: p.active ? 1 : 0.45 }}>
               <div style={{ width: "40px", height: "40px", background: "var(--dark3)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem", overflow: "hidden" }}>
-                {p.image_url ? <img src={p.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : p.emoji}
+                {p.image_url ? <img src={p.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : p.category === "tenis" ? "👟" : "⚽"}
               </div>
               <div>
                 <div style={{ fontWeight: 600, color: "#fff", fontSize: "0.88rem" }}>{p.club}</div>
