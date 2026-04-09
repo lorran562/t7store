@@ -1,10 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextRequest, NextResponse } from "next/server";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { NextResponse } from "next/server";
+import { supabaseServer as supabase } from "@/lib/supabaseServer";
 
 export async function GET() {
   const { data, error } = await supabase.from("products").select("*").order("id");
@@ -12,7 +7,7 @@ export async function GET() {
   return NextResponse.json(data);
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   const body = await req.json();
   const { data, error } = await supabase.from("products").insert([body]).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
