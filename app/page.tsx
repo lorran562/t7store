@@ -4,11 +4,13 @@ import PromoBanner from "@/components/PromoBanner";
 import Ticker from "@/components/Ticker";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import Benefits from "@/components/Benefits";
-import ProductsSection from "@/components/ProductsSection";
+import ProductsSectionServer from "@/components/ProductsSectionServer";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+
+export const revalidate = 0;
 
 export default function Home() {
   return (
@@ -20,7 +22,7 @@ export default function Home() {
         <Ticker />
         <FeaturedProducts />
         <Benefits />
-        <ProductsSection />
+        <ProductsSectionServer />
         <Testimonials />
       </main>
       <Footer />
