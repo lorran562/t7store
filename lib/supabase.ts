@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pfmtwfkfdtytlwvqggce.supabase.co";
-const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmbXR3ZmtmZHR5dGx3dnFnZ2NlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MDIxMTYsImV4cCI6MjA4OTk3ODExNn0.tsEkJRa2KAW-pUCg_cZ4zJApKIiS0siK2xOvpo5-br0";
+const url  = process.env.NEXT_PUBLIC_SUPABASE_URL  || "https://pfmtwfkfdtytlwvqggce.supabase.co";
+const key  = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmbXR3ZmtmZHR5dGx3dnFnZ2NlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MDIxMTYsImV4cCI6MjA4OTk3ODExNn0.tsEkJRa2KAW-pUCg_cZ4zJApKIiS0siK2xOvpo5-br0";
 
 export const supabase = createClient(url, key);
 
@@ -23,9 +23,12 @@ export type Product = {
   updated_at: string;
 };
 
+// qty: quantidade do item no carrinho
+export type CartItem = Product & { size: string; qty: number; uid: number };
+
 export type Order = {
   id: number;
-  items: Array<{ club: string; name: string; size: string; price: number; image_url?: string }>;
+  items: Array<{ club: string; name: string; size: string; price: number; qty: number }>;
   total: number;
   customer_name: string | null;
   customer_phone: string | null;
@@ -33,8 +36,6 @@ export type Order = {
   notes: string | null;
   created_at: string;
 };
-
-export type CartItem = Product & { size: string; uid: number };
 
 export function fmt(n: number): string {
   return n.toFixed(2).replace(".", ",");
@@ -62,14 +63,10 @@ export function isTenis(category: string): boolean {
   return category === "tenis";
 }
 
-// Upload de imagem para o storage do Supabase
 export async function uploadProductImage(file: File): Promise<string | null> {
-  const ext = file.name.split(".").pop() || "jpg";
+  const ext  = file.name.split(".").pop() || "jpg";
   const path = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const { error } = await supabase.storage
-    .from("product-images")
-    .upload(path, file, { upsert: true, contentType: file.type });
+  const { error } = await supabase.storage.from("product-images").upload(path, file, { upsert: true, contentType: file.type });
   if (error) return null;
-  const { data } = supabase.storage.from("product-images").getPublicUrl(path);
-  return data.publicUrl;
+  return supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl;
 }

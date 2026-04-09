@@ -70,7 +70,7 @@ export default function AdminPedidos() {
                   <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "16px 20px" }}>
                     {order.items.map((item, i) => (
                       <div key={i} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "10px 14px", background: "rgba(255,255,255,0.03)", borderRadius: "8px", marginBottom: "8px" }}>
-                        {item.image_url && <img src={item.image_url} alt="" style={{ width: "36px", height: "36px", borderRadius: "6px", objectFit: "cover", flexShrink: 0 }} />}
+                        null
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: "0.88rem", color: "#fff", fontWeight: 600 }}>{item.club} — {item.name}</div>
                           <div style={{ fontSize: "0.75rem", color: "rgba(245,245,245,0.4)" }}>Tamanho: {item.size}</div>
