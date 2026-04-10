@@ -28,7 +28,7 @@ export default function Hero() {
           <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(18,184,58,0.18)", border: "1px solid rgba(18,184,58,0.4)", borderRadius: "50px", padding: "6px 14px", marginBottom: "16px", width: "fit-content" }}>
             <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--green-light)", boxShadow: "0 0 8px var(--green-light)", animation: "pulse 2s ease-in-out infinite", flexShrink: 0 }} />
             <span style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.78rem", letterSpacing: "1.5px", textTransform: "uppercase", color: "var(--green-light)" }}>
-              Nova coleção 24/25
+              Qualidade AAA+
             </span>
           </div>
 
@@ -45,13 +45,10 @@ export default function Hero() {
             Camisas dos maiores clubes do mundo. Qualidade AAA+, entrega rápida para todo o Brasil.
           </p>
 
-          {/* CTAs — lado a lado no mobile também */}
+          {/* CTA */}
           <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "28px" }}>
             <a href="#produtos" style={{ background: "linear-gradient(135deg,#0a8c2a,#12b83a)", color: "#fff", border: "none", padding: "14px 28px", borderRadius: "10px", fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", cursor: "pointer", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "8px", boxShadow: "0 4px 24px rgba(10,140,42,0.5)", minHeight: "52px" }}>
               ⚽ VER CAMISAS
-            </a>
-            <a href="#produtos" style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(8px)", color: "#fff", border: "1px solid rgba(255,255,255,0.25)", padding: "13px 24px", borderRadius: "10px", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.95rem", letterSpacing: "1px", textTransform: "uppercase", textDecoration: "none", display: "inline-flex", alignItems: "center", minHeight: "52px" }}>
-              👟 TÊNIS
             </a>
           </div>
 
