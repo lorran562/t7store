@@ -51,13 +51,13 @@ export default function ProductPage() {
 
   const handleBuyNow = () => {
     if (!selectedSize) { showToast(tenis ? "Selecione a numeração!" : "Selecione um tamanho!"); return; }
-    for (let i = 0; i < quantity; i++) addToCart(product, null, selectedSize, "", 1);
+    for (let i = 0; i < quantity; i++) addToCart(product, null, selectedSize, 1);
     openCart();
   };
 
   const handleAdd = () => {
     if (!selectedSize) { showToast(tenis ? "Selecione a numeração!" : "Selecione um tamanho!"); return; }
-    for (let i = 0; i < quantity; i++) addToCart(product, null, selectedSize, "", 1);
+    for (let i = 0; i < quantity; i++) addToCart(product, null, selectedSize, 1);
     showToast(`${quantity}x ${product.club} (${selectedSize}) adicionado!`);
   };
 

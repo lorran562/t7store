@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
-import { CartItem, Product, ProductVariation, fmt, effectivePrice, effectiveImage } from "@/lib/supabase";
+import { CartItem, Product, ColorGroup, fmt } from "@/lib/supabase";
 
 interface CartContextType {
   cart: CartItem[];
@@ -8,7 +8,7 @@ interface CartContextType {
   cartTotal: string;
   cartSubtotal: number;
   isCartOpen: boolean;
-  addToCart: (product: Product, variation: ProductVariation | null, size: string, color: string, qty?: number) => void;
+  addToCart: (product: Product, group: ColorGroup | null, size: string, qty?: number) => void;
   removeFromCart: (uid: number) => void;
   updateQty: (uid: number, qty: number) => void;
   clearCart: () => void;
@@ -18,12 +18,12 @@ interface CartContextType {
 }
 
 const CartContext = createContext<CartContextType | null>(null);
-const STORAGE_KEY = "t7store_cart_v2";
+const STORAGE_KEY = "t7store_cart_v3";
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart]           = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
+  const [hydrated, setHydrated]   = useState(false);
 
   useEffect(() => {
     try {
@@ -40,19 +40,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addToCart = useCallback((
     product: Product,
-    variation: ProductVariation | null,
+    group: ColorGroup | null,
     size: string,
-    color: string,
     qty = 1
   ) => {
-    const price = effectivePrice(product, variation);
-    const image_url = effectiveImage(product, variation);
+    const color     = group?.color ?? "";
+    const image_url = group?.image_url || product.image_url;
     setCart(prev => {
-      const key = `${product.id}-${variation?.id ?? "none"}-${size}-${color}`;
       const idx = prev.findIndex(x =>
         x.product_id === product.id &&
-        x.variation_id === (variation?.id ?? null) &&
-        x.size === size && x.color === color
+        x.color_group_id === (group?.id ?? null) &&
+        x.size === size
       );
       if (idx >= 0) {
         const next = [...prev];
@@ -62,7 +60,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const item: CartItem = {
         uid: Date.now() + Math.random(),
         product_id: product.id,
-        variation_id: variation?.id ?? null,
+        color_group_id: group?.id ?? null,
         club: product.club,
         brand: product.brand || product.club,
         name: product.name,
@@ -70,7 +68,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         type: product.type,
         color,
         size,
-        price,
+        price: product.price,
         image_url,
         qty,
       };

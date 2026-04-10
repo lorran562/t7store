@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { supabase, Product, ProductVariation, CATEGORIES, Category } from "@/lib/supabase";
+import { supabase, Product, ColorGroup, CATEGORIES, Category } from "@/lib/supabase";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
 import ProductCard from "./ProductCard";
@@ -40,18 +40,19 @@ export default function ProductsSection() {
 
       if (!prods) { setLoading(false); return; }
 
-      const { data: vars } = await supabase
-        .from("product_variations")
+      const { data: groups } = await supabase
+        .from("product_color_groups")
         .select("*")
-        .in("product_id", prods.map(p => p.id));
+        .in("product_id", prods.map(p => p.id))
+        .order("sort_order");
 
-      const varsByProduct: Record<number, ProductVariation[]> = {};
-      (vars || []).forEach(v => {
-        if (!varsByProduct[v.product_id]) varsByProduct[v.product_id] = [];
-        varsByProduct[v.product_id].push(v);
+      const groupsByProduct: Record<number, ColorGroup[]> = {};
+      (groups || []).forEach(g => {
+        if (!groupsByProduct[g.product_id]) groupsByProduct[g.product_id] = [];
+        groupsByProduct[g.product_id].push(g);
       });
 
-      setProducts(prods.map(p => ({ ...p, variations: varsByProduct[p.id] || [] })));
+      setProducts(prods.map(p => ({ ...p, colorGroups: groupsByProduct[p.id] || [] })));
       setLoading(false);
     }
     load();
@@ -61,15 +62,15 @@ export default function ProductsSection() {
 
   const handleAdd = useCallback((
     product: Product,
-    variation: ProductVariation | null,
+    group: ColorGroup | null,
     size: string,
-    color: string,
     qty: number
   ) => {
-    addToCart(product, variation, size, color, qty);
+    addToCart(product, group, size, qty);
     setSelected(null);
-    const varInfo = [color, size].filter(Boolean).join(" / ");
-    showToast(`✅ ${product.club} · ${varInfo}${qty > 1 ? ` ×${qty}` : ""}`);
+    const color = group?.color || "";
+    const info  = [color, size].filter(Boolean).join(" / ");
+    showToast(`✅ ${product.club} · ${info}${qty > 1 ? ` ×${qty}` : ""}`);
     setTimeout(openCart, 400);
   }, [addToCart, openCart, showToast]);
 
@@ -83,13 +84,12 @@ export default function ProductsSection() {
       </div>
 
       {/* Filtros */}
-      <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "4px", marginBottom: "24px", scrollSnapType: "x mandatory" }} className="no-scrollbar">
+      <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "4px", marginBottom: "24px" }} className="no-scrollbar">
         {CATEGORIES.map(({ label, value }) => {
           const isActive = category === value;
-          const isTenisBtn = value === "tenis";
           return (
             <button key={value} onClick={() => setCategory(value)}
-              style={{ background: isActive ? (isTenisBtn ? "rgba(0,87,183,0.9)" : "var(--green)") : "rgba(255,255,255,0.06)", border: `1px solid ${isActive ? (isTenisBtn ? "#0057b7" : "var(--green)") : "rgba(255,255,255,0.1)"}`, color: isActive ? "#fff" : "rgba(245,245,245,0.65)", padding: "8px 16px", borderRadius: "50px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.82rem", textTransform: "uppercase", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, scrollSnapAlign: "start", minHeight: "38px", transition: "all .2s" }}>
+              style={{ background: isActive ? (value === "tenis" ? "rgba(0,87,183,0.9)" : "var(--green)") : "rgba(255,255,255,0.06)", border: `1px solid ${isActive ? (value === "tenis" ? "#0057b7" : "var(--green)") : "rgba(255,255,255,0.1)"}`, color: isActive ? "#fff" : "rgba(245,245,245,0.65)", padding: "8px 16px", borderRadius: "50px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.82rem", textTransform: "uppercase", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, minHeight: "38px", transition: "all .2s" }}>
               {label}
             </button>
           );
@@ -98,10 +98,9 @@ export default function ProductsSection() {
 
       {/* Grid */}
       <div className="products-grid">
-        {loading
-          ? [...Array(8)].map((_, i) => <SkeletonCard key={i} />)
-          : filtered.map(p => <ProductCard key={p.id} product={p} onOpenModal={setSelected} />)
-        }
+        {loading ? [...Array(8)].map((_, i) => <SkeletonCard key={i} />) : filtered.map(p => (
+          <ProductCard key={p.id} product={p} onOpenModal={setSelected} />
+        ))}
       </div>
 
       {!loading && filtered.length === 0 && (

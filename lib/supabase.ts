@@ -5,25 +5,27 @@ const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsIn
 
 export const supabase = createClient(url, key);
 
-export type ProductVariation = {
+// ─── Tipos de dado ────────────────────────────────────────────────────────────
+
+export type SizeStock = { size: string; stock: number };
+
+export type ColorGroup = {
   id: number;
   product_id: number;
-  color: string;
-  size: string;
-  stock: number;
-  price: number | null;
-  image_url: string;
+  color: string;       // "" = produto sem cor específica
+  image_url: string;   // imagem desta cor
+  sizes: SizeStock[];  // [{size:"M", stock:10}, ...]
+  sort_order: number;
   created_at: string;
   updated_at: string;
 };
 
-export type VariationForm = {
+// Formulário de um grupo de cor (usado no admin — sem IDs gerados)
+export type ColorGroupForm = {
   tempId: string;
   color: string;
-  size: string;
-  stock: number;
-  price: string;
   image_url: string;
+  sizes: { tempId: string; size: string; stock: number }[];
 };
 
 export type Product = {
@@ -44,13 +46,14 @@ export type Product = {
   sizes: string[];
   created_at: string;
   updated_at: string;
-  variations?: ProductVariation[];
+  // Joined
+  colorGroups?: ColorGroup[];
 };
 
 export type CartItem = {
   uid: number;
   product_id: number;
-  variation_id: number | null;
+  color_group_id: number | null;
   club: string;
   brand: string;
   name: string;
@@ -73,6 +76,8 @@ export type Order = {
   notes: string | null;
   created_at: string;
 };
+
+// ─── Utilitários ─────────────────────────────────────────────────────────────
 
 export function fmt(n: number): string {
   return n.toFixed(2).replace(".", ",");
@@ -100,27 +105,14 @@ export function isTenis(type: string): boolean {
   return type === "tenis";
 }
 
-export function getColors(variations: ProductVariation[]): string[] {
-  return Array.from(new Set(variations.map(v => v.color).filter(Boolean)));
+// Retorna imagem efetiva: do grupo de cor ou do produto pai
+export function effectiveImage(product: Product, group?: ColorGroup | null): string {
+  return group?.image_url || product.image_url;
 }
 
-export function findVariation(
-  variations: ProductVariation[],
-  color: string,
-  size: string
-): ProductVariation | undefined {
-  return variations.find(v => {
-    const colorMatch = color ? v.color === color : true;
-    return colorMatch && v.size === size;
-  });
-}
-
-export function effectivePrice(product: Product, variation?: ProductVariation | null): number {
-  return variation?.price ?? product.price;
-}
-
-export function effectiveImage(product: Product, variation?: ProductVariation | null): string {
-  return (variation?.image_url) || product.image_url;
+// Estoque total de um produto (soma de todos os grupos)
+export function totalStock(groups: ColorGroup[]): number {
+  return groups.reduce((s, g) => s + g.sizes.reduce((ss, x) => ss + x.stock, 0), 0);
 }
 
 export async function uploadProductImage(file: File): Promise<string | null> {
@@ -131,4 +123,9 @@ export async function uploadProductImage(file: File): Promise<string | null> {
     .upload(path, file, { upsert: true, contentType: file.type });
   if (error) return null;
   return supabase.storage.from("product-images").getPublicUrl(path).data.publicUrl;
+}
+
+// Helper para criar ID temporário
+export function tmpId(): string {
+  return Math.random().toString(36).slice(2);
 }
