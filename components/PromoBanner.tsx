@@ -42,7 +42,7 @@ export default function PromoBanner() {
           alignItems: "center",
           justifyContent: "center",
           gap: "8px",
-          fontFamily: "'Barlow Condensed', sans-serif",
+          fontFamily: "var(--font-body)",
           fontWeight: 700,
           fontSize: "0.85rem",
           letterSpacing: "1px",

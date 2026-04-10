@@ -44,7 +44,7 @@ export default function Testimonials() {
       <div style={{ textAlign: "center", marginBottom: "48px" }}>
         <span
           style={{
-            fontFamily: "'Barlow Condensed', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: "0.78rem",
             fontWeight: 700,
             letterSpacing: "4px",
@@ -58,7 +58,7 @@ export default function Testimonials() {
         </span>
         <h2
           style={{
-            fontFamily: "'Bebas Neue', sans-serif",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
             letterSpacing: "2px",
           }}
@@ -100,7 +100,7 @@ export default function Testimonials() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontFamily: "'Bebas Neue', sans-serif",
+                  fontFamily: "var(--font-display)",
                   fontSize: "1.3rem",
                   color: "#fff",
                 }}
@@ -110,7 +110,7 @@ export default function Testimonials() {
               <div>
                 <div
                   style={{
-                    fontFamily: "'Barlow Condensed', sans-serif",
+                    fontFamily: "var(--font-body)",
                     fontWeight: 700,
                     fontSize: "1rem",
                     color: "#fff",
@@ -157,7 +157,7 @@ export default function Testimonials() {
                 padding: "8px 12px",
                 fontSize: "0.78rem",
                 color: "var(--green-light)",
-                fontFamily: "'Barlow Condensed', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontWeight: 700,
                 letterSpacing: "0.5px",
               }}

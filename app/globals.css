@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500&display=swap');
+/* Nova tipografia: Syne (display agressivo) + DM Sans (corpo limpo) */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap');
 
 :root {
   --green: #0a8c2a;
@@ -15,6 +16,11 @@
   --dark3: #1a1a1a;
   --white: #f5f5f5;
   --header-h: 56px;
+
+  /* Fontes */
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+  --font-mono:    'Space Grotesk', sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -22,21 +28,19 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
-  font-family: 'Barlow', sans-serif;
+  font-family: var(--font-body);
   background: var(--black);
   color: var(--white);
   overflow-x: hidden;
-  /* Melhor scroll no iOS */
   -webkit-overflow-scrolling: touch;
 }
 
-/* ── TIPOGRAFIA RESPONSIVA ─────────────────────────── */
-h1, h2, h3 { line-height: 1.05; }
+h1, h2, h3 { line-height: 1.05; font-family: var(--font-display); }
 
-/* ── GRID DE PRODUTOS — mobile-first ──────────────── */
+/* ── GRID DE PRODUTOS ──────────────────────────────────────────────────────── */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);   /* mobile: 2 colunas */
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 @media (min-width: 600px) {
@@ -46,44 +50,36 @@ h1, h2, h3 { line-height: 1.05; }
   .products-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
 }
 
-/* ── LAYOUT PRODUTO DETALHE ───────────────────────── */
+/* ── LAYOUTS ───────────────────────────────────────────────────────────────── */
 .product-detail-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 28px;
+  display: grid; grid-template-columns: 1fr; gap: 28px;
 }
 @media (min-width: 768px) {
   .product-detail-grid { grid-template-columns: 1fr 1fr; gap: 48px; }
 }
 
-/* ── LAYOUT CHECKOUT ──────────────────────────────── */
 .checkout-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
+  display: grid; grid-template-columns: 1fr; gap: 24px;
 }
 @media (min-width: 1024px) {
   .checkout-grid { grid-template-columns: 1fr 400px; }
 }
 
-/* ── HERO ─────────────────────────────────────────── */
 .hero-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
+  display: grid; grid-template-columns: 1fr; gap: 24px;
 }
 @media (min-width: 900px) {
   .hero-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* ── TICKER ───────────────────────────────────────── */
+/* ── TICKER ────────────────────────────────────────────────────────────────── */
 @keyframes scroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
 .ticker-animate { animation: scroll 22s linear infinite; }
 
-/* ── ANIMAÇÕES ────────────────────────────────────── */
+/* ── ANIMAÇÕES ─────────────────────────────────────────────────────────────── */
 @keyframes fadeUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 @keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
 @keyframes float    { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-16px); } }
@@ -94,7 +90,7 @@ h1, h2, h3 { line-height: 1.05; }
 @keyframes spin     { to { transform:rotate(360deg); } }
 @keyframes shimmer  { 0% { background-position:-200% 0; } 100% { background-position:200% 0; } }
 
-/* ── SKELETON LOADER ──────────────────────────────── */
+/* ── SKELETON LOADER ───────────────────────────────────────────────────────── */
 .skeleton {
   background: linear-gradient(90deg, var(--dark2) 25%, var(--dark3) 50%, var(--dark2) 75%);
   background-size: 200% 100%;
@@ -102,38 +98,23 @@ h1, h2, h3 { line-height: 1.05; }
   border-radius: 8px;
 }
 
-/* ── BOTÕES: TOUCH TARGET MÍNIMO 44px ────────────── */
+/* ── TOUCH ─────────────────────────────────────────────────────────────────── */
 button, a[role="button"] { min-height: 44px; }
 
-/* ── FOCO / ACESSIBILIDADE ────────────────────────── */
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--green-light);
-  outline-offset: 2px;
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--green-light); outline-offset: 2px;
 }
 
-/* ── INPUTS MOBILE ────────────────────────────────── */
 input, select, textarea {
-  font-size: 16px !important; /* evita zoom no iOS */
+  font-size: 16px !important;
   -webkit-appearance: none;
   border-radius: 10px;
 }
 
-/* ── SCROLLBAR OCULTA (ticker) ───────────────────── */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* ── TRANSITIONS GLOBAIS ──────────────────────────── */
 button, a { transition: all 0.2s ease; }
-
-/* ── SELEÇÃO ──────────────────────────────────────── */
 ::selection { background: rgba(18,184,58,.3); color: #fff; }
-
-/* ── TAP HIGHLIGHT MOBILE ─────────────────────────── */
 * { -webkit-tap-highlight-color: transparent; }
-
-/* ── SAFE AREA (notch) ────────────────────────────── */
 .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }

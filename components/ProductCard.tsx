@@ -16,7 +16,7 @@ function Placeholder({ category }: { category: string }) {
   return (
     <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "8px", background: isTenis(category) ? "linear-gradient(135deg,#0a1628,#0d1e3d)" : "linear-gradient(135deg,#0a1a0a,#0d2e12)" }}>
       <span style={{ fontSize: "clamp(2rem,8vw,3rem)", opacity: 0.22 }}>{isTenis(category) ? "👟" : "⚽"}</span>
-      <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.6rem", fontWeight: 700, letterSpacing: "1.5px", color: "rgba(255,255,255,0.18)", textTransform: "uppercase" }}>Sem imagem</span>
+      <span style={{ fontFamily: "var(--font-body)", fontSize: "0.6rem", fontWeight: 700, letterSpacing: "1.5px", color: "rgba(255,255,255,0.18)", textTransform: "uppercase" }}>Sem imagem</span>
     </div>
   );
 }
@@ -46,12 +46,12 @@ export default function ProductCard({ product, onOpenModal }: Props) {
     >
       {/* Badge desconto */}
       {badge && (
-        <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 3, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "0.65rem", letterSpacing: "1px", textTransform: "uppercase", padding: "3px 8px", borderRadius: "5px", background: badge.bg, color: badge.color, boxShadow: "0 2px 6px rgba(0,0,0,0.4)" }}>
+        <div style={{ position: "absolute", top: "8px", left: "8px", zIndex: 3, fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "0.65rem", letterSpacing: "1px", textTransform: "uppercase", padding: "3px 8px", borderRadius: "5px", background: badge.bg, color: badge.color, boxShadow: "0 2px 6px rgba(0,0,0,0.4)" }}>
           {discount > 0 ? `-${discount}%` : badge.label}
         </div>
       )}
       {tenis && (
-        <div style={{ position: "absolute", top: "8px", right: "8px", zIndex: 3, fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "0.6rem", padding: "3px 7px", borderRadius: "4px", background: "rgba(0,87,183,0.9)", color: "#fff" }}>TÊNIS</div>
+        <div style={{ position: "absolute", top: "8px", right: "8px", zIndex: 3, fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "0.6rem", padding: "3px 7px", borderRadius: "4px", background: "rgba(0,87,183,0.9)", color: "#fff" }}>TÊNIS</div>
       )}
 
       {/* Imagem quadrada */}
@@ -73,7 +73,7 @@ export default function ProductCard({ product, onOpenModal }: Props) {
 
         {/* Overlay "Ver produto" no hover */}
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0)", display: "flex", alignItems: "center", justifyContent: "center", transition: "background .25s" }} className="group-hover:bg-black/30">
-          <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "0.85rem", letterSpacing: "2px", color: "#fff", background: "rgba(0,0,0,0.7)", padding: "8px 16px", borderRadius: "8px", opacity: 0, transition: "opacity .25s", border: "1px solid rgba(255,255,255,0.2)" }} className="group-hover:opacity-100">
+          <span style={{ fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "0.85rem", letterSpacing: "2px", color: "#fff", background: "rgba(0,0,0,0.7)", padding: "8px 16px", borderRadius: "8px", opacity: 0, transition: "opacity .25s", border: "1px solid rgba(255,255,255,0.2)" }} className="group-hover:opacity-100">
             VER PRODUTO
           </span>
         </div>
@@ -81,12 +81,12 @@ export default function ProductCard({ product, onOpenModal }: Props) {
 
       {/* Info */}
       <div style={{ padding: "10px 12px 14px", display: "flex", flexDirection: "column", flex: 1 }}>
-        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: tenis ? "#6baed6" : "var(--green-light)", marginBottom: "3px" }}>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: tenis ? "#6baed6" : "var(--green-light)", marginBottom: "3px" }}>
           {product.club}
         </div>
 
         {/* Nome — máx 2 linhas */}
-        <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "clamp(0.82rem,2.5vw,0.95rem)", color: "#fff", lineHeight: 1.2, marginBottom: "10px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" } as React.CSSProperties}>
+        <div style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "clamp(0.82rem,2.5vw,0.95rem)", color: "#fff", lineHeight: 1.2, marginBottom: "10px", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" } as React.CSSProperties}>
           {product.name}
         </div>
 
@@ -98,7 +98,7 @@ export default function ProductCard({ product, onOpenModal }: Props) {
                 R$ {fmt(product.old_price)}
               </div>
             )}
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(1.2rem,4vw,1.5rem)", color: "var(--yellow)", lineHeight: 1 }}>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.2rem,4vw,1.5rem)", color: "var(--yellow)", lineHeight: 1 }}>
               R$ {fmt(product.price)}
             </div>
           </div>

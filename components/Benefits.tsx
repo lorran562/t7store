@@ -32,7 +32,7 @@ export default function Benefits() {
       <div style={{ textAlign: "center", marginBottom: "48px" }}>
         <span
           style={{
-            fontFamily: "'Barlow Condensed', sans-serif",
+            fontFamily: "var(--font-body)",
             fontSize: "0.78rem",
             fontWeight: 700,
             letterSpacing: "4px",
@@ -46,7 +46,7 @@ export default function Benefits() {
         </span>
         <h2
           style={{
-            fontFamily: "'Bebas Neue', sans-serif",
+            fontFamily: "var(--font-display)",
             fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
             letterSpacing: "2px",
           }}
@@ -88,7 +88,7 @@ export default function Benefits() {
             </div>
             <h3
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontWeight: 700,
                 fontSize: "1.1rem",
                 letterSpacing: "1px",

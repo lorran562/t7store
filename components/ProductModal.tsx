@@ -118,7 +118,7 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
             </div>
           )}
           {discount > 0 && product.badge === "sale" && (
-            <div style={{ position: "absolute", top: "12px", left: "12px", background: "#e03c3c", color: "#fff", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "0.78rem", padding: "4px 10px", borderRadius: "6px" }}>
+            <div style={{ position: "absolute", top: "12px", left: "12px", background: "#e03c3c", color: "#fff", fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "0.78rem", padding: "4px 10px", borderRadius: "6px" }}>
               -{discount}%
             </div>
           )}
@@ -135,10 +135,10 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
 
         <div style={{ padding: "20px 20px 28px" }}>
           {/* Header */}
-          <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: tenis ? "#6baed6" : "var(--green-light)", marginBottom: "3px" }}>
+          <div style={{ fontFamily: "var(--font-body)", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "2.5px", textTransform: "uppercase", color: tenis ? "#6baed6" : "var(--green-light)", marginBottom: "3px" }}>
             {product.club}
           </div>
-          <h2 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "1.4rem", color: "#fff", lineHeight: 1.15, marginBottom: "3px" }}>
+          <h2 style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "1.4rem", color: "#fff", lineHeight: 1.15, marginBottom: "3px" }}>
             {product.name}
           </h2>
           {product.meta && <p style={{ fontSize: "0.78rem", color: "rgba(245,245,245,0.4)", marginBottom: "14px" }}>{product.meta}</p>}
@@ -148,7 +148,7 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
             {product.old_price && (
               <span style={{ fontSize: "0.85rem", color: "rgba(245,245,245,0.35)", textDecoration: "line-through" }}>R$ {fmt(product.old_price)}</span>
             )}
-            <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2.1rem", color: "var(--yellow)", lineHeight: 1 }}>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: "2.1rem", color: "var(--yellow)", lineHeight: 1 }}>
               R$ {fmt(product.price)}
             </span>
           </div>
@@ -156,7 +156,7 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
           {/* ── SELEÇÃO DE COR ── */}
           {hasColors && (
             <div style={{ marginBottom: "20px" }}>
-              <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "10px" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "10px" }}>
                 <span style={{ color: "rgba(245,245,245,0.5)" }}>Cor</span>
                 {activeGroup?.color && <span style={{ color: "#fff", marginLeft: "8px" }}>{activeGroup.color}</span>}
               </p>
@@ -178,7 +178,7 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
                       }} />
                       {/* Nome curto */}
                       {g.color && (
-                        <span style={{ fontSize: "0.62rem", color: isActive ? "#fff" : "rgba(245,245,245,0.45)", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, textTransform: "capitalize", maxWidth: "50px", textAlign: "center", lineHeight: 1.1 }}>
+                        <span style={{ fontSize: "0.62rem", color: isActive ? "#fff" : "rgba(245,245,245,0.45)", fontFamily: "var(--font-body)", fontWeight: 700, textTransform: "capitalize", maxWidth: "50px", textAlign: "center", lineHeight: 1.1 }}>
                           {g.color}
                         </span>
                       )}
@@ -191,7 +191,7 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
 
           {/* ── SELEÇÃO DE TAMANHO ── */}
           <div style={{ marginBottom: "18px" }}>
-            <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "10px" }}>
+            <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "10px" }}>
               <span style={{ color: size ? "#fff" : "rgba(245,245,245,0.5)" }}>
                 {tenis ? "Numeração" : "Tamanho"}
               </span>
@@ -210,7 +210,7 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
                       border: `2px solid ${isSelected ? accent : outOfStock ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.12)"}`,
                       background: isSelected ? accent : outOfStock ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.04)",
                       color: isSelected ? "#fff" : outOfStock ? "rgba(245,245,245,0.22)" : "rgba(245,245,245,0.7)",
-                      fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.9rem",
+                      fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.9rem",
                       cursor: outOfStock ? "not-allowed" : "pointer",
                       minWidth: "50px", minHeight: "42px", textAlign: "center",
                       transition: "all .15s", position: "relative",
@@ -242,11 +242,11 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
 
           {/* Quantidade */}
           <div style={{ marginBottom: "20px" }}>
-            <p style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1.5px", textTransform: "uppercase", color: "rgba(245,245,245,0.5)", marginBottom: "10px" }}>Quantidade</p>
+            <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1.5px", textTransform: "uppercase", color: "rgba(245,245,245,0.5)", marginBottom: "10px" }}>Quantidade</p>
             <div style={{ display: "flex", alignItems: "center", background: "rgba(255,255,255,0.05)", borderRadius: "10px", border: "1px solid rgba(255,255,255,0.1)", width: "fit-content", overflow: "hidden" }}>
               <button onClick={() => setQty(q => Math.max(1, q - 1))}
                 style={{ width: "46px", height: "46px", background: "transparent", border: "none", color: qty === 1 ? "rgba(255,255,255,0.2)" : "#fff", fontSize: "1.3rem", cursor: qty === 1 ? "not-allowed" : "pointer", borderRight: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>−</button>
-              <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.4rem", color: "#fff", minWidth: "50px", textAlign: "center", userSelect: "none" }}>{qty}</span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.4rem", color: "#fff", minWidth: "50px", textAlign: "center", userSelect: "none" }}>{qty}</span>
               <button onClick={() => setQty(q => Math.min(maxQty, q + 1))}
                 style={{ width: "46px", height: "46px", background: "transparent", border: "none", color: qty >= maxQty ? "rgba(255,255,255,0.2)" : "#fff", fontSize: "1.3rem", cursor: qty >= maxQty ? "not-allowed" : "pointer", borderLeft: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
             </div>
@@ -254,15 +254,15 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
 
           {/* Subtotal */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.03)", borderRadius: "10px", padding: "11px 16px", marginBottom: "14px", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.78rem", color: "rgba(245,245,245,0.5)", letterSpacing: "1px", textTransform: "uppercase" }}>Subtotal</span>
-            <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.4rem", color: "var(--yellow)" }}>
+            <span style={{ fontFamily: "var(--font-body)", fontSize: "0.78rem", color: "rgba(245,245,245,0.5)", letterSpacing: "1px", textTransform: "uppercase" }}>Subtotal</span>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: "1.4rem", color: "var(--yellow)" }}>
               R$ {fmt(product.price * qty)}
             </span>
           </div>
 
           {/* Botão principal */}
           <button onClick={handleAdd} disabled={!canAdd}
-            style={{ width: "100%", background: added ? "rgba(18,184,58,0.3)" : canAdd ? gradient : "rgba(255,255,255,0.06)", border: added ? "1px solid var(--green)" : "none", padding: "16px", borderRadius: "12px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: canAdd || added ? "#fff" : "rgba(255,255,255,0.25)", cursor: canAdd ? "pointer" : "not-allowed", minHeight: "54px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", transition: "all .25s", boxShadow: canAdd ? (tenis ? "0 4px 20px rgba(0,87,183,0.4)" : "0 4px 20px rgba(10,140,42,0.4)") : "none" }}>
+            style={{ width: "100%", background: added ? "rgba(18,184,58,0.3)" : canAdd ? gradient : "rgba(255,255,255,0.06)", border: added ? "1px solid var(--green)" : "none", padding: "16px", borderRadius: "12px", fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: canAdd || added ? "#fff" : "rgba(255,255,255,0.25)", cursor: canAdd ? "pointer" : "not-allowed", minHeight: "54px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", transition: "all .25s", boxShadow: canAdd ? (tenis ? "0 4px 20px rgba(0,87,183,0.4)" : "0 4px 20px rgba(10,140,42,0.4)") : "none" }}>
             {added ? "✅ ADICIONADO!" : !size ? (tenis ? "SELECIONE A NUMERAÇÃO" : "SELECIONE UM TAMANHO") : !inStock ? "SEM ESTOQUE" : `🛒 ADICIONAR · R$ ${fmt(product.price * qty)}`}
           </button>
         </div>

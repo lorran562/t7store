@@ -3,12 +3,12 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "T7 Store - Camisas de Futebol & Tênis Premium",
-  description: "Camisas dos maiores clubes nacionais e internacionais + Tênis esportivos. Qualidade AAA+, frete grátis acima de R$299. Pague com PIX e ganhe 5% de desconto!",
-  keywords: ["camisas de futebol", "camisa flamengo", "camisa corinthians", "tênis futebol", "camisas premium", "camisas retro"],
+  title: "T7 Store — Camisas de Futebol Premium",
+  description: "Camisas dos maiores clubes nacionais e internacionais. Qualidade AAA+, frete grátis acima de R$299.",
+  keywords: ["camisas de futebol", "camisa flamengo", "camisa corinthians", "camisas premium"],
   openGraph: {
     title: "T7 Store - Camisas e Tênis Premium",
-    description: "As melhores camisas de futebol do Brasil. Qualidade premium, preço justo.",
+    description: "Camisas de futebol premium. Qualidade AAA+.",
     type: "website",
     locale: "pt_BR",
   },

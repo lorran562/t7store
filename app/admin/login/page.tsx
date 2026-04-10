@@ -39,7 +39,7 @@ export default function AdminLoginPage() {
           <Image src="/t7estore.jpg" alt="T7 Store" width={72} height={72}
             style={{ objectFit: "contain", borderRadius: "12px", marginBottom: "12px",
               filter: "drop-shadow(0 0 16px rgba(18,184,58,0.5))" }} />
-          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.6rem",
+          <div style={{ fontFamily: "var(--font-display)", fontSize: "1.6rem",
             letterSpacing: "3px", background: "linear-gradient(135deg,#fff 30%,#f5c800)",
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
             T7 STORE ADMIN
@@ -51,7 +51,7 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div>
-            <label style={{ display: "block", fontFamily: "'Barlow Condensed', sans-serif",
+            <label style={{ display: "block", fontFamily: "var(--font-body)",
               fontWeight: 700, fontSize: "0.8rem", letterSpacing: "1px", textTransform: "uppercase",
               color: "rgba(245,245,245,0.55)", marginBottom: "8px" }}>
               Senha
@@ -73,7 +73,7 @@ export default function AdminLoginPage() {
           <button type="submit" disabled={loading}
             style={{ background: loading ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#0a8c2a,#12b83a)",
               border: "none", borderRadius: "10px", padding: "16px", marginTop: "8px",
-              fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1rem",
+              fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "1rem",
               letterSpacing: "2px", textTransform: "uppercase", color: "#fff",
               cursor: loading ? "wait" : "pointer" }}>
             {loading ? "ENTRANDO..." : "ENTRAR NO PAINEL"}

@@ -48,7 +48,7 @@ export default function Footer() {
         >
           <h3
             style={{
-              fontFamily: "'Bebas Neue', sans-serif",
+              fontFamily: "var(--font-display)",
               fontSize: "1.8rem",
               letterSpacing: "2px",
               color: "#fff",
@@ -95,7 +95,7 @@ export default function Footer() {
                 border: "none",
                 borderRadius: "8px",
                 padding: "14px 28px",
-                fontFamily: "'Barlow Condensed', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontWeight: 700,
                 fontSize: "0.92rem",
                 letterSpacing: "1px",
@@ -130,7 +130,7 @@ export default function Footer() {
           <div>
             <div
               style={{
-                fontFamily: "'Bebas Neue', sans-serif",
+                fontFamily: "var(--font-display)",
                 fontSize: "2rem",
                 letterSpacing: "3px",
                 background: "linear-gradient(135deg,#fff 30%,#f5c800)",
@@ -184,7 +184,7 @@ export default function Footer() {
           <div>
             <h4
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontWeight: 700,
                 fontSize: "0.92rem",
                 letterSpacing: "2px",
@@ -219,7 +219,7 @@ export default function Footer() {
           <div>
             <h4
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontWeight: 700,
                 fontSize: "0.92rem",
                 letterSpacing: "2px",
@@ -254,7 +254,7 @@ export default function Footer() {
           <div>
             <h4
               style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
+                fontFamily: "var(--font-body)",
                 fontWeight: 700,
                 fontSize: "0.92rem",
                 letterSpacing: "2px",
@@ -316,7 +316,7 @@ export default function Footer() {
                   padding: "5px 12px",
                   fontSize: "0.72rem",
                   color: "rgba(245,245,245,0.5)",
-                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontFamily: "var(--font-body)",
                   fontWeight: 700,
                   letterSpacing: "1px",
                 }}

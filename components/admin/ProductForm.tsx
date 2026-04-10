@@ -69,13 +69,13 @@ export default function ProductForm({ product, isEdit }: { product?: Product; is
   };
 
   const inp: React.CSSProperties = { width: "100%", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "10px", padding: "12px 16px", color: "#fff", fontSize: "0.9rem", outline: "none" };
-  const lbl: React.CSSProperties = { display: "block", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.75rem", letterSpacing: "1px", textTransform: "uppercase", color: "rgba(245,245,245,0.5)", marginBottom: "8px" };
+  const lbl: React.CSSProperties = { display: "block", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.75rem", letterSpacing: "1px", textTransform: "uppercase", color: "rgba(245,245,245,0.5)", marginBottom: "8px" };
 
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "32px" }}>
         <Link href="/admin/produtos" style={{ color: "rgba(245,245,245,0.4)", textDecoration: "none", fontSize: "0.9rem" }}>← Produtos</Link>
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", letterSpacing: "2px", color: "#fff" }}>
+        <h1 style={{ fontFamily: "var(--font-display)", fontSize: "2rem", letterSpacing: "2px", color: "#fff" }}>
           {isEdit ? "EDITAR PRODUTO" : "NOVO PRODUTO"}
         </h1>
       </div>
@@ -83,7 +83,7 @@ export default function ProductForm({ product, isEdit }: { product?: Product; is
         <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "24px", alignItems: "start" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "24px" }}>
-              <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "20px" }}>INFORMAÇÕES</h3>
+              <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "20px" }}>INFORMAÇÕES</h3>
               <div style={{ display: "grid", gap: "16px" }}>
                 <div><label style={lbl}>Clube / Marca *</label><input style={inp} value={form.club} onChange={e => set("club", e.target.value)} placeholder="Ex: Flamengo, Nike" /></div>
                 <div><label style={lbl}>Nome *</label><input style={inp} value={form.name} onChange={e => set("name", e.target.value)} placeholder="Ex: Camisa Oficial I 24/25" /></div>
@@ -92,7 +92,7 @@ export default function ProductForm({ product, isEdit }: { product?: Product; is
               </div>
             </div>
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "24px" }}>
-              <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "20px" }}>PREÇO E ESTOQUE</h3>
+              <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "20px" }}>PREÇO E ESTOQUE</h3>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "16px" }}>
                 <div><label style={lbl}>Preço *</label><input style={inp} type="number" step="0.01" min="0" value={form.price} onChange={e => set("price", e.target.value)} placeholder="189.90" /></div>
                 <div><label style={lbl}>Preço antigo</label><input style={inp} type="number" step="0.01" min="0" value={form.old_price} onChange={e => set("old_price", e.target.value)} placeholder="239.90" /></div>
@@ -100,7 +100,7 @@ export default function ProductForm({ product, isEdit }: { product?: Product; is
               </div>
             </div>
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "24px" }}>
-              <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "20px" }}>CATEGORIA, BADGE E TAMANHOS</h3>
+              <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "20px" }}>CATEGORIA, BADGE E TAMANHOS</h3>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
                 <div>
                   <label style={lbl}>Categoria *</label>
@@ -128,7 +128,7 @@ export default function ProductForm({ product, isEdit }: { product?: Product; is
                   const active = form.sizes.includes(size);
                   return (
                     <button key={size} type="button" onClick={() => set("sizes", active ? form.sizes.filter(s => s !== size) : [...form.sizes, size])}
-                      style={{ background: active ? "var(--green)" : "rgba(255,255,255,0.05)", border: `1px solid ${active ? "var(--green)" : "rgba(255,255,255,0.15)"}`, color: active ? "#fff" : "rgba(245,245,245,0.6)", padding: "6px 14px", borderRadius: "6px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.82rem", cursor: "pointer" }}>
+                      style={{ background: active ? "var(--green)" : "rgba(255,255,255,0.05)", border: `1px solid ${active ? "var(--green)" : "rgba(255,255,255,0.15)"}`, color: active ? "#fff" : "rgba(245,245,245,0.6)", padding: "6px 14px", borderRadius: "6px", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.82rem", cursor: "pointer" }}>
                       {size}
                     </button>
                   );
@@ -140,24 +140,24 @@ export default function ProductForm({ product, isEdit }: { product?: Product; is
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             {/* Imagem */}
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "24px" }}>
-              <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>📸 IMAGEM</h3>
+              <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>📸 IMAGEM</h3>
               <div onClick={() => !uploading && fileRef.current?.click()}
                 style={{ width: "100%", aspectRatio: "1", background: "var(--dark3)", borderRadius: "12px", overflow: "hidden", marginBottom: "12px", cursor: "pointer", border: "2px dashed rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
                 {uploading && (
                   <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <div style={{ color: "#fff", fontSize: "0.85rem", fontFamily: "'Barlow Condensed', sans-serif" }}>ENVIANDO...</div>
+                    <div style={{ color: "#fff", fontSize: "0.85rem", fontFamily: "var(--font-body)" }}>ENVIANDO...</div>
                   </div>
                 )}
                 {imagePreview
                   ? <img src={imagePreview} alt="preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={() => setImagePreview("")} />
                   : <div style={{ textAlign: "center", color: "rgba(245,245,245,0.3)" }}>
                       <div style={{ fontSize: "2.5rem", marginBottom: "8px" }}>📷</div>
-                      <div style={{ fontSize: "0.75rem", fontFamily: "'Barlow Condensed', sans-serif", letterSpacing: "1px" }}>Clique para upload</div>
+                      <div style={{ fontSize: "0.75rem", fontFamily: "var(--font-body)", letterSpacing: "1px" }}>Clique para upload</div>
                     </div>}
               </div>
               <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} style={{ display: "none" }} />
               <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
-                style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", padding: "10px", color: "rgba(245,245,245,0.7)", cursor: "pointer", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.85rem", marginBottom: "12px" }}>
+                style={{ width: "100%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", padding: "10px", color: "rgba(245,245,245,0.7)", cursor: "pointer", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.85rem", marginBottom: "12px" }}>
                 {uploading ? "ENVIANDO..." : imagePreview ? "📷 TROCAR" : "📷 UPLOAD"}
               </button>
               <label style={lbl}>Ou cole uma URL:</label>
@@ -165,12 +165,12 @@ export default function ProductForm({ product, isEdit }: { product?: Product; is
             </div>
 
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", padding: "24px" }}>
-              <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>STATUS</h3>
+              <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>STATUS</h3>
               <div style={{ display: "flex", alignItems: "center", gap: "14px", cursor: "pointer" }} onClick={() => set("active", !form.active)}>
                 <div style={{ width: "48px", height: "26px", borderRadius: "13px", background: form.active ? "var(--green)" : "rgba(255,255,255,0.1)", position: "relative", transition: "background .2s", flexShrink: 0 }}>
                   <div style={{ position: "absolute", top: "3px", left: form.active ? "24px" : "3px", width: "20px", height: "20px", borderRadius: "50%", background: "#fff", transition: "left .2s" }} />
                 </div>
-                <span style={{ color: form.active ? "#fff" : "rgba(245,245,245,0.4)", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700 }}>
+                <span style={{ color: form.active ? "#fff" : "rgba(245,245,245,0.4)", fontFamily: "var(--font-body)", fontWeight: 700 }}>
                   {form.active ? "Ativo" : "Inativo"}
                 </span>
               </div>
@@ -179,7 +179,7 @@ export default function ProductForm({ product, isEdit }: { product?: Product; is
             {error && <div style={{ background: "rgba(224,60,60,0.15)", border: "1px solid rgba(224,60,60,0.4)", borderRadius: "10px", padding: "12px 16px", fontSize: "0.85rem", color: "#ff6b6b" }}>{error}</div>}
 
             <button type="submit" disabled={saving}
-              style={{ background: saving ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", borderRadius: "12px", padding: "16px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1.05rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: saving ? "wait" : "pointer", boxShadow: "0 4px 20px rgba(10,140,42,0.4)" }}>
+              style={{ background: saving ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", borderRadius: "12px", padding: "16px", fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "1.05rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: saving ? "wait" : "pointer", boxShadow: "0 4px 20px rgba(10,140,42,0.4)" }}>
               {saving ? "SALVANDO..." : isEdit ? "SALVAR ALTERAÇÕES" : "CRIAR PRODUTO"}
             </button>
           </div>

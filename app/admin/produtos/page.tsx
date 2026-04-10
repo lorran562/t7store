@@ -46,7 +46,7 @@ export default function AdminProdutos() {
 
   if (loading) return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "60vh" }}>
-      <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.5rem", color: "rgba(245,245,245,0.3)", letterSpacing: "3px" }}>CARREGANDO...</div>
+      <div style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", color: "rgba(245,245,245,0.3)", letterSpacing: "3px" }}>CARREGANDO...</div>
     </div>
   );
 
@@ -54,11 +54,11 @@ export default function AdminProdutos() {
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "28px", flexWrap: "wrap", gap: "16px" }}>
         <div>
-          <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2.2rem", letterSpacing: "2px", color: "#fff", marginBottom: "4px" }}>PRODUTOS</h1>
+          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "2.2rem", letterSpacing: "2px", color: "#fff", marginBottom: "4px" }}>PRODUTOS</h1>
           <p style={{ color: "rgba(245,245,245,0.45)", fontSize: "0.9rem" }}>{products.length} produtos · {products.filter(p => p.active).length} ativos</p>
         </div>
         <Link href="/admin/produtos/novo"
-          style={{ background: "linear-gradient(135deg,#0a8c2a,#12b83a)", color: "#fff", padding: "12px 24px", borderRadius: "10px", textDecoration: "none", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "0.95rem", letterSpacing: "1px" }}>
+          style={{ background: "linear-gradient(135deg,#0a8c2a,#12b83a)", color: "#fff", padding: "12px 24px", borderRadius: "10px", textDecoration: "none", fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "0.95rem", letterSpacing: "1px" }}>
           + Novo Produto
         </Link>
       </div>
@@ -69,7 +69,7 @@ export default function AdminProdutos() {
       <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "14px", overflow: "hidden" }}>
         <div style={{ display: "grid", gridTemplateColumns: "56px 1fr 110px 100px 90px 80px 100px", padding: "12px 20px", borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(255,255,255,0.02)" }}>
           {["Foto","Produto","Categoria","Preço","Badge","Status","Ações"].map(h => (
-            <div key={h} style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1.5px", textTransform: "uppercase", color: "rgba(245,245,245,0.4)" }}>{h}</div>
+            <div key={h} style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1.5px", textTransform: "uppercase", color: "rgba(245,245,245,0.4)" }}>{h}</div>
           ))}
         </div>
 
@@ -86,17 +86,17 @@ export default function AdminProdutos() {
               </div>
               <div style={{ fontSize: "0.8rem", color: "rgba(245,245,245,0.55)", textTransform: "capitalize" }}>{p.category}</div>
               <div>
-                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", color: "var(--yellow)" }}>R$ {Number(p.price).toFixed(2).replace(".",",")}</div>
+                <div style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", color: "var(--yellow)" }}>R$ {Number(p.price).toFixed(2).replace(".",",")}</div>
                 {p.old_price && <div style={{ fontSize: "0.7rem", color: "rgba(245,245,245,0.3)", textDecoration: "line-through" }}>R$ {Number(p.old_price).toFixed(2).replace(".",",")}</div>}
               </div>
               <div>
                 {p.badge
-                  ? <span style={{ padding: "3px 10px", borderRadius: "20px", background: badgeStyle[p.badge]?.bg, color: badgeStyle[p.badge]?.color, fontSize: "0.72rem", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, textTransform: "uppercase" }}>{p.badge}</span>
+                  ? <span style={{ padding: "3px 10px", borderRadius: "20px", background: badgeStyle[p.badge]?.bg, color: badgeStyle[p.badge]?.color, fontSize: "0.72rem", fontFamily: "var(--font-body)", fontWeight: 700, textTransform: "uppercase" }}>{p.badge}</span>
                   : <span style={{ color: "rgba(245,245,245,0.2)", fontSize: "0.8rem" }}>—</span>}
               </div>
               <div>
                 <button onClick={() => toggleActive(p.id, p.active)}
-                  style={{ padding: "5px 12px", borderRadius: "20px", border: "none", background: p.active ? "rgba(18,184,58,0.2)" : "rgba(255,255,255,0.07)", color: p.active ? "#12b83a" : "rgba(245,245,245,0.4)", fontSize: "0.72rem", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, cursor: "pointer" }}>
+                  style={{ padding: "5px 12px", borderRadius: "20px", border: "none", background: p.active ? "rgba(18,184,58,0.2)" : "rgba(255,255,255,0.07)", color: p.active ? "#12b83a" : "rgba(245,245,245,0.4)", fontSize: "0.72rem", fontFamily: "var(--font-body)", fontWeight: 700, cursor: "pointer" }}>
                   {p.active ? "✓ ATIVO" : "INATIVO"}
                 </button>
               </div>

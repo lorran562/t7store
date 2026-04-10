@@ -77,9 +77,9 @@ export default function ProductsSection() {
   return (
     <section id="produtos" style={{ padding: "48px 16px 64px" }}>
       <div style={{ textAlign: "center", marginBottom: "28px" }}>
-        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "4px", textTransform: "uppercase", color: "var(--green-light)", display: "block", marginBottom: "8px" }}>Coleção</span>
-        <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(1.8rem,5vw,2.8rem)", letterSpacing: "2px" }}>
-          CAMISAS & <span style={{ color: "var(--yellow)" }}>TÊNIS</span>
+        <span style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", fontWeight: 700, letterSpacing: "4px", textTransform: "uppercase", color: "var(--green-light)", display: "block", marginBottom: "8px" }}>Coleção</span>
+        <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.8rem,5vw,2.8rem)", letterSpacing: "2px" }}>
+          NOSSA <span style={{ color: "var(--yellow)" }}>COLEÇÃO</span>
         </h2>
       </div>
 
@@ -89,7 +89,7 @@ export default function ProductsSection() {
           const isActive = category === value;
           return (
             <button key={value} onClick={() => setCategory(value)}
-              style={{ background: isActive ? (value === "tenis" ? "rgba(0,87,183,0.9)" : "var(--green)") : "rgba(255,255,255,0.06)", border: `1px solid ${isActive ? (value === "tenis" ? "#0057b7" : "var(--green)") : "rgba(255,255,255,0.1)"}`, color: isActive ? "#fff" : "rgba(245,245,245,0.65)", padding: "8px 16px", borderRadius: "50px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.82rem", textTransform: "uppercase", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, minHeight: "38px", transition: "all .2s" }}>
+              style={{ background: isActive ? "var(--green)" : "rgba(255,255,255,0.06)", border: `1px solid ${isActive ? "var(--green)" : "rgba(255,255,255,0.1)"}`, color: isActive ? "#fff" : "rgba(245,245,245,0.65)", padding: "8px 16px", borderRadius: "50px", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.82rem", textTransform: "uppercase", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, minHeight: "38px", transition: "all .2s" }}>
               {label}
             </button>
           );
@@ -106,7 +106,7 @@ export default function ProductsSection() {
       {!loading && filtered.length === 0 && (
         <div style={{ textAlign: "center", padding: "60px 20px", color: "rgba(245,245,245,0.38)" }}>
           <div style={{ fontSize: "2.5rem", marginBottom: "12px" }}>🔍</div>
-          <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.3rem" }}>Nenhum produto nessa categoria</div>
+          <div style={{ fontFamily: "var(--font-display)", fontSize: "1.3rem" }}>Nenhum produto nessa categoria</div>
         </div>
       )}
 

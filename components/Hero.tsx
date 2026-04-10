@@ -27,13 +27,13 @@ export default function Hero() {
           {/* Badge */}
           <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(18,184,58,0.18)", border: "1px solid rgba(18,184,58,0.4)", borderRadius: "50px", padding: "6px 14px", marginBottom: "16px", width: "fit-content" }}>
             <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--green-light)", boxShadow: "0 0 8px var(--green-light)", animation: "pulse 2s ease-in-out infinite", flexShrink: 0 }} />
-            <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.78rem", letterSpacing: "1.5px", textTransform: "uppercase", color: "var(--green-light)" }}>
+            <span style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.78rem", letterSpacing: "1.5px", textTransform: "uppercase", color: "var(--green-light)" }}>
               Nova coleção 24/25
             </span>
           </div>
 
           {/* Título — responsivo */}
-          <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(2.4rem, 9vw, 5rem)", lineHeight: 0.95, letterSpacing: "3px", marginBottom: "16px" }}>
+          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(2.4rem, 9vw, 5rem)", lineHeight: 0.95, letterSpacing: "3px", marginBottom: "16px" }}>
             <div style={{ color: "#fff" }}>VISTA</div>
             <div style={{ background: "linear-gradient(90deg,#12b83a,#7fff00)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", filter: "drop-shadow(0 0 20px rgba(18,184,58,0.4))" }}>
               SUA PAIXÃO
@@ -42,28 +42,20 @@ export default function Hero() {
           </h1>
 
           <p style={{ fontSize: "clamp(0.9rem,2.5vw,1.1rem)", color: "rgba(255,255,255,0.78)", marginBottom: "24px", lineHeight: 1.65, maxWidth: "480px" }}>
-            Camisas premium dos maiores clubes do mundo. Qualidade AAA+. Entrega rápida para todo o Brasil.
+            Camisas dos maiores clubes do mundo. Qualidade AAA+, entrega rápida para todo o Brasil.
           </p>
 
           {/* CTAs — lado a lado no mobile também */}
           <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "28px" }}>
-            <a href="#produtos" style={{ background: "linear-gradient(135deg,#0a8c2a,#12b83a)", color: "#fff", border: "none", padding: "14px 28px", borderRadius: "10px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", cursor: "pointer", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "8px", boxShadow: "0 4px 24px rgba(10,140,42,0.5)", minHeight: "52px" }}>
+            <a href="#produtos" style={{ background: "linear-gradient(135deg,#0a8c2a,#12b83a)", color: "#fff", border: "none", padding: "14px 28px", borderRadius: "10px", fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", cursor: "pointer", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "8px", boxShadow: "0 4px 24px rgba(10,140,42,0.5)", minHeight: "52px" }}>
               ⚽ VER CAMISAS
             </a>
-            <a href="#produtos" style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(8px)", color: "#fff", border: "1px solid rgba(255,255,255,0.25)", padding: "13px 24px", borderRadius: "10px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.95rem", letterSpacing: "1px", textTransform: "uppercase", textDecoration: "none", display: "inline-flex", alignItems: "center", minHeight: "52px" }}>
+            <a href="#produtos" style={{ background: "rgba(255,255,255,0.1)", backdropFilter: "blur(8px)", color: "#fff", border: "1px solid rgba(255,255,255,0.25)", padding: "13px 24px", borderRadius: "10px", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.95rem", letterSpacing: "1px", textTransform: "uppercase", textDecoration: "none", display: "inline-flex", alignItems: "center", minHeight: "52px" }}>
               👟 TÊNIS
             </a>
           </div>
 
-          {/* Stats — horizontais e compactos */}
-          <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-            {[{ v: "5.000+", l: "Clientes" }, { v: "15.000+", l: "Vendas" }, { v: "4.9★", l: "Avaliação" }].map(s => (
-              <div key={s.l}>
-                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.6rem", color: "var(--green-light)", lineHeight: 1 }}>{s.v}</div>
-                <div style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.55)" }}>{s.l}</div>
-              </div>
-            ))}
-          </div>
+
         </div>
 
         {/* Imagem da camisa — aparece só tablet+ */}
@@ -75,11 +67,11 @@ export default function Hero() {
           </div>
           {/* Floating badges */}
           <div style={{ position: "absolute", top: "12%", right: "4%", background: "rgba(0,0,0,0.7)", backdropFilter: "blur(10px)", border: "1px solid rgba(18,184,58,0.3)", borderRadius: "10px", padding: "10px 14px", animation: "floatBadge 3s ease-in-out infinite" }}>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", color: "var(--green-light)" }}>QUALIDADE</div>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "1rem", color: "var(--green-light)" }}>QUALIDADE</div>
             <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.6)" }}>AAA+ Premium</div>
           </div>
           <div style={{ position: "absolute", bottom: "18%", left: "0%", background: "rgba(0,0,0,0.7)", backdropFilter: "blur(10px)", border: "1px solid rgba(245,200,0,0.3)", borderRadius: "10px", padding: "10px 14px", animation: "floatBadge 3s ease-in-out infinite 1s" }}>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", color: "var(--yellow)" }}>FRETE GRÁTIS</div>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "1rem", color: "var(--yellow)" }}>FRETE GRÁTIS</div>
             <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.6)" }}>Acima de R$ 299</div>
           </div>
         </div>
@@ -87,7 +79,7 @@ export default function Hero() {
 
       {/* Scroll indicator — só no desktop */}
       <div style={{ position: "absolute", bottom: "24px", left: "50%", transform: "translateX(-50%)", display: "none", flexDirection: "column", alignItems: "center", gap: "6px", opacity: 0.55, zIndex: 3 }} className="md:flex">
-        <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.7rem", letterSpacing: "2px", textTransform: "uppercase" }}>Role</span>
+        <span style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", letterSpacing: "2px", textTransform: "uppercase" }}>Role</span>
         <div style={{ width: "24px", height: "38px", border: "2px solid rgba(255,255,255,0.35)", borderRadius: "12px", display: "flex", justifyContent: "center", paddingTop: "6px" }}>
           <div style={{ width: "3px", height: "8px", background: "var(--green-light)", borderRadius: "2px", animation: "scrollBounce 1.5s ease-in-out infinite" }} />
         </div>

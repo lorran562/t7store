@@ -37,7 +37,7 @@ const maskCep = (v: string) => {
 
 function Label({ text, required, error }: { text: string; required?: boolean; error?: string }) {
   return (
-    <label style={{ display: "block", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1px", textTransform: "uppercase", color: error ? "#ff6b6b" : "rgba(245,245,245,0.5)", marginBottom: "6px" }}>
+    <label style={{ display: "block", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1px", textTransform: "uppercase", color: error ? "#ff6b6b" : "rgba(245,245,245,0.5)", marginBottom: "6px" }}>
       {text}{required && <span style={{ color: "#ff6b6b", marginLeft: "3px" }}>*</span>}
       {error && <span style={{ marginLeft: "8px", fontSize: "0.68rem", fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>{error}</span>}
     </label>
@@ -153,9 +153,9 @@ export default function CheckoutPage() {
     return (
       <div style={{ minHeight: "100svh", background: "var(--black)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "20px", padding: "24px", textAlign: "center" }}>
         <div style={{ fontSize: "4rem" }}>🛒</div>
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", color: "#fff" }}>Carrinho vazio</h1>
+        <h1 style={{ fontFamily: "var(--font-display)", fontSize: "2rem", color: "#fff" }}>Carrinho vazio</h1>
         <p style={{ color: "rgba(245,245,245,0.5)", fontSize: "0.9rem" }}>Adicione produtos antes de finalizar.</p>
-        <Link href="/" style={{ background: "var(--green)", color: "#fff", padding: "14px 32px", borderRadius: "10px", textDecoration: "none", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, letterSpacing: "1px", minHeight: "52px", display: "inline-flex", alignItems: "center" }}>
+        <Link href="/" style={{ background: "var(--green)", color: "#fff", padding: "14px 32px", borderRadius: "10px", textDecoration: "none", fontFamily: "var(--font-body)", fontWeight: 700, letterSpacing: "1px", minHeight: "52px", display: "inline-flex", alignItems: "center" }}>
           ← VOLTAR À LOJA
         </Link>
       </div>
@@ -167,7 +167,7 @@ export default function CheckoutPage() {
     return (
       <div style={{ minHeight: "100svh", background: "var(--black)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "20px", padding: "24px", textAlign: "center" }}>
         <div style={{ width: "80px", height: "80px", background: "linear-gradient(135deg,#0a8c2a,#12b83a)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2.2rem", boxShadow: "0 8px 32px rgba(10,140,42,0.5)" }}>✓</div>
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(1.8rem,5vw,2.8rem)", color: "#fff" }}>
+        <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.8rem,5vw,2.8rem)", color: "#fff" }}>
           PEDIDO <span style={{ color: "var(--yellow)" }}>ENVIADO!</span>
         </h1>
         <p style={{ color: "rgba(245,245,245,0.65)", maxWidth: "360px", lineHeight: 1.65, fontSize: "0.92rem" }}>
@@ -176,11 +176,11 @@ export default function CheckoutPage() {
         <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "14px", padding: "16px 24px", display: "flex", alignItems: "center", gap: "12px" }}>
           <span style={{ fontSize: "1.5rem" }}>💬</span>
           <div style={{ textAlign: "left" }}>
-            <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.75rem", letterSpacing: "1px", color: "var(--green-light)" }}>WHATSAPP</div>
+            <div style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.75rem", letterSpacing: "1px", color: "var(--green-light)" }}>WHATSAPP</div>
             <div style={{ color: "#fff", fontSize: "0.92rem" }}>(69) 9320-9150</div>
           </div>
         </div>
-        <Link href="/" style={{ background: "var(--green)", color: "#fff", padding: "14px 32px", borderRadius: "10px", textDecoration: "none", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, letterSpacing: "1px", minHeight: "52px", display: "inline-flex", alignItems: "center" }}>
+        <Link href="/" style={{ background: "var(--green)", color: "#fff", padding: "14px 32px", borderRadius: "10px", textDecoration: "none", fontFamily: "var(--font-body)", fontWeight: 700, letterSpacing: "1px", minHeight: "52px", display: "inline-flex", alignItems: "center" }}>
           CONTINUAR COMPRANDO
         </Link>
       </div>
@@ -193,16 +193,16 @@ export default function CheckoutPage() {
       <header style={{ position: "sticky", top: 0, zIndex: 50, background: "rgba(8,8,8,0.97)", backdropFilter: "blur(14px)", borderBottom: "2px solid var(--green)", height: "var(--header-h)", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px" }}>
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none" }}>
           <Image src="/t7estore.jpg" alt="T7" width={34} height={34} style={{ objectFit: "contain" }} />
-          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.3rem", letterSpacing: "2px", background: "linear-gradient(135deg,#fff 30%,#f5c800)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>T7 STORE</span>
+          <span style={{ fontFamily: "var(--font-display)", fontSize: "1.3rem", letterSpacing: "2px", background: "linear-gradient(135deg,#fff 30%,#f5c800)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>T7 STORE</span>
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--green-light)", fontSize: "0.82rem" }}>
           <span>🔒</span>
-          <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 600 }}>Checkout Seguro</span>
+          <span style={{ fontFamily: "var(--font-body)", fontWeight: 600 }}>Checkout Seguro</span>
         </div>
       </header>
 
       <main style={{ maxWidth: "900px", margin: "0 auto", padding: "24px 16px 100px" }}>
-        <h1 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(1.8rem,5vw,2.4rem)", letterSpacing: "2px", color: "#fff", marginBottom: "4px" }}>
+        <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.8rem,5vw,2.4rem)", letterSpacing: "2px", color: "#fff", marginBottom: "4px" }}>
           FINALIZAR <span style={{ color: "var(--yellow)" }}>PEDIDO</span>
         </h1>
         <p style={{ color: "rgba(245,245,245,0.4)", fontSize: "0.85rem", marginBottom: "28px" }}>Preencha seus dados e confirme pelo WhatsApp</p>
@@ -214,7 +214,7 @@ export default function CheckoutPage() {
 
             {/* Dados pessoais */}
             <section style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "20px" }}>
-              <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span style={{ background: "var(--green)", borderRadius: "50%", width: "22px", height: "22px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontFamily: "sans-serif", fontWeight: 900, flexShrink: 0 }}>1</span>
                 SEUS DADOS
               </h2>
@@ -232,7 +232,7 @@ export default function CheckoutPage() {
 
             {/* Endereço */}
             <section style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "20px" }}>
-              <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span style={{ background: "var(--green)", borderRadius: "50%", width: "22px", height: "22px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontFamily: "sans-serif", fontWeight: 900, flexShrink: 0 }}>2</span>
                 ENDEREÇO DE ENTREGA
               </h2>
@@ -277,7 +277,7 @@ export default function CheckoutPage() {
 
             {/* Pagamento */}
             <section style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "20px" }}>
-              <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+              <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
                 <span style={{ background: "var(--green)", borderRadius: "50%", width: "22px", height: "22px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "0.72rem", fontFamily: "sans-serif", fontWeight: 900, flexShrink: 0 }}>3</span>
                 FORMA DE PAGAMENTO
               </h2>
@@ -287,7 +287,7 @@ export default function CheckoutPage() {
                     style={{ display: "flex", alignItems: "center", gap: "14px", padding: "14px 16px", background: payment === opt.id ? "rgba(10,140,42,0.12)" : "rgba(255,255,255,0.03)", border: `1.5px solid ${payment === opt.id ? "var(--green)" : "rgba(255,255,255,0.1)"}`, borderRadius: "12px", cursor: "pointer", textAlign: "left", width: "100%", transition: "all .15s", minHeight: "58px" }}>
                     <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>{opt.icon}</span>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "#fff" }}>{opt.label}</div>
+                      <div style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.95rem", color: "#fff" }}>{opt.label}</div>
                       <div style={{ fontSize: "0.75rem", color: opt.id === "pix" ? "var(--green-light)" : "rgba(245,245,245,0.45)" }}>{opt.desc}</div>
                     </div>
                     <div style={{ width: "20px", height: "20px", borderRadius: "50%", border: `2px solid ${payment === opt.id ? "var(--green)" : "rgba(255,255,255,0.2)"}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -311,7 +311,7 @@ export default function CheckoutPage() {
           {/* ─── Resumo ─── */}
           <div>
             <div style={{ background: "var(--dark2)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "16px", padding: "20px", position: "sticky", top: "calc(var(--header-h) + 16px)" }}>
-              <h2 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>RESUMO DO PEDIDO</h2>
+              <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1rem", letterSpacing: "2px", color: "#fff", marginBottom: "16px" }}>RESUMO DO PEDIDO</h2>
 
               {/* Itens */}
               <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "16px", maxHeight: "300px", overflowY: "auto" }}>
@@ -328,7 +328,7 @@ export default function CheckoutPage() {
                           {item.category === "tenis" ? "Nº" : "Tam."} {item.size}{q > 1 ? ` · ×${q}` : ""}
                         </div>
                       </div>
-                      <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", color: "var(--yellow)", flexShrink: 0 }}>R$ {fmt(item.price * q)}</div>
+                      <div style={{ fontFamily: "var(--font-display)", fontSize: "1rem", color: "var(--yellow)", flexShrink: 0 }}>R$ {fmt(item.price * q)}</div>
                     </div>
                   );
                 })}
@@ -351,8 +351,8 @@ export default function CheckoutPage() {
                   </div>
                 )}
                 <div style={{ display: "flex", justifyContent: "space-between", paddingTop: "10px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-                  <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.88rem", color: "#fff" }}>TOTAL</span>
-                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.7rem", color: "var(--yellow)" }}>R$ {fmt(total)}</span>
+                  <span style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.88rem", color: "#fff" }}>TOTAL</span>
+                  <span style={{ fontFamily: "var(--font-display)", fontSize: "1.7rem", color: "var(--yellow)" }}>R$ {fmt(total)}</span>
                 </div>
               </div>
 
@@ -360,7 +360,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handleSubmit}
                 disabled={sending}
-                style={{ width: "100%", marginTop: "16px", background: sending ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", padding: "16px 20px", borderRadius: "12px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: sending ? "wait" : "pointer", boxShadow: sending ? "none" : "0 6px 24px rgba(10,140,42,0.45)", minHeight: "54px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
+                style={{ width: "100%", marginTop: "16px", background: sending ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", padding: "16px 20px", borderRadius: "12px", fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: sending ? "wait" : "pointer", boxShadow: sending ? "none" : "0 6px 24px rgba(10,140,42,0.45)", minHeight: "54px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
                 className="hidden md:flex"
               >
                 <span style={{ fontSize: "1.2rem" }}>💬</span>
@@ -380,7 +380,7 @@ export default function CheckoutPage() {
         <button
           onClick={handleSubmit}
           disabled={sending}
-          style={{ width: "100%", background: sending ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", padding: "16px", borderRadius: "12px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: sending ? "wait" : "pointer", boxShadow: "0 4px 20px rgba(10,140,42,0.45)", minHeight: "52px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}
+          style={{ width: "100%", background: sending ? "rgba(255,255,255,0.1)" : "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", padding: "16px", borderRadius: "12px", fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: sending ? "wait" : "pointer", boxShadow: "0 4px 20px rgba(10,140,42,0.45)", minHeight: "52px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}
         >
           💬 CONFIRMAR · R$ {fmt(total)}
         </button>

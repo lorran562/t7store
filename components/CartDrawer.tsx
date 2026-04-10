@@ -15,7 +15,7 @@ export default function CartDrawer() {
       <div style={{ position: "fixed", top: 0, right: 0, bottom: 0, width: "min(390px,100vw)", background: "var(--dark2)", borderLeft: "1px solid rgba(255,255,255,0.07)", zIndex: 201, transform: isCartOpen ? "translateX(0)" : "translateX(100%)", transition: "transform .32s cubic-bezier(.4,0,.2,1)", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
         <div style={{ padding: "18px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexShrink: 0 }}>
           <div>
-            <h3 style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.3rem", letterSpacing: "2px" }}>🛒 CARRINHO</h3>
+            <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.3rem", letterSpacing: "2px" }}>🛒 CARRINHO</h3>
             {cart.length > 0 && <p style={{ fontSize: "0.75rem", color: "rgba(245,245,245,0.45)" }}>{cart.reduce((s, x) => s + x.qty, 0)} {cart.reduce((s, x) => s + x.qty, 0) === 1 ? "item" : "itens"}</p>}
           </div>
           <button onClick={closeCart} style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", width: "38px", height: "38px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>✕</button>
@@ -40,13 +40,13 @@ export default function CartDrawer() {
                 </div>
                 <div style={{ display: "flex", alignItems: "center", background: "rgba(255,255,255,0.04)", borderRadius: "8px", width: "fit-content", border: "1px solid rgba(255,255,255,0.08)", overflow: "hidden" }}>
                   <button onClick={() => item.qty === 1 ? removeFromCart(item.uid) : updateQty(item.uid, item.qty - 1)} style={{ width: "32px", height: "32px", background: "transparent", border: "none", color: "#fff", fontSize: "1rem", cursor: "pointer", borderRight: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>{item.qty === 1 ? "🗑" : "−"}</button>
-                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1rem", color: "#fff", minWidth: "32px", textAlign: "center", userSelect: "none" }}>{item.qty}</span>
+                  <span style={{ fontFamily: "var(--font-display)", fontSize: "1rem", color: "#fff", minWidth: "32px", textAlign: "center", userSelect: "none" }}>{item.qty}</span>
                   <button onClick={() => updateQty(item.uid, item.qty + 1)} style={{ width: "32px", height: "32px", background: "transparent", border: "none", color: "#fff", fontSize: "1rem", cursor: "pointer", borderLeft: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
                 </div>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px", flexShrink: 0 }}>
-                <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.05rem", color: "var(--yellow)" }}>R$ {fmt(item.price * item.qty)}</div>
+                <div style={{ fontFamily: "var(--font-display)", fontSize: "1.05rem", color: "var(--yellow)" }}>R$ {fmt(item.price * item.qty)}</div>
                 {item.qty > 1 && <div style={{ fontSize: "0.68rem", color: "rgba(245,245,245,0.35)" }}>R$ {fmt(item.price)} × {item.qty}</div>}
               </div>
             </div>
@@ -64,11 +64,11 @@ export default function CartDrawer() {
                 <span style={{ color: shipping === 0 ? "var(--green-light)" : "rgba(245,245,245,0.5)" }}>{shipping === 0 ? "Grátis 🎉" : `R$ ${fmt(shipping)}`}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", paddingTop: "8px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-                <span style={{ fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.88rem", color: "#fff", textTransform: "uppercase", letterSpacing: "1px" }}>Total</span>
-                <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.6rem", color: "var(--yellow)" }}>R$ {fmt(total)}</span>
+                <span style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.88rem", color: "#fff", textTransform: "uppercase", letterSpacing: "1px" }}>Total</span>
+                <span style={{ fontFamily: "var(--font-display)", fontSize: "1.6rem", color: "var(--yellow)" }}>R$ {fmt(total)}</span>
               </div>
             </div>
-            <button onClick={goToCheckout} style={{ width: "100%", background: "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", padding: "16px", borderRadius: "12px", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: "pointer", boxShadow: "0 4px 20px rgba(10,140,42,0.4)", minHeight: "52px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <button onClick={goToCheckout} style={{ width: "100%", background: "linear-gradient(135deg,#0a8c2a,#12b83a)", border: "none", padding: "16px", borderRadius: "12px", fontFamily: "var(--font-body)", fontWeight: 900, fontSize: "1rem", letterSpacing: "2px", textTransform: "uppercase", color: "#fff", cursor: "pointer", boxShadow: "0 4px 20px rgba(10,140,42,0.4)", minHeight: "52px", display: "flex", alignItems: "center", justifyContent: "center" }}>
               FINALIZAR PEDIDO →
             </button>
             {faltaFrete > 0 && <p style={{ textAlign: "center", fontSize: "0.72rem", color: "rgba(245,245,245,0.35)", marginTop: "10px" }}>Faltam <strong style={{ color: "var(--yellow)" }}>R$ {fmt(faltaFrete)}</strong> para frete grátis</p>}

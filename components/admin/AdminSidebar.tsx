@@ -22,7 +22,7 @@ export default function AdminSidebar() {
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
           <Image src="/t7estore.jpg" alt="T7" width={36} height={36} style={{ objectFit: "contain", borderRadius: "8px" }} />
           <div>
-            <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.1rem", letterSpacing: "2px", background: "linear-gradient(135deg,#fff 30%,#f5c800)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>T7 STORE</div>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", letterSpacing: "2px", background: "linear-gradient(135deg,#fff 30%,#f5c800)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>T7 STORE</div>
             <div style={{ fontSize: "0.65rem", color: "rgba(245,245,245,0.35)", letterSpacing: "1px", textTransform: "uppercase" }}>Admin Panel</div>
           </div>
         </Link>
@@ -32,7 +32,7 @@ export default function AdminSidebar() {
         <Link href="/admin"
           style={{ display: "flex", alignItems: "center", gap: "12px", padding: "11px 14px", borderRadius: "10px", textDecoration: "none",
             background: "rgba(10,140,42,0.2)", border: "1px solid rgba(10,140,42,0.4)", color: "#fff",
-            fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.95rem" }}>
+            fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.95rem" }}>
           <span>👕</span> Produtos
           <div style={{ marginLeft: "auto", width: "6px", height: "6px", borderRadius: "50%", background: "var(--green-light)" }} />
         </Link>
@@ -43,7 +43,7 @@ export default function AdminSidebar() {
           🏪 Ver a loja
         </Link>
         <button onClick={handleLogout}
-          style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "10px 14px", borderRadius: "8px", background: "rgba(224,60,60,0.1)", border: "1px solid rgba(224,60,60,0.2)", color: "#ff6b6b", cursor: "pointer", fontFamily: "'Barlow Condensed', sans-serif", fontWeight: 700, fontSize: "0.9rem" }}>
+          style={{ width: "100%", display: "flex", alignItems: "center", gap: "10px", padding: "10px 14px", borderRadius: "8px", background: "rgba(224,60,60,0.1)", border: "1px solid rgba(224,60,60,0.2)", color: "#ff6b6b", cursor: "pointer", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.9rem" }}>
           🚪 Sair
         </button>
       </div>

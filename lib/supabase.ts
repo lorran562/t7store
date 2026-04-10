@@ -83,15 +83,13 @@ export function fmt(n: number): string {
   return n.toFixed(2).replace(".", ",");
 }
 
-export type Category = "todos" | "nacional" | "internacional" | "selecao" | "retro" | "tenis";
+export type Category = "todos" | "nacional" | "internacional" | "selecao";
 
 export const CATEGORIES: { label: string; value: Category }[] = [
   { label: "Todos",          value: "todos"         },
   { label: "Nacionais",      value: "nacional"      },
   { label: "Internacionais", value: "internacional" },
   { label: "Seleções",       value: "selecao"       },
-  { label: "Retrô",          value: "retro"         },
-  { label: "👟 Tênis",       value: "tenis"         },
 ];
 
 export const SHIRT_SIZES = ["PP", "P", "M", "G", "GG", "XGG"];
