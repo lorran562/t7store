@@ -14,7 +14,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <Providers>
           <div style={{ display: "flex", minHeight: "100vh", background: "var(--black)" }}>
             <AdminSidebar />
-            <main style={{ flex: 1, padding: "32px", overflowY: "auto", marginLeft: "240px" }}>
+            <main style={{ flex: 1, padding: "16px", overflowY: "auto", marginLeft: "0", maxWidth: "100vw" }} className="md:ml-[240px] md:p-8">
               {children}
             </main>
           </div>
