@@ -28,7 +28,7 @@ export default function Hero() {
           <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "rgba(18,184,58,0.18)", border: "1px solid rgba(18,184,58,0.4)", borderRadius: "50px", padding: "6px 14px", marginBottom: "16px", width: "fit-content" }}>
             <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--green-light)", boxShadow: "0 0 8px var(--green-light)", animation: "pulse 2s ease-in-out infinite", flexShrink: 0 }} />
             <span style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.78rem", letterSpacing: "1.5px", textTransform: "uppercase", color: "var(--green-light)" }}>
-              Qualidade AAA+
+              Nova coleção 25/26
             </span>
           </div>
 
