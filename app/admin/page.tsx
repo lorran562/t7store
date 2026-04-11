@@ -5,7 +5,7 @@ import { supabase, Product, ColorGroup, ColorGroupForm, fmt, getSizes, uploadPro
 type ProductForm = {
   club: string; brand: string; name: string; meta: string; description: string;
   price: string; old_price: string; badge: string;
-  type: "camisa" | "tenis"; category: string; active: boolean;
+  type: "camisa" | "tenis" | "bone"; category: string; active: boolean;
   image_url: string;
 };
 
@@ -206,13 +206,13 @@ export default function AdminPage() {
           return (
             <div key={p.id} style={{ display: "grid", gridTemplateColumns: "60px 1fr 80px 120px 100px 80px 80px 90px", padding: "12px 18px", alignItems: "center", borderBottom: i < filtered.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none", opacity: p.active ? 1 : 0.4 }}>
               <div style={{ width: "44px", height: "44px", background: "var(--dark3)", borderRadius: "8px", overflow: "hidden" }}>
-                {p.image_url ? <img src={p.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.3rem", opacity: 0.4 }}>{isTenis(p.type) ? "👟" : "⚽"}</div>}
+                {p.image_url ? <img src={p.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.3rem", opacity: 0.4 }}>{isTenis(p.type) ? "👟" : p.type === "bone" ? "🧢" : "⚽"}</div>}
               </div>
               <div>
                 <div style={{ fontWeight: 600, color: "#fff", fontSize: "0.88rem" }}>{p.club}</div>
                 <div style={{ fontSize: "0.73rem", color: "rgba(245,245,245,0.38)" }}>{p.name}</div>
               </div>
-              <div><span style={{ padding: "3px 8px", borderRadius: "4px", background: isTenis(p.type) ? "rgba(0,87,183,0.25)" : "rgba(10,140,42,0.25)", color: isTenis(p.type) ? "#6baed6" : "var(--green-light)", fontSize: "0.68rem", fontFamily: "var(--font-body)", fontWeight: 700, textTransform: "uppercase" }}>{isTenis(p.type) ? "👟" : "⚽"}</span></div>
+              <div><span style={{ padding: "3px 8px", borderRadius: "4px", background: isTenis(p.type) ? "rgba(0,87,183,0.25)" : "rgba(10,140,42,0.25)", color: isTenis(p.type) ? "#6baed6" : "var(--green-light)", fontSize: "0.68rem", fontFamily: "var(--font-body)", fontWeight: 700, textTransform: "uppercase" }}>{isTenis(p.type) ? "👟" : p.type === "bone" ? "🧢" : "⚽"}</span></div>
               <div>
                 <div style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", color: "var(--yellow)" }}>R$ {fmt(p.price)}</div>
                 {p.old_price && <div style={{ fontSize: "0.7rem", color: "rgba(245,245,245,0.28)", textDecoration: "line-through" }}>R$ {fmt(p.old_price)}</div>}
@@ -275,12 +275,13 @@ export default function AdminPage() {
                   <label style={lbl}>Tipo *</label>
                   <select style={{ ...inp, cursor: "pointer" }} value={form.type}
                     onChange={e => {
-                      const t = e.target.value as "camisa" | "tenis";
-                      setForm(p => ({ ...p, type: t, category: t === "tenis" ? "tenis" : "nacional" }));
+                      const t = e.target.value as "camisa" | "tenis" | "bone";
+                      setForm(p => ({ ...p, type: t, category: t === "tenis" ? "tenis" : t === "bone" ? "bone" : "nacional" }));
                       setColorGroups(prev => prev.map(g => ({ ...g, sizes: getSizes(t).map(s => ({ tempId: tmpId(), size: s, stock: 0 })) })));
                     }}>
                     <option value="camisa">⚽ Camisa</option>
                     <option value="tenis">👟 Tênis</option>
+                    <option value="bone">🧢 Boné</option>
                   </select>
                 </div>
               </div>
@@ -299,7 +300,11 @@ export default function AdminPage() {
               <div>
                 <label style={lbl}>Categoria</label>
                 <select style={{ ...inp, cursor: "pointer" }} value={form.category} onChange={e => setForm(p => ({ ...p, category: e.target.value }))}>
-                  {form.type === "tenis" ? <option value="tenis">Tênis</option> : (
+                  {form.type === "tenis" ? (
+                    <option value="tenis">Tênis</option>
+                  ) : form.type === "bone" ? (
+                    <option value="bone">Boné</option>
+                  ) : (
                     <>
                       <option value="nacional">Nacional</option>
                       <option value="internacional">Internacional</option>

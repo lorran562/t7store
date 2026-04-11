@@ -14,8 +14,8 @@ const BADGE: Record<string, { bg: string; color: string; label: string }> = {
 
 function Placeholder({ category }: { category: string }) {
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "8px", background: isTenis(category) ? "linear-gradient(135deg,#0a1628,#0d1e3d)" : "linear-gradient(135deg,#0a1a0a,#0d2e12)" }}>
-      <span style={{ fontSize: "clamp(2rem,8vw,3rem)", opacity: 0.22 }}>{isTenis(category) ? "👟" : "⚽"}</span>
+    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "8px", background: isTenis(category) ? "linear-gradient(135deg,#0a1628,#0d1e3d)" : category === "bone" ? "linear-gradient(135deg,#1a1408,#2e2510)" : "linear-gradient(135deg,#0a1a0a,#0d2e12)" }}>
+      <span style={{ fontSize: "clamp(2rem,8vw,3rem)", opacity: 0.22 }}>{isTenis(category) ? "👟" : category === "bone" ? "🧢" : "⚽"}</span>
       <span style={{ fontFamily: "var(--font-body)", fontSize: "0.6rem", fontWeight: 700, letterSpacing: "1.5px", color: "rgba(255,255,255,0.18)", textTransform: "uppercase" }}>Sem imagem</span>
     </div>
   );

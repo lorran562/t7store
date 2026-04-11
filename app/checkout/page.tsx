@@ -320,12 +320,12 @@ export default function CheckoutPage() {
                   return (
                     <div key={item.uid} style={{ display: "flex", gap: "10px", alignItems: "center", padding: "10px", background: "rgba(255,255,255,0.03)", borderRadius: "10px" }}>
                       <div style={{ width: "48px", height: "48px", borderRadius: "8px", background: "var(--dark3)", overflow: "hidden", flexShrink: 0 }}>
-                        {item.image_url ? <img src={item.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", opacity: 0.35 }}>{item.category === "tenis" ? "👟" : "⚽"}</div>}
+                        {item.image_url ? <img src={item.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", opacity: 0.35 }}>{item.type === "tenis" ? "👟" : item.type === "bone" ? "🧢" : "⚽"}</div>}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: "0.8rem", color: "#fff", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.club} — {item.name}</div>
                         <div style={{ fontSize: "0.72rem", color: "rgba(245,245,245,0.4)" }}>
-                          {item.category === "tenis" ? "Nº" : "Tam."} {item.size}{q > 1 ? ` · ×${q}` : ""}
+                          {item.type === "tenis" ? "Nº" : "Tam."} {item.size}{q > 1 ? ` · ×${q}` : ""}
                         </div>
                       </div>
                       <div style={{ fontFamily: "var(--font-display)", fontSize: "1rem", color: "var(--yellow)", flexShrink: 0 }}>R$ {fmt(item.price * q)}</div>

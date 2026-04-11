@@ -114,7 +114,7 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
             />
           ) : (
             <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "4rem", opacity: 0.2 }}>
-              {tenis ? "👟" : "⚽"}
+              {tenis ? "👟" : product.type === "bone" ? "🧢" : "⚽"}
             </div>
           )}
           {discount > 0 && product.badge === "sale" && (
@@ -193,7 +193,7 @@ export default function ProductModal({ product, onClose, onAdd }: Props) {
           <div style={{ marginBottom: "18px" }}>
             <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: "10px" }}>
               <span style={{ color: size ? "#fff" : "rgba(245,245,245,0.5)" }}>
-                {tenis ? "Numeração" : "Tamanho"}
+                {isTenis(product.type) ? "Numeração" : product.type === "bone" ? "Tamanho" : "Tamanho"}
               </span>
               {!size && <span style={{ color: "#e03c3c", marginLeft: "4px" }}>*</span>}
             </p>

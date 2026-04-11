@@ -35,11 +35,11 @@ export type Product = {
   name: string;
   meta: string;
   description: string;
-  type: "camisa" | "tenis";
+  type: "camisa" | "tenis" | "bone";
   price: number;
   old_price: number | null;
   badge: "sale" | "new" | "retro" | null;
-  category: "nacional" | "internacional" | "selecao" | "retro" | "tenis";
+  category: "nacional" | "internacional" | "selecao" | "retro" | "tenis" | "bone";
   image_url: string;
   active: boolean;
   stock: number;
@@ -83,24 +83,32 @@ export function fmt(n: number): string {
   return n.toFixed(2).replace(".", ",");
 }
 
-export type Category = "todos" | "nacional" | "internacional" | "selecao";
+export type Category = "todos" | "nacional" | "internacional" | "selecao" | "bone";
 
 export const CATEGORIES: { label: string; value: Category }[] = [
   { label: "Todos",          value: "todos"         },
   { label: "Nacionais",      value: "nacional"      },
   { label: "Internacionais", value: "internacional" },
   { label: "Seleções",       value: "selecao"       },
+  { label: "🧢 Bonés",        value: "bone"          },
 ];
 
 export const SHIRT_SIZES = ["PP", "P", "M", "G", "GG", "XGG"];
 export const SHOE_SIZES  = ["36", "37", "38", "39", "40", "41", "42", "43", "44"];
+export const HAT_SIZES   = ["Único", "P/M", "G/GG"];
 
 export function getSizes(type: string): string[] {
-  return type === "tenis" ? SHOE_SIZES : SHIRT_SIZES;
+  if (type === "tenis") return SHOE_SIZES;
+  if (type === "bone")  return HAT_SIZES;
+  return SHIRT_SIZES;
 }
 
 export function isTenis(type: string): boolean {
   return type === "tenis";
+}
+
+export function isBone(type: string): boolean {
+  return type === "bone";
 }
 
 // Retorna imagem efetiva: do grupo de cor ou do produto pai

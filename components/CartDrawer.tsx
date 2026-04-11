@@ -30,7 +30,7 @@ export default function CartDrawer() {
           ) : cart.map(item => (
             <div key={item.uid} style={{ display: "flex", gap: "12px", padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
               <div style={{ width: "60px", height: "60px", background: "var(--dark3)", borderRadius: "8px", flexShrink: 0, overflow: "hidden" }}>
-                {item.image_url ? <img src={item.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem", opacity: 0.35 }}>{item.type === "tenis" ? "👟" : "⚽"}</div>}
+                {item.image_url ? <img src={item.image_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem", opacity: 0.35 }}>{item.type === "tenis" ? "👟" : item.type === "bone" ? "🧢" : "⚽"}</div>}
               </div>
 
               <div style={{ flex: 1, minWidth: 0 }}>
