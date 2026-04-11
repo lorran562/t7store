@@ -61,52 +61,36 @@ export default function Footer() {
             style={{
               fontSize: "0.92rem",
               color: "rgba(245,245,245,0.6)",
-              marginBottom: "20px",
+              marginBottom: "24px",
             }}
           >
-            Cadastre-se e ganhe 10% de desconto na primeira compra!
+            Fale com a gente no WhatsApp e ganhe <strong style={{ color: "var(--yellow)" }}>10% de desconto</strong> na primeira compra!
           </p>
-          <div
+          <a
+            href={`https://wa.me/556993209150?text=${encodeURIComponent("Olá! Vi o site da T7 Store e quero receber ofertas exclusivas e meu cupom de 10% de desconto 🛒")}`}
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
-              display: "flex",
+              display: "inline-flex",
+              alignItems: "center",
               gap: "10px",
-              maxWidth: "450px",
-              margin: "0 auto",
+              background: "#25d366",
+              border: "none",
+              borderRadius: "10px",
+              padding: "14px 32px",
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              fontSize: "1rem",
+              letterSpacing: "1px",
+              color: "#fff",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              textDecoration: "none",
+              boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
             }}
-            className="flex-col sm:flex-row"
           >
-            <input
-              type="email"
-              placeholder="Seu melhor e-mail"
-              style={{
-                flex: 1,
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.15)",
-                borderRadius: "8px",
-                padding: "14px 18px",
-                color: "#fff",
-                fontSize: "0.95rem",
-                outline: "none",
-              }}
-            />
-            <button
-              style={{
-                background: "var(--green)",
-                border: "none",
-                borderRadius: "8px",
-                padding: "14px 28px",
-                fontFamily: "var(--font-body)",
-                fontWeight: 700,
-                fontSize: "0.92rem",
-                letterSpacing: "1px",
-                color: "#fff",
-                cursor: "pointer",
-                whiteSpace: "nowrap",
-              }}
-            >
-              CADASTRAR
-            </button>
-          </div>
+            💬 FALAR NO WHATSAPP
+          </a>
         </div>
       </div>
 
